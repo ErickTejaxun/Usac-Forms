@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -254,18 +255,16 @@ public class Interfaz extends javax.swing.JFrame {
     
     public String leerArchivoX(String path) throws FileNotFoundException, IOException
     {
+        ArrayList<String> encabezados = new ArrayList();
         String cadenaArchivo= "";               
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
-            //Leer el archivo plano de excel.
-            
-            
+            //Leer el archivo plano de excel.                        
             XSSFWorkbook libro = new XSSFWorkbook(archivo);
-
+            
             /*Obtenemos la hoja que necesitamos
             - Necesitamos 3:  Encuesta, Opciones, Configuraciones¨
             */
-
             //Primero la página Encuesta
             XSSFSheet hojaActual = libro.getSheetAt(0);
 
@@ -273,23 +272,41 @@ public class Interfaz extends javax.swing.JFrame {
             Iterator<Row> filaIterator = hojaActual.iterator();
 
             Row fila; // Auxiliar para cada fila.
-
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna
             while(filaIterator.hasNext())
             {
                 fila = filaIterator.next();
-
                 //Ahora obtenemos las celdas de la fila.
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
                 //Obtenemos cada celda
-                while(celdaIterator.hasNext())
+                if(fila.getPhysicalNumberOfCells()!=0)
                 {
-                    //Obtenemos el contenido de la celda.
-                    celda = celdaIterator.next(); 
-                    cadenaArchivo +=  celda.toString()+ "~";
-                    //System.out.println(cadenaArchivo);
+
+                    cadenaArchivo +=  "<fila>\n";
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            cadenaArchivo +=  "\t<" + encabezados.get(colContador) + ">" ;
+                            cadenaArchivo +=   celda.toString()  ;
+                            cadenaArchivo +=  "</" + encabezados.get(colContador) + ">\n" ;
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }
+                    cadenaArchivo +=  "</fila>\n";
+                    filaContador ++;                
+
                 }
-                cadenaArchivo +=  "\n";
+                
             }       
         }
         catch(Exception error)
