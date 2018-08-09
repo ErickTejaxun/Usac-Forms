@@ -11,14 +11,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  *
@@ -76,6 +80,11 @@ public class Interfaz extends javax.swing.JFrame {
         botonGuardar.setBounds(85, 12, 40, 40);
 
         botonAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/abrir.jpg"))); // NOI18N
+        botonAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAbrirActionPerformed(evt);
+            }
+        });
         jPanel1.add(botonAbrir);
         botonAbrir.setBounds(11, 12, 40, 40);
 
@@ -192,13 +201,16 @@ public class Interfaz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
-        try {            
-            areaEdicion.setText(leerArchivo("C:\\Users\\erick\\Documents\\Modela1\\Tarea2.xlsx"));
-            
+
+    }//GEN-LAST:event_botonGenerarActionPerformed
+
+    private void botonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrirActionPerformed
+        try {
+            seleccionarArchivo();
         } catch (IOException ex) {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_botonGenerarActionPerformed
+    }//GEN-LAST:event_botonAbrirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,14 +252,14 @@ public class Interfaz extends javax.swing.JFrame {
     
     //Metodo para leer el archivo .xls :v
     
-    public String leerArchivo(String path) throws FileNotFoundException, IOException
+    public String leerArchivoX(String path) throws FileNotFoundException, IOException
     {
-        String cadenaArchivo= "";
-        String hoja = "Encuesta";
-        
+        String cadenaArchivo= "";               
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
             //Leer el archivo plano de excel.
+            
+            
             XSSFWorkbook libro = new XSSFWorkbook(archivo);
 
             /*Obtenemos la hoja que necesitamos
@@ -288,10 +300,87 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
+        public String leerArchivo(String path) throws FileNotFoundException, IOException
+    {
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.
+            
+            
+            HSSFWorkbook libro = new HSSFWorkbook(archivo);
+
+            /*Obtenemos la hoja que necesitamos
+            - Necesitamos 3:  Encuesta, Opciones, Configuraciones¨
+            */
+
+            //Primero la página Encuesta
+            HSSFSheet hojaActual = libro.getSheetAt(0);
+
+            //Obtenemos las filas de la hoja.
+            Iterator<Row> filaIterator = hojaActual.iterator();
+
+            Row fila; // Auxiliar para cada fila.
+
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();
+
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                while(celdaIterator.hasNext())
+                {
+                    //Obtenemos el contenido de la celda.
+                    celda = celdaIterator.next(); 
+                    cadenaArchivo +=  celda.toString()+ "~";
+                    //System.out.println(cadenaArchivo);
+                }
+                cadenaArchivo +=  "\n";
+            }       
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+        }
+        return cadenaArchivo;
+    }
+    
     public void Mensaje(String mensaje, String titulo)
     {
         JOptionPane.showMessageDialog(this, mensaje, titulo, HEIGHT);
     }    
+    
+    public void seleccionarArchivo() throws IOException    
+    {
+        JFileChooser file=new JFileChooser();
+        file.showOpenDialog(this);
+        /**abrimos el archivo seleccionado*/
+        File eleccion=file.getSelectedFile();
+        if(eleccion!=null)
+        {
+            StringTokenizer token = new StringTokenizer(eleccion.getPath(),"\\");
+            String formatoArchivo = "";
+            while(token.hasMoreTokens())
+            {
+                formatoArchivo = token.nextToken();
+            }
+            token = new StringTokenizer(formatoArchivo,".");
+            while(token.hasMoreElements()){formatoArchivo= token.nextToken();}
+            
+            if(formatoArchivo.equals("xlsx"))
+            {
+                areaEdicion.setText(leerArchivoX(eleccion.getPath()));
+            }
+            else 
+            {
+                areaEdicion.setText(leerArchivo(eleccion.getPath()));
+            }
+            
+            
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
     private javax.swing.JButton botonAbrir;
