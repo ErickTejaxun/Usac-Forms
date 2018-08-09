@@ -270,6 +270,9 @@ public class Interfaz extends javax.swing.JFrame {
 
             //Obtenemos las filas de la hoja.
             Iterator<Row> filaIterator = hojaActual.iterator();
+            
+            //ordenarEncuesta(filaIterator); // Llamamos al metodo que ordena las filas.
+            //ordenarEncuesta(Iterator<Row>);
 
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
@@ -281,10 +284,10 @@ public class Interfaz extends javax.swing.JFrame {
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
                 //Obtenemos cada celda
-                if(fila.getPhysicalNumberOfCells()!=0)
+                if(fila.getPhysicalNumberOfCells()>0)
                 {
-
-                    cadenaArchivo +=  "<fila>\n";
+                    if(filaContador>0){cadenaArchivo +=  "<fila>\n";}
+                    
                     while(celdaIterator.hasNext())
                     {
                         //Obtenemos el contenido de la celda.
@@ -302,7 +305,7 @@ public class Interfaz extends javax.swing.JFrame {
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }
                     }
-                    cadenaArchivo +=  "</fila>\n";
+                    if(filaContador>0){cadenaArchivo +=  "</fila>\n";}
                     filaContador ++;                
 
                 }
@@ -398,6 +401,10 @@ public class Interfaz extends javax.swing.JFrame {
             
         }
     }
+    
+    //Ordenamos la Hoja de calculos
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
     private javax.swing.JButton botonAbrir;
