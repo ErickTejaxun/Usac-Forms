@@ -379,6 +379,272 @@ public class Interfaz extends javax.swing.JFrame {
         return cadenaArchivo;
     }    
     
+    public String leerArchivoXConfiguracion(String path) throws FileNotFoundException, IOException
+    {
+        ArrayList<String> encabezados = new ArrayList();
+        String cadenaArchivo= "";  
+        ArrayList<Configuracion> listaConfiguraciones = new ArrayList();            
+        Configuracion nuevaConfiguracion = null;          
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("configuracion");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna                        
+          
+            
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();                
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaConfiguracion = new Configuracion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            nuevaConfiguracion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }                    
+                    if(filaContador>0){listaConfiguraciones.add(nuevaConfiguracion);}
+                    filaContador ++;                
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<Configuraciones>\n";
+            for(Configuracion conf: listaConfiguraciones)
+            {
+                cadenaArchivo+=conf.getData();
+            }
+            cadenaArchivo+= "</Configuraciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+            cadenaArchivo+= "<Configuraciones>\n";
+            for(Configuracion conf: listaConfiguraciones)
+            {
+                cadenaArchivo+=conf.getData();
+            }
+            cadenaArchivo+= "</Configuraciones>\n";              
+        }                                        
+        return cadenaArchivo;
+    }     
+    
+    
+    
+    public String leerArchivoEncuesta(String path) throws FileNotFoundException, IOException
+    {
+        ArrayList<String> encabezados = new ArrayList();
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            HSSFWorkbook libro = new HSSFWorkbook(archivo);                                                                      
+            HSSFSheet hojaActual = libro.getSheet("encuesta");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna                        
+            ArrayList<Pregunta> listaPreguntas = new ArrayList();
+            Pregunta nuevaPregunta = null;            
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaPregunta = new Pregunta();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }                    
+                    if(filaContador>0){listaPreguntas.add(nuevaPregunta);}
+                    filaContador ++;                
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<encuesta>\n";
+            for(Pregunta preg: listaPreguntas)
+            {
+                cadenaArchivo+=preg.getData();
+            }
+            cadenaArchivo+= "</encuesta>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+        }                                        
+        return cadenaArchivo;
+    }
+    
+    public String leerArchivoOpcion(String path) throws FileNotFoundException, IOException
+    {
+        ArrayList<String> encabezados = new ArrayList();
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            HSSFWorkbook libro = new HSSFWorkbook(archivo);                                                                      
+            HSSFSheet hojaActual = libro.getSheet("opciones");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna                        
+            ArrayList<Opcion> listaOpciones = new ArrayList();            
+            Opcion nuevaOpcion = null;            
+            
+            
+
+            
+            
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();                
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaOpcion = new Opcion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            nuevaOpcion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }                    
+                    if(filaContador>0){listaOpciones.add(nuevaOpcion);}
+                    filaContador ++;                
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<opciones>\n";
+            for(Opcion opc: listaOpciones)
+            {
+                cadenaArchivo+=opc.getData();
+            }
+            cadenaArchivo+= "</opciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+        }                                        
+        return cadenaArchivo;
+    }    
+    
+    public String leerArchivoConfiguracion(String path) throws FileNotFoundException, IOException
+    {
+        ArrayList<String> encabezados = new ArrayList();
+        String cadenaArchivo= "";     
+        ArrayList<Configuracion> listaConfiguraciones = new ArrayList();            
+        Configuracion nuevaConfiguracion = null;           
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            HSSFWorkbook libro = new HSSFWorkbook(archivo);                                                                      
+            HSSFSheet hojaActual = libro.getSheet("configuracion");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna                        
+         
+            
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();                
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaConfiguracion = new Configuracion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            nuevaConfiguracion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }                    
+                    if(filaContador>0){listaConfiguraciones.add(nuevaConfiguracion);}
+                    filaContador ++;                
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<Configuraciones>\n";
+            for(Configuracion conf: listaConfiguraciones)
+            {
+                cadenaArchivo+=conf.getData();
+            }
+            cadenaArchivo+= "</Configuraciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<Configuraciones>\n";
+            for(Configuracion conf: listaConfiguraciones)
+            {
+                cadenaArchivo+=conf.getData();
+            }
+            cadenaArchivo+= "</Configuraciones>\n";             
+            
+        }                                        
+        return cadenaArchivo;
+    }       
+    
+    
     
         public String leerArchivo(String path) throws FileNotFoundException, IOException
     {
@@ -451,23 +717,34 @@ public class Interfaz extends javax.swing.JFrame {
             
             if(formatoArchivo.equals("xlsx"))
             {
-                areaEdicion.setText(leerArchivoX(eleccion.getPath()));
+                areaEdicion.setText(leerArchivoXLSX(eleccion.getPath()));
             }
             else 
             {
-                areaEdicion.setText(leerArchivo(eleccion.getPath()));
+                areaEdicion.setText(leerArchivoXLS(eleccion.getPath()));
             }                        
         }
     }
     
-    public String leerArchivoX(String path) throws IOException
+    public String leerArchivoXLSX(String path) throws IOException
     {
         String cadena = "";
         cadena+= leerArchivoXEncuesta(path);        
         cadena+= leerArchivoXOpcion(path);
-        //cadena+= leerArchivoXConfiguracion(path);
+        cadena+= leerArchivoXConfiguracion(path);
         return cadena;        
     }
+    
+    public String leerArchivoXLS(String path) throws IOException
+    {
+    
+        String cadena = ""; 
+        cadena+= leerArchivoEncuesta(path);        
+        cadena+= leerArchivoOpcion(path);
+        cadena+= leerArchivoConfiguracion(path);
+        return cadena;        
+
+    }    
     
   
     //Ordenamos la Hoja de calculos
