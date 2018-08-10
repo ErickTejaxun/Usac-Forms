@@ -9,7 +9,7 @@ package generadorformularios;
  *
  * @author erick
  */
-public class pregunta 
+public class Pregunta 
 {
     String	tipo	=	""	;
    String	IdPregunta	=	""	;
@@ -32,7 +32,7 @@ public class pregunta
 
 
 
-    public pregunta()
+    public Pregunta()
     {
     }
 

@@ -254,7 +254,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     //Metodo para leer el archivo .xls :v
     
-    public String leerArchivoX(String path) throws FileNotFoundException, IOException
+    public String leerArchivoXEncuesta(String path) throws FileNotFoundException, IOException
     {
         ArrayList<String> encabezados = new ArrayList();
         String cadenaArchivo= "";               
@@ -266,12 +266,9 @@ public class Interfaz extends javax.swing.JFrame {
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna
-            
-            
-            ArrayList<pregunta> listaPreguntas = new ArrayList();
-            pregunta nuevaPregunta = null;
-            
+            int colContador = 0;     // Contador de columna                        
+            ArrayList<Pregunta> listaPreguntas = new ArrayList();
+            Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
                 fila = filaIterator.next();
@@ -282,7 +279,7 @@ public class Interfaz extends javax.swing.JFrame {
                 if(fila.getPhysicalNumberOfCells()>0)
                 {
                     //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
-                    nuevaPregunta = new pregunta();
+                    nuevaPregunta = new Pregunta();
                     while(celdaIterator.hasNext())
                     {
                         //Obtenemos el contenido de la celda.
@@ -294,39 +291,88 @@ public class Interfaz extends javax.swing.JFrame {
                         else                   
                         {
                             nuevaPregunta.insertarAtributo(encabezados.get(colContador), celda.toString());
-                            /*cadenaArchivo +=  "\t<" + encabezados.get(colContador) + ">" ;
-                            cadenaArchivo +=   celda.toString()  ;
-                            cadenaArchivo +=  "</" + encabezados.get(colContador) + ">\n" ;
-                            */
                             colContador ++ ;
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }
                     }                    
                     if(filaContador>0){listaPreguntas.add(nuevaPregunta);}
                     filaContador ++;                
-
-                }
-                
-            } 
-            
-            /*Recorremos el array list*/            
-            for(pregunta preg: listaPreguntas)
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<encuesta>\n";
+            for(Pregunta preg: listaPreguntas)
             {
                 cadenaArchivo+=preg.getData();
             }
-            
+            cadenaArchivo+= "</encuesta>\n";            
         }
         catch(Exception error)
         {
             Mensaje(error.getMessage(), "Error");
-        }
-        
-        
-        
-        
-        
+        }                                        
         return cadenaArchivo;
     }
+    
+    public String leerArchivoXOpcion(String path) throws FileNotFoundException, IOException
+    {
+        ArrayList<String> encabezados = new ArrayList();
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("opciones");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna                        
+            ArrayList<Opcion> listaOpciones = new ArrayList();
+            Opcion nuevaOpcion = null;            
+            while(filaIterator.hasNext())
+            {
+                fila = filaIterator.next();
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaOpcion = new Opcion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {
+                            encabezados.add(celda.toString());
+                        }
+                        else                   
+                        {
+                            nuevaOpcion.insertarAtributo(encabezados.get(colContador), celda.toString());
+                            colContador ++ ;
+                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                        }
+                    }                    
+                    if(filaContador>0){listaOpciones.add(nuevaOpcion);}
+                    filaContador ++;                
+                }                
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<opciones>\n";
+            for(Opcion opc: listaOpciones)
+            {
+                cadenaArchivo+=opc.getData();
+            }
+            cadenaArchivo+= "</opciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+        }                                        
+        return cadenaArchivo;
+    }    
     
     
         public String leerArchivo(String path) throws FileNotFoundException, IOException
@@ -405,12 +451,18 @@ public class Interfaz extends javax.swing.JFrame {
             else 
             {
                 areaEdicion.setText(leerArchivo(eleccion.getPath()));
-            }
-            
-            
+            }                        
         }
     }
     
+    public String leerArchivoX(String path) throws IOException
+    {
+        String cadena = "";
+        cadena+= leerArchivoXEncuesta(path);        
+        cadena+= leerArchivoXOpcion(path);
+        //cadena+= leerArchivoXConfiguracion(path);
+        return cadena;        
+    }
     
   
     //Ordenamos la Hoja de calculos
