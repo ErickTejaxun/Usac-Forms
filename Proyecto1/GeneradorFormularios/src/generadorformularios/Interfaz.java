@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -260,23 +261,17 @@ public class Interfaz extends javax.swing.JFrame {
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
             //Leer el archivo plano de excel.                        
-            XSSFWorkbook libro = new XSSFWorkbook(archivo);
-            
-            /*Obtenemos la hoja que necesitamos
-            - Necesitamos 3:  Encuesta, Opciones, Configuraciones¨
-            */
-            //Primero la página Encuesta
-            XSSFSheet hojaActual = libro.getSheetAt(0);
-
-            //Obtenemos las filas de la hoja.
-            Iterator<Row> filaIterator = hojaActual.iterator();
-            
-            //ordenarEncuesta(filaIterator); // Llamamos al metodo que ordena las filas.
-            //ordenarEncuesta(Iterator<Row>);
-
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("encuesta");                                    
+            Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna
+            
+            
+            ArrayList<pregunta> listaPreguntas = new ArrayList();
+            pregunta nuevaPregunta = null;
+            
             while(filaIterator.hasNext())
             {
                 fila = filaIterator.next();
@@ -286,8 +281,8 @@ public class Interfaz extends javax.swing.JFrame {
                 //Obtenemos cada celda
                 if(fila.getPhysicalNumberOfCells()>0)
                 {
-                    if(filaContador>0){cadenaArchivo +=  "<fila>\n";}
-                    
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaPregunta = new pregunta();
                     while(celdaIterator.hasNext())
                     {
                         //Obtenemos el contenido de la celda.
@@ -298,24 +293,38 @@ public class Interfaz extends javax.swing.JFrame {
                         }
                         else                   
                         {
-                            cadenaArchivo +=  "\t<" + encabezados.get(colContador) + ">" ;
+                            nuevaPregunta.insertarAtributo(encabezados.get(colContador), celda.toString());
+                            /*cadenaArchivo +=  "\t<" + encabezados.get(colContador) + ">" ;
                             cadenaArchivo +=   celda.toString()  ;
                             cadenaArchivo +=  "</" + encabezados.get(colContador) + ">\n" ;
+                            */
                             colContador ++ ;
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }
-                    }
-                    if(filaContador>0){cadenaArchivo +=  "</fila>\n";}
+                    }                    
+                    if(filaContador>0){listaPreguntas.add(nuevaPregunta);}
                     filaContador ++;                
 
                 }
                 
-            }       
+            } 
+            
+            /*Recorremos el array list*/            
+            for(pregunta preg: listaPreguntas)
+            {
+                cadenaArchivo+=preg.getData();
+            }
+            
         }
         catch(Exception error)
         {
             Mensaje(error.getMessage(), "Error");
         }
+        
+        
+        
+        
+        
         return cadenaArchivo;
     }
     
@@ -402,8 +411,11 @@ public class Interfaz extends javax.swing.JFrame {
         }
     }
     
+    
+  
     //Ordenamos la Hoja de calculos
     
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
