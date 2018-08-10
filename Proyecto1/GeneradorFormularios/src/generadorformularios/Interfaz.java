@@ -290,7 +290,7 @@ public class Interfaz extends javax.swing.JFrame {
                         }
                         else                   
                         {
-                            nuevaPregunta.insertarAtributo(encabezados.get(colContador), celda.toString());
+                            nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
                             colContador ++ ;
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }
@@ -327,11 +327,16 @@ public class Interfaz extends javax.swing.JFrame {
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna                        
-            ArrayList<Opcion> listaOpciones = new ArrayList();
+            ArrayList<Opcion> listaOpciones = new ArrayList();            
             Opcion nuevaOpcion = null;            
+            
+            
+
+            
+            
             while(filaIterator.hasNext())
             {
-                fila = filaIterator.next();
+                fila = filaIterator.next();                
                 //Ahora obtenemos las celdas de la fila.
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
@@ -350,7 +355,7 @@ public class Interfaz extends javax.swing.JFrame {
                         }
                         else                   
                         {
-                            nuevaOpcion.insertarAtributo(encabezados.get(colContador), celda.toString());
+                            nuevaOpcion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
                             colContador ++ ;
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }

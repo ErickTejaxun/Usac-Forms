@@ -267,7 +267,7 @@ public class Pregunta
         data+="\t<lectura>"+this.getLectura()+"</lectura>\n"; 
         data+="\t<repeticion>"+this.getRepeticion()+"</repeticion>\n"; 
         data+="\t<apariencia>"+this.getApariencia()+"</apariencia>\n"; 
-        data+="\t<codigo_pre>"+this.getCodigo_post()+"</codigo_pre>\n"; 
+        data+="\t<codigo_pre>"+this.getCodigo_pre()+"</codigo_pre>\n"; 
         data+="\t<codigo_post>"+this.getCodigo_post()+"</codigo_post>\n"; 
         data+="\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
         data+="</pregunta>\n";  
