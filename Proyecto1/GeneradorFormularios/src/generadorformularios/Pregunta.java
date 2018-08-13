@@ -5,6 +5,8 @@
  */
 package generadorformularios;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author erick
@@ -15,9 +17,9 @@ public class Pregunta
    String	IdPregunta	=	""	;
    String	etiqueta	=	""	;
    String	parametro	=	""	;
-   String	calcular	=	""	;
+   String	calculo	=	""	;
    String	aplicable	=	""	;
-   String	sugerencia	=	""	;
+   String	sugerir	=	""	;
    String	restringir	=	""	;
    String	restringirmsn	=	""	;
    String	requeridoMsn	=	""	;
@@ -29,7 +31,8 @@ public class Pregunta
    String	codigo_pre	=	""	;
    String	codigo_post	=	""	;
    String	multimedia	=	""	;
-
+   int fila = 0;
+   boolean error = true;
 
 
     public Pregunta()
@@ -53,7 +56,7 @@ public class Pregunta
     }
 
     public String getCalcular() {
-        return calcular;
+        return calculo;
     }
 
     public String getAplicable() {
@@ -61,7 +64,7 @@ public class Pregunta
     }
 
     public String getSugerencia() {
-        return sugerencia;
+        return sugerir;
     }
 
     public String getRestringir() {
@@ -121,7 +124,7 @@ public class Pregunta
     }
 
     public void setCalcular(String calcular) {
-        this.calcular = calcular;
+        this.calculo = calcular;
     }
 
     public void setAplicable(String aplicable) {
@@ -129,7 +132,7 @@ public class Pregunta
     }
 
     public void setSugerencia(String sugerencia) {
-        this.sugerencia = sugerencia;
+        this.sugerir = sugerencia;
     }
 
     public void setRestringir(String restringir) {
@@ -171,10 +174,29 @@ public class Pregunta
     public void setCodigo_post(String codigo_post) {
         this.codigo_post = codigo_post;
     }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
     
+    public int getFila()
+    {
+        return this.fila;
+    }
+    
+    public void setError()
+    {
+        this.error = true;
+    }
+    
+    public boolean getError()
+    {
+        return this.error;
+    }
     
     public void insertarAtributo(String tipo, String valor)
     {
+        valor = valor.trim();
         switch(tipo.toLowerCase())
         {
             case "tipo":
@@ -189,13 +211,13 @@ public class Pregunta
             case "parametro":
                 this.setParametro(valor);
                 break;
-            case "calcular":
+            case "calculo":
                 this.setCalcular(valor);
                 break;
             case "aplicable":
                 this.setAplicable(valor);
                 break;
-            case "sugerencia":
+            case "sugerir":
                 this.setSugerencia(valor);
                 break;
             case "restringir":
@@ -234,7 +256,6 @@ public class Pregunta
             case "multimedia":
                 this.setMultimedia(valor);
                 break;
-
         }
     }
 
@@ -244,7 +265,7 @@ public class Pregunta
     
     public void setMultimedia(String multimedia)
     {
-        this.multimedia = this.multimedia;
+        this.multimedia = multimedia;
     }
     
     
@@ -256,14 +277,14 @@ public class Pregunta
         data+="\t<idpregunta>"+this.getIdPregunta()+"</idpregunta>\n"; 
         data+="\t<etiqueta>"+this.getEtiqueta()+"</etiqueta>\n"; 
         data+="\t<parametro>"+this.getParametro()+"</parametro>\n"; 
-        data+="\t<calcular>"+this.getCalcular()+"</calcular>\n"; 
+        data+="\t<calculo>"+this.getCalcular()+"</calculo>\n"; 
         data+="\t<aplicable>"+this.getAplicable()+"</aplicable>\n"; 
         data+="\t<sugerencia>"+this.getSugerencia()+"</sugerencia>\n"; 
         data+="\t<restringir>"+this.getRestringir()+"</restringir>\n"; 
         data+="\t<restringirmsn>"+this.getRestringirmsn()+"</restringirmsn>\n"; 
         data+="\t<requeridomsn>"+this.getRequeridoMsn()+"</requeridomsn>\n"; 
         data+="\t<requerido>"+this.getRequerido()+"</requerido>\n"; 
-        data+="\t<pordefecto>"+this.getPredeterminado()+"</pordefecto>\n"; 
+        data+="\t<predeterminado>"+this.getPredeterminado()+"</predeterminado>\n"; 
         data+="\t<lectura>"+this.getLectura()+"</lectura>\n"; 
         data+="\t<repeticion>"+this.getRepeticion()+"</repeticion>\n"; 
         data+="\t<apariencia>"+this.getApariencia()+"</apariencia>\n"; 
@@ -272,5 +293,5 @@ public class Pregunta
         data+="\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
         data+="</pregunta>\n";  
         return data;
-    }
+    }                   
 }

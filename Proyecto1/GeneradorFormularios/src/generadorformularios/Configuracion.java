@@ -74,7 +74,7 @@ public class Configuracion
     
     public void insertarAtributo(String tipo, String data)
     {
-        System.out.println(tipo+"-"+data);
+        //System.out.println(tipo+"-"+data);
         switch(tipo.toLowerCase())
         {
             case "titulo_formulario":

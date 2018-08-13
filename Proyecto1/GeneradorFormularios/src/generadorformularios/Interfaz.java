@@ -6,9 +6,11 @@
 package generadorformularios;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -18,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -31,6 +34,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
  * @author erick
  */
 public class Interfaz extends javax.swing.JFrame {
+    
+    public ArrayList<Error> listaErrores = new ArrayList();
+    private String archivoActual = "";
+    public ArrayList<Pregunta> listaPreguntas = new ArrayList();
 
     /**
      * Creates new form Interfaz
@@ -60,8 +67,8 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaErrores = new javax.swing.JTable();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -69,7 +76,7 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1000, 700));
+        setMinimumSize(new java.awt.Dimension(1000, 800));
         setName("frameInterfaz"); // NOI18N
         setResizable(false);
         getContentPane().setLayout(null);
@@ -120,7 +127,9 @@ public class Interfaz extends javax.swing.JFrame {
 
         jPanel2.setLayout(null);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jPanel3.setLayout(new javax.swing.OverlayLayout(jPanel3));
+
+        tablaErrores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -128,32 +137,17 @@ public class Interfaz extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Archivo", "Linea", "Columna", "Descripción"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaErrores);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel3.add(jScrollPane1);
 
         jTabbedPane2.addTab("Errores", jPanel3);
 
         jPanel2.add(jTabbedPane2);
-        jTabbedPane2.setBounds(10, 310, 890, 130);
+        jTabbedPane2.setBounds(20, 330, 880, 240);
 
         areaEdicion.setColumns(20);
         areaEdicion.setRows(5);
@@ -197,7 +191,7 @@ public class Interfaz extends javax.swing.JFrame {
         jTabbedPane1.addTab("Entrada", jPanel2);
 
         getContentPane().add(jTabbedPane1);
-        jTabbedPane1.setBounds(30, 130, 920, 500);
+        jTabbedPane1.setBounds(30, 130, 940, 650);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -266,8 +260,7 @@ public class Interfaz extends javax.swing.JFrame {
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                        
-            ArrayList<Pregunta> listaPreguntas = new ArrayList();
+            int colContador = 0;     // Contador de columna                                    
             Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
@@ -290,12 +283,76 @@ public class Interfaz extends javax.swing.JFrame {
                         }
                         else                   
                         {
-                            nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            //nuevaPregunta.insertarAtributo(ncabezados.get(celda.getColumnIndex())e, celda.toString());
+                            String valor = celda.toString();
+                            switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
+                            {
+                                case "tipo":
+                                    if(valor.equals("")){listaErrores.add(new Error("Celda tipo vacia.",filaContador,celda.getColumnIndex()));}
+                                    nuevaPregunta.setTipo(valor);
+                                    break;
+                                case "idpregunta":
+                                    if(valor.equals("")){listaErrores.add(new Error("Celda idPregunta vacia.",filaContador,celda.getColumnIndex()));}
+                                    nuevaPregunta.setIdPregunta(valor);
+                                    break;               
+                                case "etiqueta":
+                                    if(valor.equals("")){listaErrores.add(new Error("Celda etiqueta vacia.",filaContador,celda.getColumnIndex()));}
+                                    nuevaPregunta.setEtiqueta(valor);
+                                    break;
+                                case "parametro":
+                                    nuevaPregunta.setParametro(valor);
+                                    break;
+                                case "calculo":
+                                    nuevaPregunta.setCalcular(valor);
+                                    break;
+                                case "aplicable":
+                                    nuevaPregunta.setAplicable(valor);
+                                    break;
+                                case "sugerir":
+                                    nuevaPregunta.setSugerencia(valor);
+                                    break;
+                                case "restringir":
+                                    nuevaPregunta.setRestringir(valor);
+                                    break;
+                                case "restriccion":
+                                    nuevaPregunta.setRestringir(valor);
+                                    break;                
+                                case "restringirmsn":
+                                    nuevaPregunta.setRestringirmsn(valor);
+                                    break;
+                                case "requeridomsn":
+                                    nuevaPregunta.setRequeridoMsn(valor);
+                                    break;
+                                case "requerido":
+                                    nuevaPregunta.setRequerido(valor);
+                                    break;
+                                case "predeterminado":
+                                    nuevaPregunta.setPredeterminado(valor);
+                                    break;
+                                case "lectura":
+                                    nuevaPregunta.setLectura(valor);
+                                    break;
+                                case "repeticion":
+                                    nuevaPregunta.setRepeticion(valor);
+                                    break;
+                                case "apariencia":
+                                    nuevaPregunta.setApariencia(valor);
+                                    break;
+                                case "codigo_pre":
+                                    nuevaPregunta.setCodigo_pre(valor);
+                                    break;
+                                case "codigo_post":
+                                    nuevaPregunta.setCodigo_post(valor);
+                                    break;
+                                case "multimedia":
+                                    nuevaPregunta.setMultimedia(valor);
+                                    break;
+                            }                            
                             colContador ++ ;
                             if(colContador>= encabezados.size()){ colContador =0 ;}                        
                         }
                     }                    
-                    if(filaContador>0){listaPreguntas.add(nuevaPregunta);}
+                    if(filaContador>0){nuevaPregunta.setFila(filaContador);listaPreguntas.add(nuevaPregunta);}
                     filaContador ++;                
                 }                
             }             
@@ -436,7 +493,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
         catch(Exception error)
         {
-            Mensaje(error.getMessage(), "Error");
+            //Mensaje(error.getMessage(), "Error");
             cadenaArchivo+= "<Configuraciones>\n";
             for(Configuracion conf: listaConfiguraciones)
             {
@@ -462,7 +519,6 @@ public class Interfaz extends javax.swing.JFrame {
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna                        
-            ArrayList<Pregunta> listaPreguntas = new ArrayList();
             Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
@@ -480,18 +536,102 @@ public class Interfaz extends javax.swing.JFrame {
                         //Obtenemos el contenido de la celda.
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
-                        {
-                            encabezados.add(celda.toString());
+                        {     
+                            encabezados.add(celda.toString());                             
                         }
                         else                   
                         {
-                            nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString();                            
+                            switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
+                            {
+                                case "tipo":
+                                    if(valor.equals(""))
+                                    {                                        
+                                        registrarError("Celda tipo vacia.", filaContador, colContador);
+                                        Mensaje("Error Tipo:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                    }
+                                    nuevaPregunta.setTipo(valor);
+                                    break;
+                                case "idpregunta":
+                                    if(valor.equals(""))
+                                    {
+                                        registrarError("Celda idpregunta vacia.", filaContador, colContador);
+                                        Mensaje("Error idpregunta:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                    }
+                                    nuevaPregunta.setIdPregunta(valor);
+                                    break;               
+                                case "etiqueta":
+                                    if(valor.equals(""))
+                                    {
+                                        registrarError("Celda etiqueta vacia.", filaContador, colContador);
+                                        Mensaje("Error etiqueta:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                    }
+                                    nuevaPregunta.setEtiqueta(valor);
+                                    break;
+                                case "parametro":
+                                    nuevaPregunta.setParametro(valor);
+                                    break;
+                                case "calculo":
+                                    nuevaPregunta.setCalcular(valor);
+                                    break;
+                                case "aplicable":
+                                    nuevaPregunta.setAplicable(valor);
+                                    break;
+                                case "sugerir":
+                                    nuevaPregunta.setSugerencia(valor);
+                                    break;
+                                case "restringir":
+                                    nuevaPregunta.setRestringir(valor);
+                                    break;
+                                case "restriccion":
+                                    nuevaPregunta.setRestringir(valor);
+                                    break;                
+                                case "restringirmsn":
+                                    nuevaPregunta.setRestringirmsn(valor);
+                                    break;
+                                case "requeridomsn":
+                                    nuevaPregunta.setRequeridoMsn(valor);
+                                    break;
+                                case "requerido":
+                                    nuevaPregunta.setRequerido(valor);
+                                    break;
+                                case "predeterminado":
+                                    nuevaPregunta.setPredeterminado(valor);
+                                    break;
+                                case "lectura":
+                                    nuevaPregunta.setLectura(valor);
+                                    break;
+                                case "repeticion":
+                                    nuevaPregunta.setRepeticion(valor);
+                                    break;
+                                case "apariencia":
+                                    nuevaPregunta.setApariencia(valor);
+                                    break;
+                                case "codigo_pre":
+                                    nuevaPregunta.setCodigo_pre(valor);
+                                    break;
+                                case "codigo_post":
+                                    nuevaPregunta.setCodigo_post(valor);
+                                    break;
+                                case "multimedia":
+                                    nuevaPregunta.setMultimedia(valor);
+                                    break;
+                            }                            
+                            
                             colContador ++ ;
-                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                            if(colContador>= encabezados.size())
+                            { 
+                                colContador =0 ;
+                            }                        
                         }
                     }                    
-                    if(filaContador>0){listaPreguntas.add(nuevaPregunta);}
-                    filaContador ++;                
+                    if(filaContador>0)
+                    {
+                        nuevaPregunta.setFila(filaContador);
+                        listaPreguntas.add(nuevaPregunta);
+                    }
+                    filaContador = filaContador + 1;                
                 }                
             }             
             /*Recorremos el array list*/               
@@ -631,7 +771,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
         catch(Exception error)
         {
-            Mensaje(error.getMessage(), "Error");
+            //Mensaje(error.getMessage(), "Error");
             /*Recorremos el array list*/               
             cadenaArchivo+= "<Configuraciones>\n";
             for(Configuracion conf: listaConfiguraciones)
@@ -642,61 +782,20 @@ public class Interfaz extends javax.swing.JFrame {
             
         }                                        
         return cadenaArchivo;
-    }       
-    
-    
-    
-        public String leerArchivo(String path) throws FileNotFoundException, IOException
-    {
-        String cadenaArchivo= "";               
-        try(FileInputStream archivo = new FileInputStream(new File(path)))
-        {
-            //Leer el archivo plano de excel.
-            
-            
-            HSSFWorkbook libro = new HSSFWorkbook(archivo);
-
-            /*Obtenemos la hoja que necesitamos
-            - Necesitamos 3:  Encuesta, Opciones, Configuraciones¨
-            */
-
-            //Primero la página Encuesta
-            HSSFSheet hojaActual = libro.getSheetAt(0);
-
-            //Obtenemos las filas de la hoja.
-            Iterator<Row> filaIterator = hojaActual.iterator();
-
-            Row fila; // Auxiliar para cada fila.
-
-            while(filaIterator.hasNext())
-            {
-                fila = filaIterator.next();
-
-                //Ahora obtenemos las celdas de la fila.
-                Iterator<Cell> celdaIterator = fila.cellIterator();
-                Cell celda;
-                //Obtenemos cada celda
-                while(celdaIterator.hasNext())
-                {
-                    //Obtenemos el contenido de la celda.
-                    celda = celdaIterator.next(); 
-                    cadenaArchivo +=  celda.toString()+ "~";
-                    //System.out.println(cadenaArchivo);
-                }
-                cadenaArchivo +=  "\n";
-            }       
-        }
-        catch(Exception error)
-        {
-            Mensaje(error.getMessage(), "Error");
-        }
-        return cadenaArchivo;
-    }
-    
+    }                   
     public void Mensaje(String mensaje, String titulo)
     {
         JOptionPane.showMessageDialog(this, mensaje, titulo, HEIGHT);
     }    
+    
+    public String getArchivoActual()
+    {
+        return this.archivoActual;
+    }
+    public void setArchivoActual(String path)
+    {
+        this.archivoActual = path;
+    }
     
     public void seleccionarArchivo() throws IOException    
     {
@@ -706,6 +805,7 @@ public class Interfaz extends javax.swing.JFrame {
         File eleccion=file.getSelectedFile();
         if(eleccion!=null)
         {
+            setArchivoActual(eleccion.getPath());
             StringTokenizer token = new StringTokenizer(eleccion.getPath(),"\\");
             String formatoArchivo = "";
             while(token.hasMoreTokens())
@@ -728,10 +828,13 @@ public class Interfaz extends javax.swing.JFrame {
     
     public String leerArchivoXLSX(String path) throws IOException
     {
+        listaPreguntas.clear();
         String cadena = "";
         cadena+= leerArchivoXEncuesta(path);        
         cadena+= leerArchivoXOpcion(path);
         cadena+= leerArchivoXConfiguracion(path);
+        generarArchivo(path, cadena);
+        mostrarErrores();
         return cadena;        
     }
     
@@ -742,14 +845,91 @@ public class Interfaz extends javax.swing.JFrame {
         cadena+= leerArchivoEncuesta(path);        
         cadena+= leerArchivoOpcion(path);
         cadena+= leerArchivoConfiguracion(path);
+        generarArchivo(path, cadena);
+        mostrarErrores();
         return cadena;        
 
     }    
     
-  
-    //Ordenamos la Hoja de calculos
-    
+     
+    public void generarArchivo(String path, String contenido) throws IOException
+    {        
+        StringTokenizer token = new StringTokenizer(path,"\\");
+        String formatoArchivo = "";
+        while(token.hasMoreTokens())
+        {
+            formatoArchivo = token.nextToken();
+        }        
+        String cadenas[] = formatoArchivo.split("\\.");
+        String ruta = "C:\\EXCEL\\"+cadenas[0] + ".ex";
+        File archivo = new File(ruta);
+        BufferedWriter bw;
+        if(archivo.exists()) {
+            bw = new BufferedWriter(new FileWriter(archivo));
+            bw.write(contenido);
+        } else {
+            bw = new BufferedWriter(new FileWriter(archivo));
+            bw.write(contenido);
+        }
+        bw.close();        
+        
 
+    }
+    
+    
+    public void mostrarErrores()
+    {                
+                      
+        DefaultTableModel filasErrores = new DefaultTableModel();        
+        filasErrores.addColumn("Archivo");
+        filasErrores.addColumn("Línea");
+        filasErrores.addColumn("Columna");
+        filasErrores.addColumn("Detalle"); 
+        filasErrores.addColumn("Tipo");         
+        //filasErrores.addRow(new String[]{"Archivo","Linea","Columna","Detalle","Tipo"});
+        tablaErrores.setModel(filasErrores);                            
+        
+        /*Primero verificamos que los errores sean correctos.
+        Por ejemplo que si son agrupación no se toman encuenta como errores si no trae idPregunta y etiqueta        
+        */
+        for(int x = 0 ; x< listaErrores.size(); x++)
+        {
+            Error err = listaErrores.get(x);
+            Pregunta preg = listaPreguntas.get(err.fila);
+            if(preg.getTipo().toLowerCase().equals("iniciar agrupacion")|| 
+                    preg.getTipo().toLowerCase().equals("iniciar ciclo") )
+            {
+                if(!preg.getIdPregunta().equals(""))
+                { 
+                    listaErrores.remove(x);
+                }
+            }
+            if(preg.getTipo().toLowerCase().equals("finalizar agrupacion")||
+                    preg.getTipo().toLowerCase().equals("finalizar ciclo"))
+            {
+                    listaErrores.remove(x);
+            }            
+        }
+        
+        
+        for(int x=0;x<listaErrores.size();x++)
+        {
+                filasErrores.addRow(new Object[]
+                {
+                    this.getArchivoActual(), 
+                    listaErrores.get(x).getFila(),
+                    listaErrores.get(x).getColumna(),
+                    listaErrores.get(x).getDetalle(),
+                    "Lexico"});                                            
+        }                                             
+    }  
+    
+    
+    public void registrarError(String detalle, int fila, int columna)
+    {        
+        listaErrores.add(new Error(detalle, fila, columna));                
+    }
+        
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
@@ -765,11 +945,11 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablaErrores;
     // End of variables declaration//GEN-END:variables
 }

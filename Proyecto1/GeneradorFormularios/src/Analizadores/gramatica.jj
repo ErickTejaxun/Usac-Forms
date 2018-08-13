@@ -33,7 +33,7 @@ options {
   ERROR_REPORTING = true;
   JAVA_UNICODE_ESCAPE = false;
   UNICODE_INPUT = false;
-  IGNORE_CASE = false;
+  IGNORE_CASE = true;
   USER_TOKEN_MANAGER = false;
   USER_CHAR_STREAM = false;
   BUILD_PARSER = true;
@@ -42,18 +42,18 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(Simple1)
-
-public class Simple1 {
+PARSER_BEGIN(excelParser)
+package Analizadores;
+public class excelParser {
 
   public static void main(String args[]) throws ParseException {
-    Simple1 parser = new Simple1(System.in);
+    excelParser parser = new excelParser(System.in);
     parser.Input();
   }
 
 }
 
-PARSER_END(Simple1)
+PARSER_END(excelParser)
 
 void Input() :
 {}
