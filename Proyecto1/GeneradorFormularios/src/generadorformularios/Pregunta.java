@@ -272,26 +272,26 @@ public class Pregunta
     public String getData()
     {
         String data= ""; 
-        data+="<pregunta>\n";
-        data+="\t<tipo>"+this.getTipo()+"</tipo>\n"; 
-        data+="\t<idpregunta>"+this.getIdPregunta()+"</idpregunta>\n"; 
-        data+="\t<etiqueta>"+this.getEtiqueta()+"</etiqueta>\n"; 
-        data+="\t<parametro>"+this.getParametro()+"</parametro>\n"; 
-        data+="\t<calculo>"+this.getCalcular()+"</calculo>\n"; 
-        data+="\t<aplicable>"+this.getAplicable()+"</aplicable>\n"; 
-        data+="\t<sugerencia>"+this.getSugerencia()+"</sugerencia>\n"; 
-        data+="\t<restringir>"+this.getRestringir()+"</restringir>\n"; 
-        data+="\t<restringirmsn>"+this.getRestringirmsn()+"</restringirmsn>\n"; 
-        data+="\t<requeridomsn>"+this.getRequeridoMsn()+"</requeridomsn>\n"; 
-        data+="\t<requerido>"+this.getRequerido()+"</requerido>\n"; 
-        data+="\t<predeterminado>"+this.getPredeterminado()+"</predeterminado>\n"; 
-        data+="\t<lectura>"+this.getLectura()+"</lectura>\n"; 
-        data+="\t<repeticion>"+this.getRepeticion()+"</repeticion>\n"; 
-        data+="\t<apariencia>"+this.getApariencia()+"</apariencia>\n"; 
-        data+="\t<codigo_pre>"+this.getCodigo_pre()+"</codigo_pre>\n"; 
-        data+="\t<codigo_post>"+this.getCodigo_post()+"</codigo_post>\n"; 
-        data+="\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
-        data+="</pregunta>\n";  
+        data+="\t<pregunta>\n";
+        data+="\t\t<tipo>"+this.getTipo()+"</tipo>\n"; 
+        data+="\t\t<idpregunta>"+this.getIdPregunta()+"</idpregunta>\n"; 
+        data+="\t\t<etiqueta>"+this.getEtiqueta()+"</etiqueta>\n"; 
+        data+="\t\t<parametro>"+this.getParametro()+"</parametro>\n"; 
+        data+="\t\t<calculo>"+this.getCalcular()+"</calculo>\n"; 
+        data+="\t\t<aplicable>"+this.getAplicable()+"</aplicable>\n"; 
+        data+="\t\t<sugerir>"+this.getSugerencia()+"</sugerir>\n"; 
+        data+="\t\t<restringir>"+this.getRestringir()+"</restringir>\n"; 
+        data+="\t\t<restringirmsn>"+this.getRestringirmsn()+"</restringirmsn>\n"; 
+        data+="\t\t<requeridomsn>"+this.getRequeridoMsn()+"</requeridomsn>\n"; 
+        data+="\t\t<requerido>"+this.getRequerido()+"</requerido>\n"; 
+        data+="\t\t<predeterminado>"+this.getPredeterminado()+"</predeterminado>\n"; 
+        data+="\t\t<lectura>"+this.getLectura()+"</lectura>\n"; 
+        data+="\t\t<repeticion>"+this.getRepeticion()+"</repeticion>\n"; 
+        data+="\t\t<apariencia>"+this.getApariencia()+"</apariencia>\n"; 
+        data+="\t\t<codigo_pre>"+this.getCodigo_pre()+"</codigo_pre>\n"; 
+        data+="\t\t<codigo_post>"+this.getCodigo_post()+"</codigo_post>\n"; 
+        data+="\t\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
+        data+="\t</pregunta>\n";  
         return data;
     }                   
 }

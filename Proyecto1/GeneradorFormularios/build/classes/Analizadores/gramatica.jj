@@ -55,14 +55,127 @@ public class excelParser {
 
 PARSER_END(excelParser)
 
-void Input() :
-{}
+
+/*
+<ESTADO> -- ESTADO es el nombre del estado en el que vamos a declarar las reglas léxicas.
+SKIP: ignora el no terminal
+MORE: encicla en una producción 
+TOKEN: tokens
+TOKEN_ESPCIAL: saber
+*/
+
+SKIP: // Saltar a un estado auxiliar
 {
-  MatchedBraces() ("\n"|"\r")* <EOF>
+    "<"{}:EHOJA
 }
 
-void MatchedBraces() :
-{}
+<EHOJA>TOKEN: 
 {
-  "{" [ MatchedBraces() ] "}"
+    <IENCUESTA:"encuesta">:ENCUESTA_ 
+}
+/*
+<eleccionHoja>TOKEN: 
+{
+    <ICONFIGURACIONES:"configuracion">:CONFIGURACION_
+}
+
+<eleccionHoja>TOKEN: 
+{
+    <IOPCIONES:"opcion">:OPCION_ 
+}
+*/
+
+<ENCUESTA_>SKIP:
+{
+    ">":ENCUESTA    
+}
+
+//Declarar erroes para este estado que sólo es transitorio.
+
+<ENCUESTA>SKIP:
+{
+    "<":CELDAP
+}
+
+<CELDAP>TOKEN:
+{
+    <TIPO:"tipo">:TIPO1
+}
+
+<TIPO1>SKIP:
+{
+    ">":TIPO2
+}
+
+<TIPO2>TOKEN:
+{
+     <fecha:"fecha">
+    |<texto:"texto">
+    |<entero:"entero">
+    |<decimal:"decimal">
+    |<rango:"rango">
+    |<condicion:"condicion">
+    |<hora:"hora">
+    |<fechahora:"fechahora">
+    |<seleccion_uno:"seleccionar_uno">
+    |<seleccion_multiples:"seleccion_multiples">
+    |<nota:"nota">
+    |<fichero:"fichero">
+    |<calcular:"calcular">
+    |<iniciar_agrupacion:"iniciar agrupacion">
+    |<finalizar_agrupacon:"finalizar agrupacion">
+    |<iniciar_ciclo:"iniciar ciclo">
+    |<finalizar_ciclo:"finalizar ciclo">
+}
+
+<TIPO2>TOKEN:
+{
+    <ID:(<LETRA>)((<LETRA>)|(<DIGITO>))+>:LID1
+    |<#DIGITO: ["0" - "9"]>
+    |<#LETRA:["A"-"Z"]>
+}
+
+<TIPO2>SKIP:
+{
+    "\"":LF1
+}
+
+<TIPO2>SKIP:
+{
+    ">":CELDAP
+}
+
+<LID1>TOKEN:
+{
+    <COMA:",">:LID2
+}
+
+<LID2>TOKEN:
+{    
+    <ID>:LID2
+}
+
+<LID2>SKIP:
+{
+    "<":CELDAP
+}
+
+<LF1>TOKEN:
+{
+    <PUNTO:".">:LF2
+}
+
+<LF1>SKIP:
+{
+    ">":CELDAP
+}
+
+<LF2>TOKEN:
+{
+    <ID>:LF3
+}
+
+<LF3>TOKEN:
+{
+    <COMA>:LF1
 }

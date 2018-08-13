@@ -260,7 +260,8 @@ public class Interfaz extends javax.swing.JFrame {
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                                    
+            int colContador = 0;     // Contador de columna 
+            int posicion = 0;
             Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
@@ -278,25 +279,38 @@ public class Interfaz extends javax.swing.JFrame {
                         //Obtenemos el contenido de la celda.
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
-                        {
-                            encabezados.add(celda.toString());
+                        {     
+                            encabezados.add(celda.toString());                             
                         }
                         else                   
                         {
-                            //nuevaPregunta.insertarAtributo(ncabezados.get(celda.getColumnIndex())e, celda.toString());
-                            String valor = celda.toString();
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString(); 
+                            posicion = celda.getColumnIndex();
                             switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
                             {
                                 case "tipo":
-                                    if(valor.equals("")){listaErrores.add(new Error("Celda tipo vacia.",filaContador,celda.getColumnIndex()));}
+                                    if(valor.equals(""))
+                                    {                                        
+                                        registrarError("Celda tipo vacia.", filaContador, colContador);
+                                        //Mensaje("Error Tipo:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                    }
                                     nuevaPregunta.setTipo(valor);
                                     break;
                                 case "idpregunta":
-                                    if(valor.equals("")){listaErrores.add(new Error("Celda idPregunta vacia.",filaContador,celda.getColumnIndex()));}
+                                    if(valor.equals(""))
+                                    {
+                                        registrarError("Celda idpregunta vacia.", filaContador, colContador);
+                                        //Mensaje("Error idpregunta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                    }
                                     nuevaPregunta.setIdPregunta(valor);
                                     break;               
                                 case "etiqueta":
-                                    if(valor.equals("")){listaErrores.add(new Error("Celda etiqueta vacia.",filaContador,celda.getColumnIndex()));}
+                                    if(valor.equals(""))
+                                    {
+                                        registrarError("Celda etiqueta vacia.", filaContador, colContador);
+                                        //Mensaje("Error etiqueta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                    }
                                     nuevaPregunta.setEtiqueta(valor);
                                     break;
                                 case "parametro":
@@ -348,12 +362,20 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setMultimedia(valor);
                                     break;
                             }                            
+                            
                             colContador ++ ;
-                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                            if(colContador>= encabezados.size())
+                            { 
+                                colContador =0 ;
+                            }                        
                         }
                     }                    
-                    if(filaContador>0){nuevaPregunta.setFila(filaContador);listaPreguntas.add(nuevaPregunta);}
-                    filaContador ++;                
+                    if(filaContador>0)
+                    {
+                        nuevaPregunta.setFila(filaContador);
+                        listaPreguntas.add(nuevaPregunta);
+                    }
+                    filaContador = filaContador + 1;                
                 }                
             }             
             /*Recorremos el array list*/               
@@ -385,12 +407,7 @@ public class Interfaz extends javax.swing.JFrame {
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna                        
             ArrayList<Opcion> listaOpciones = new ArrayList();            
-            Opcion nuevaOpcion = null;            
-            
-            
-
-            
-            
+            Opcion nuevaOpcion = null;                                                           
             while(filaIterator.hasNext())
             {
                 fila = filaIterator.next();                
@@ -439,9 +456,9 @@ public class Interfaz extends javax.swing.JFrame {
     public String leerArchivoXConfiguracion(String path) throws FileNotFoundException, IOException
     {
         ArrayList<String> encabezados = new ArrayList();
-        String cadenaArchivo= "";  
+        String cadenaArchivo= "";     
         ArrayList<Configuracion> listaConfiguraciones = new ArrayList();            
-        Configuracion nuevaConfiguracion = null;          
+        Configuracion nuevaConfiguracion = null;           
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
             //Leer el archivo plano de excel.                        
@@ -451,7 +468,7 @@ public class Interfaz extends javax.swing.JFrame {
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna                        
-          
+         
             
             while(filaIterator.hasNext())
             {
@@ -494,15 +511,17 @@ public class Interfaz extends javax.swing.JFrame {
         catch(Exception error)
         {
             //Mensaje(error.getMessage(), "Error");
+            /*Recorremos el array list*/               
             cadenaArchivo+= "<Configuraciones>\n";
             for(Configuracion conf: listaConfiguraciones)
             {
                 cadenaArchivo+=conf.getData();
             }
-            cadenaArchivo+= "</Configuraciones>\n";              
+            cadenaArchivo+= "</Configuraciones>\n";             
+            
         }                                        
         return cadenaArchivo;
-    }     
+    }       
     
     
     
@@ -518,7 +537,8 @@ public class Interfaz extends javax.swing.JFrame {
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                        
+            int colContador = 0;     // Contador de columna 
+            int posicion = 0;
             Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
@@ -542,14 +562,15 @@ public class Interfaz extends javax.swing.JFrame {
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            String valor = celda.toString();                            
+                            String valor = celda.toString(); 
+                            posicion = celda.getColumnIndex();
                             switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
                             {
                                 case "tipo":
                                     if(valor.equals(""))
                                     {                                        
                                         registrarError("Celda tipo vacia.", filaContador, colContador);
-                                        Mensaje("Error Tipo:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                        //Mensaje("Error Tipo:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
                                     }
                                     nuevaPregunta.setTipo(valor);
                                     break;
@@ -557,7 +578,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     if(valor.equals(""))
                                     {
                                         registrarError("Celda idpregunta vacia.", filaContador, colContador);
-                                        Mensaje("Error idpregunta:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                        //Mensaje("Error idpregunta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
                                     }
                                     nuevaPregunta.setIdPregunta(valor);
                                     break;               
@@ -565,7 +586,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     if(valor.equals(""))
                                     {
                                         registrarError("Celda etiqueta vacia.", filaContador, colContador);
-                                        Mensaje("Error etiqueta:" + filaContador+"," +colContador, nuevaPregunta.getTipo());
+                                        //Mensaje("Error etiqueta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
                                     }
                                     nuevaPregunta.setEtiqueta(valor);
                                     break;
@@ -663,12 +684,7 @@ public class Interfaz extends javax.swing.JFrame {
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna                        
             ArrayList<Opcion> listaOpciones = new ArrayList();            
-            Opcion nuevaOpcion = null;            
-            
-            
-
-            
-            
+            Opcion nuevaOpcion = null;                                                           
             while(filaIterator.hasNext())
             {
                 fila = filaIterator.next();                
@@ -895,7 +911,7 @@ public class Interfaz extends javax.swing.JFrame {
         for(int x = 0 ; x< listaErrores.size(); x++)
         {
             Error err = listaErrores.get(x);
-            Pregunta preg = listaPreguntas.get(err.fila);
+            Pregunta preg = listaPreguntas.get(err.getFila());
             if(preg.getTipo().toLowerCase().equals("iniciar agrupacion")|| 
                     preg.getTipo().toLowerCase().equals("iniciar ciclo") )
             {

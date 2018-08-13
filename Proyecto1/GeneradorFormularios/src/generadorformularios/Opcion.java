@@ -75,12 +75,12 @@ public class Opcion
     public String getData()
     {
         String data= ""; 
-        data+="<opcion>\n";
-        data+="\t<nombre_lista>"+this.getNombre_lista()+"</nombre_lista>\n";  
-        data+="\t<nombre>"+this.getNombre()+"</nombre>\n";  
-        data+="\t<etiqueta>"+this.getEtiqueta()+"</etiqueta>\n";  
-        data+="\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
-        data+="</opcion>\n";  
+        data+="\t<opcion>\n";
+        data+="\t\t<nombre_lista>"+this.getNombre_lista()+"</nombre_lista>\n";  
+        data+="\t\t<nombre>"+this.getNombre()+"</nombre>\n";  
+        data+="\t\t<etiqueta>"+this.getEtiqueta()+"</etiqueta>\n";  
+        data+="\t\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
+        data+="\t</opcion>\n";  
         return data;
     }    
 }
