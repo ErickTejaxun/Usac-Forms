@@ -44,13 +44,29 @@ options {
 
 PARSER_BEGIN(excelParser)
 package Analizadores;
-public class excelParser {
 
-  public static void main(String args[]) throws ParseException {
-    excelParser parser = new excelParser(System.in);
-    parser.Input();
-  }
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+public class excelParser
+{
+    public static void main(String[] args) throws ParseException, FileNotFoundException 
+    {     
+    }
+    public static void analizar()
+    {
+        try
+        {
+            excelParser analizador =  excelParser(System.in);
+            analizador.inicio();
+        }
+        catch(ParseException error)
+        {
+            System.out.println(error.getMessage());
+            System.out.println("Errores en la entrada");
+        }
 
+    }
 }
 
 PARSER_END(excelParser)
@@ -69,43 +85,96 @@ SKIP: // Saltar a un estado auxiliar
     "<"{}:EHOJA
 }
 
+SKIP:
+{
+    <(" " | "\t" | "\n" | "\r" )+>
+}
+
 <EHOJA>TOKEN: 
 {
     <IENCUESTA:"encuesta">:ENCUESTA_ 
 }
-/*
-<eleccionHoja>TOKEN: 
-{
-    <ICONFIGURACIONES:"configuracion">:CONFIGURACION_
-}
-
-<eleccionHoja>TOKEN: 
-{
-    <IOPCIONES:"opcion">:OPCION_ 
-}
-*/
 
 <ENCUESTA_>SKIP:
 {
     ">":ENCUESTA    
 }
 
-//Declarar erroes para este estado que sólo es transitorio.
-
 <ENCUESTA>SKIP:
 {
-    "<":CELDAP
+    "<":PREG1
+}
+
+
+<PREG1>TOKEN:
+{
+    <IPREGUNTA:"pregunta">:PREG2
+}
+
+<PREG2>SKIP:
+{
+    ">":PREG3
+}
+
+<PREG3>SKIP:
+{
+    "<":CELDAP    
+}
+
+<CELDAP>:SKIP:
+{
+    "/":PREG5
+}
+
+<PREG5>TOKEN:
+{
+    <FENCUESTA:"encuesta">:PREG6
+}
+<PREG6>SKIP:
+{
+    ">":ENCUESTA
 }
 
 <CELDAP>TOKEN:
 {
-    <TIPO:"tipo">:TIPO1
+    <ITIPO:"tipo">:TIPO1
 }
 
 <TIPO1>SKIP:
 {
-    ">":TIPO2
+    ">":TIPO2    
 }
+
+<TIPO2>SKIP:
+{
+    "\"":LF1    
+}
+
+<LF1>SKIP:
+{
+    "<":TIPO3
+}
+
+<LF1>TOKEN:
+{
+    <PUNTO:".">:LF2
+}
+
+<LF2>TOKEN:
+{
+    <ID>:LF3
+}
+
+<LF3>SKIP:
+{
+    "\"":LF1
+}
+
+<LF3>TOKEN:
+{
+    <COMA:",">:LF1
+}
+
 
 <TIPO2>TOKEN:
 {
@@ -126,56 +195,65 @@ SKIP: // Saltar a un estado auxiliar
     |<finalizar_agrupacon:"finalizar agrupacion">
     |<iniciar_ciclo:"iniciar ciclo">
     |<finalizar_ciclo:"finalizar ciclo">
+    |<ID>:LID1    
 }
 
-<TIPO2>TOKEN:
+
+<LDI1>TOKEN:
 {
-    <ID:(<LETRA>)((<LETRA>)|(<DIGITO>))+>:LID1
-    |<#DIGITO: ["0" - "9"]>
-    |<#LETRA:["A"-"Z"]>
+    <COMA>:LID2
+}
+
+<LD2>TOKEN:
+{
+    <ID>:LID1
+}
+
+<LID1>SKIP:
+{
+    "<":TIPO3
 }
 
 <TIPO2>SKIP:
 {
-    "\"":LF1
+    "<":TIPO3
 }
 
-<TIPO2>SKIP:
+<TIPO3>SKIP:
 {
-    ">":CELDAP
+    "/":TIPO4
 }
-
-<LID1>TOKEN:
+<TIPO4>TOKEN:
 {
-    <COMA:",">:LID2
+    <FTIPO:"tipo">:TIPO5
 }
 
-<LID2>TOKEN:
-{    
-    <ID>:LID2
-}
-
-<LID2>SKIP:
+<TIPO5>SKIP:
 {
-    "<":CELDAP
+    ">":PREG3
 }
 
-<LF1>TOKEN:
+
+
+/*Area de analis sintactico. */
+void inicio():
+{}
 {
-    <PUNTO:".">:LF2
+    <IENCUESTA>lpreg()<FENCUESTA><EOF>
 }
 
-<LF1>SKIP:
+void lpreg():
+{}
 {
-    ">":CELDAP
+    <IPREGUNTA> lceldasP() <FPREGUNTA>
 }
 
-<LF2>TOKEN:
-{
-    <ID>:LF3
-}
 
-<LF3>TOKEN:
-{
-    <COMA>:LF1
-}
+
+
+
+
+
+
+
+
