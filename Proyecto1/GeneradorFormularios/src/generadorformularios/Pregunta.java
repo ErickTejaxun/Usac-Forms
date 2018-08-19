@@ -303,13 +303,13 @@ public class Pregunta
     }     
     
     
-    public void setPosicion(String clave, int valor)
+    public void setColumna(String clave, int valor)
     {
-        this.posiciones.put(clave, valor);
+        this.posiciones.put(clave.toLowerCase(), valor);
     }
     
-    public int getPosicion(String clave)
+    public String getColumna(String clave)
     {
-        return this.posiciones.get(clave);
+        return this.posiciones.get(clave).toString();
     }
 }

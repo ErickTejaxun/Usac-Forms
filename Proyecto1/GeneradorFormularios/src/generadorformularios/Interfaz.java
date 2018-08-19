@@ -42,6 +42,7 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Error> listaErrores = new ArrayList();
     private String archivoActual = "";
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
+    ArrayList<String> encabezados = new ArrayList();
     
     
     excelParser analizador = null;
@@ -205,19 +206,23 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
                         
-        String[] argumentos = {areaEdicion.getText()};
+        String[] argumentos = new String[3];
         
+        int fila = 1;
         for(Pregunta pre : listaPreguntas)
         {
             argumentos[0] = "tipo\n"+ pre.getTipo();
-            //argumentos[1] = ;
-            //argumentos[2] = ;
+            argumentos[1] = String.valueOf(fila); // Fila hoja de excel.
+            argumentos[2] = pre.getColumna("tipo"); // Columna hoja de excel.
             try 
             {
                 excelParser.main(argumentos);
-            } catch (ParseException ex) {
+            } 
+            catch (ParseException ex) 
+            {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }            
+            fila++;
         }
         
         
@@ -278,8 +283,7 @@ public class Interfaz extends javax.swing.JFrame {
     //Metodo para leer el archivo .xls :v
     
     public String leerArchivoXEncuesta(String path) throws FileNotFoundException, IOException
-    {
-        ArrayList<String> encabezados = new ArrayList();
+    {        
         String cadenaArchivo= "";               
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
@@ -559,8 +563,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     
     public String leerArchivoEncuesta(String path) throws FileNotFoundException, IOException
-    {
-        ArrayList<String> encabezados = new ArrayList();
+    {        
         String cadenaArchivo= "";               
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
@@ -590,86 +593,99 @@ public class Interfaz extends javax.swing.JFrame {
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
                         {     
-                            encabezados.add(celda.toString());                             
+                            registrarEncabezado(celda.toString());                            
                         }
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
                             String valor = celda.toString(); 
                             posicion = celda.getColumnIndex();
-                            switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
+                            String encabezado = encabezados.get(celda.getColumnIndex()).toLowerCase();
+                            switch(encabezado)
                             {
                                 case "tipo":
                                     if(valor.equals(""))
                                     {                                        
-                                        registrarError("Celda tipo vacia.", filaContador, colContador);
-                                        //Mensaje("Error Tipo:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                        registrarError("Celda tipo vacia.", filaContador, colContador);                                        
                                     }
                                     nuevaPregunta.setTipo(valor);
+                                    nuevaPregunta.setColumna("tipo", posicion);
                                     break;
                                 case "idpregunta":
                                     if(valor.equals(""))
                                     {
-                                        registrarError("Celda idpregunta vacia.", filaContador, colContador);
-                                        //Mensaje("Error idpregunta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                        registrarError("Celda idpregunta vacia.", filaContador, colContador);                                        
                                     }
                                     nuevaPregunta.setIdPregunta(valor);
+                                    nuevaPregunta.setColumna("idpregunta", posicion);
                                     break;               
                                 case "etiqueta":
                                     if(valor.equals(""))
                                     {
-                                        registrarError("Celda etiqueta vacia.", filaContador, colContador);
-                                        //Mensaje("Error etiqueta:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                        registrarError("Celda etiqueta vacia.", filaContador, colContador);                                        
                                     }
                                     nuevaPregunta.setEtiqueta(valor);
+                                    nuevaPregunta.setColumna("etiqueta", posicion);
                                     break;
                                 case "parametro":
                                     nuevaPregunta.setParametro(valor);
+                                    nuevaPregunta.setColumna("parametro", posicion);
                                     break;
                                 case "calculo":
                                     nuevaPregunta.setCalcular(valor);
+                                    nuevaPregunta.setColumna("calculo", posicion);
                                     break;
                                 case "aplicable":
                                     nuevaPregunta.setAplicable(valor);
+                                    nuevaPregunta.setColumna("aplicable", posicion);
                                     break;
                                 case "sugerir":
                                     nuevaPregunta.setSugerencia(valor);
+                                    nuevaPregunta.setColumna("sugerir", posicion);
                                     break;
                                 case "restringir":
                                     nuevaPregunta.setRestringir(valor);
-                                    break;
-                                case "restriccion":
-                                    nuevaPregunta.setRestringir(valor);
+                                    nuevaPregunta.setColumna("restringir", posicion);
                                     break;                
                                 case "restringirmsn":
                                     nuevaPregunta.setRestringirmsn(valor);
+                                    nuevaPregunta.setColumna("restringirmsn", posicion);
                                     break;
                                 case "requeridomsn":
                                     nuevaPregunta.setRequeridoMsn(valor);
+                                    nuevaPregunta.setColumna("requeridomsn", posicion);
                                     break;
                                 case "requerido":
                                     nuevaPregunta.setRequerido(valor);
+                                    nuevaPregunta.setColumna("requerido", posicion);
                                     break;
                                 case "predeterminado":
                                     nuevaPregunta.setPredeterminado(valor);
+                                    nuevaPregunta.setColumna("predeterminado", posicion);
                                     break;
                                 case "lectura":
                                     nuevaPregunta.setLectura(valor);
+                                    nuevaPregunta.setColumna("lectura", posicion);
                                     break;
                                 case "repeticion":
                                     nuevaPregunta.setRepeticion(valor);
+                                    nuevaPregunta.setColumna("repeticion", posicion);
                                     break;
                                 case "apariencia":
                                     nuevaPregunta.setApariencia(valor);
+                                    nuevaPregunta.setColumna("apariencia", posicion);
                                     break;
                                 case "codigo_pre":
                                     nuevaPregunta.setCodigo_pre(valor);
+                                    nuevaPregunta.setColumna("codigo_pre", posicion);
                                     break;
                                 case "codigo_post":
                                     nuevaPregunta.setCodigo_post(valor);
+                                    nuevaPregunta.setColumna("codigo_post", posicion);
                                     break;
-                                case "multimedia":
+                                case "fichero":
                                     nuevaPregunta.setMultimedia(valor);
+                                    nuevaPregunta.setColumna("fichero", posicion);
                                     break;
                             }                            
                             
@@ -984,6 +1000,11 @@ public class Interfaz extends javax.swing.JFrame {
     {
         boolean resultado  = false;                
         return resultado;
+    }
+    
+    public void registrarEncabezado(String valor)
+    {
+        encabezados.add(valor.toLowerCase());
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
