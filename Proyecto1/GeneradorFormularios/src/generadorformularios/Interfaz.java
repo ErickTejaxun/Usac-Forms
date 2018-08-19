@@ -206,19 +206,33 @@ public class Interfaz extends javax.swing.JFrame {
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
                         
         String[] argumentos = {areaEdicion.getText()};
-        try {
-            excelParser.main(argumentos);
-        } catch (ParseException ex) {
-            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        
+        for(Pregunta pre : listaPreguntas)
+        {
+            argumentos[0] = "tipo\n"+ pre.getTipo();
+            //argumentos[1] = ;
+            //argumentos[2] = ;
+            try 
+            {
+                excelParser.main(argumentos);
+            } catch (ParseException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }            
         }
+        
+        
+
         
         
     }//GEN-LAST:event_botonGenerarActionPerformed
 
     private void botonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrirActionPerformed
-        try {
+        try 
+        {
             seleccionarArchivo();
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) 
+        {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonAbrirActionPerformed

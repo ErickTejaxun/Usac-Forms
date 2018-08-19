@@ -46,6 +46,17 @@ public class excelParser implements excelParserConstants {
 
     }
 
+    void errorPanico(int tokenSinc)
+    {
+        ParseException e = generateParseException();
+        Token t;
+        do
+        {
+            t = getNextToken();
+        }
+        while (t.kind != tokenSinc);
+    }
+
 /*Area de analis sintactico. */
   final public void Inicio() throws ParseException {
     label_1:

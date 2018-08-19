@@ -91,6 +91,17 @@ public class excelParser
 
     }
 
+    void errorPanico(int tokenSinc) 
+    { 
+        ParseException e = generateParseException();     
+        Token t; 
+        do 
+        {
+            t = getNextToken();
+        } 
+        while (t.kind != tokenSinc);
+    }
+
 }
 PARSER_END(excelParser)
 
@@ -209,3 +220,5 @@ void listaFormatos1():
     <coma><punto><id>listaFormatos1()
 |   {System.out.println("Final fila");}
 }
+
+

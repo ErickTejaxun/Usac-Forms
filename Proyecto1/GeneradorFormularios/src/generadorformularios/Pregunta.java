@@ -6,6 +6,7 @@
 package generadorformularios;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  *
@@ -31,6 +32,12 @@ public class Pregunta
    String	codigo_pre	=	""	;
    String	codigo_post	=	""	;
    String	multimedia	=	""	;
+   
+   
+   private Hashtable<String, Integer> posiciones= new Hashtable<String, Integer>();
+  
+   
+   
    int fila = 0;
    boolean error = true;
 
@@ -293,5 +300,16 @@ public class Pregunta
         data+="\t\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
         data+="\t</pregunta>\n";  
         return data;
-    }                   
+    }     
+    
+    
+    public void setPosicion(String clave, int valor)
+    {
+        this.posiciones.put(clave, valor);
+    }
+    
+    public int getPosicion(String clave)
+    {
+        return this.posiciones.get(clave);
+    }
 }
