@@ -26,7 +26,7 @@ options {
   LOOKAHEAD = 1;
   CHOICE_AMBIGUITY_CHECK = 2;
   OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = true;
+  STATIC = false;
   DEBUG_PARSER = false;
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
@@ -43,32 +43,55 @@ options {
 }
 
 PARSER_BEGIN(excelParser)
+
 package Analizadores;
-
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-public class excelParser
+
+public class excelParser 
 {
-    public static void main(String[] args) throws ParseException, FileNotFoundException 
-    {     
-    }
-    public static void analizar()
+
+    public static void main(String args[]) throws ParseException
     {
-        try
+        if(args.length>0)
         {
-            excelParser analizador =  excelParser(System.in);
-            analizador.inicio();
+            try
+            {
+                try
+                {
+                    InputStream data = new ByteArrayInputStream(args[0].getBytes());
+                    excelParser analizador = new excelParser(data);
+                    analizador.Inicio();
+                }
+                catch(TokenMgrError te)
+                {   
+                    System.out.println(te.getMessage());
+                    System.out.println("Errores------------------");                    
+                }
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }            
         }
-        catch(ParseException error)
+        else
         {
-            System.out.println(error.getMessage());
-            System.out.println("Errores en la entrada");
+            try
+            {
+                excelParser analizador = new excelParser(System.in);
+                analizador.Inicio();
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }              
         }
 
     }
-}
 
+}
 PARSER_END(excelParser)
 
 
@@ -80,9 +103,10 @@ TOKEN: tokens
 TOKEN_ESPCIAL: saber
 */
 
-SKIP: // Saltar a un estado auxiliar
+
+TOKEN:
 {
-    "<"{}:EHOJA
+    <tipo:"tipo">:TIPO
 }
 
 SKIP:
@@ -90,170 +114,98 @@ SKIP:
     <(" " | "\t" | "\n" | "\r" )+>
 }
 
-<EHOJA>TOKEN: 
+<TIPO>TOKEN:
 {
-    <IENCUESTA:"encuesta">:ENCUESTA_ 
-}
-
-<ENCUESTA_>SKIP:
-{
-    ">":ENCUESTA    
-}
-
-<ENCUESTA>SKIP:
-{
-    "<":PREG1
-}
-
-
-<PREG1>TOKEN:
-{
-    <IPREGUNTA:"pregunta">:PREG2
-}
-
-<PREG2>SKIP:
-{
-    ">":PREG3
-}
-
-<PREG3>SKIP:
-{
-    "<":CELDAP    
-}
-
-<CELDAP>:SKIP:
-{
-    "/":PREG5
-}
-
-<PREG5>TOKEN:
-{
-    <FENCUESTA:"encuesta">:PREG6
-}
-<PREG6>SKIP:
-{
-    ">":ENCUESTA
-}
-
-<CELDAP>TOKEN:
-{
-    <ITIPO:"tipo">:TIPO1
-}
-
-<TIPO1>SKIP:
-{
-    ">":TIPO2    
-}
-
-<TIPO2>SKIP:
-{
-    "\"":LF1    
-}
-
-<LF1>SKIP:
-{
-    "<":TIPO3
-}
-
-<LF1>TOKEN:
-{
-    <PUNTO:".">:LF2
-}
-
-<LF2>TOKEN:
-{
-    <ID>:LF3
-}
-
-<LF3>SKIP:
-{
-    "\"":LF1
-}
-
-<LF3>TOKEN:
-{
-    <COMA:",">:LF1
-}
-
-
-<TIPO2>TOKEN:
-{
-     <fecha:"fecha">
-    |<texto:"texto">
+    <texto:"texto">
     |<entero:"entero">
     |<decimal:"decimal">
     |<rango:"rango">
     |<condicion:"condicion">
+    |<fecha:"fecha">
     |<hora:"hora">
     |<fechahora:"fechahora">
-    |<seleccion_uno:"seleccionar_uno">
-    |<seleccion_multiples:"seleccion_multiples">
+    |<seleccionaUno:"selecciona_uno">
+    |<seleccionaMultiple:"selecciona_multiple">
     |<nota:"nota">
     |<fichero:"fichero">
     |<calcular:"calcular">
-    |<iniciar_agrupacion:"iniciar agrupacion">
-    |<finalizar_agrupacon:"finalizar agrupacion">
-    |<iniciar_ciclo:"iniciar ciclo">
-    |<finalizar_ciclo:"finalizar ciclo">
-    |<ID>:LID1    
+    |<iniciar:"iniciar">:AGCI
+    |<finalizar:"finalizar">:AGCI
 }
 
-
-<LDI1>TOKEN:
+<TIPO>TOKEN:
 {
-    <COMA>:LID2
+    <id:(<letra>)(<letra>|<digito>|"_")*  >
+|   <#digito:["0" - "9"] > 
+|   <#letra:["A"-"Z"]> 
+|   <coma:",">
+|   <punto:".">
 }
 
-<LD2>TOKEN:
+<TIPO>SKIP:
 {
-    <ID>:LID1
+    <(" " | "\t" | "\n" | "\r" )+>
 }
 
-<LID1>SKIP:
+// Agrupacion y Ciclo AGCI
+<AGCI>SKIP:
 {
-    "<":TIPO3
+    <(" " | "\t" | "\n" | "\r" )+>
 }
 
-<TIPO2>SKIP:
+<AGCI>TOKEN:
 {
-    "<":TIPO3
+    <agrupacion:"agrupacion">
+    |<ciclo:"ciclo">     
 }
-
-<TIPO3>SKIP:
-{
-    "/":TIPO4
-}
-<TIPO4>TOKEN:
-{
-    <FTIPO:"tipo">:TIPO5
-}
-
-<TIPO5>SKIP:
-{
-    ">":PREG3
-}
-
 
 
 /*Area de analis sintactico. */
-void inicio():
+void Inicio():
 {}
 {
-    <IENCUESTA>lpreg()<FENCUESTA><EOF>
+    (
+    <tipo>Tipo()<EOF>{System.out.println("Celda tipo");}
+    )+
 }
 
-void lpreg():
+void Tipo():
 {}
 {
-    <IPREGUNTA> lceldasP() <FPREGUNTA>
+     <texto>
+    |<entero>
+    |<decimal>
+    |<rango>
+    |<condicion>
+    |<fecha>
+    |<hora>
+    |<fechahora>
+    |<seleccionaUno><id>
+    |<seleccionaMultiple><id>
+    |<nota>    
+    |<fichero>listaFormatos()
+    |<calcular>
+    |<iniciar>agci()    
+    |<finalizar>agci()    
 }
 
+void agci():
+{}
+{
+    <ciclo>
+   |<agrupacion>
+}
 
+void listaFormatos():
+{}
+{
+    "\""<punto><id>listaFormatos1()"\""
+    |{System.out.println("Sin formatos");}
+}
 
-
-
-
-
-
-
-
+void listaFormatos1():
+{}
+{
+    <coma><punto><id>listaFormatos1()
+|   {System.out.println("Final fila");}
+}

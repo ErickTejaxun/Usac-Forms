@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -29,6 +28,11 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+
+import Analizadores.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 /**
  *
  * @author erick
@@ -38,6 +42,9 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Error> listaErrores = new ArrayList();
     private String archivoActual = "";
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
+    
+    
+    excelParser analizador = null;
 
     /**
      * Creates new form Interfaz
@@ -197,7 +204,15 @@ public class Interfaz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
-
+                        
+        String[] argumentos = {areaEdicion.getText()};
+        try {
+            excelParser.main(argumentos);
+        } catch (ParseException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }//GEN-LAST:event_botonGenerarActionPerformed
 
     private void botonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrirActionPerformed
@@ -294,8 +309,12 @@ public class Interfaz extends javax.swing.JFrame {
                                     {                                        
                                         registrarError("Celda tipo vacia.", filaContador, colContador);
                                         //Mensaje("Error Tipo:" + celda.getRowIndex()+"," +celda.getColumnIndex(), nuevaPregunta.getTipo());
+                                    }   
+                                    else
+                                    {
+                                        analizarCelda("tipo|"+valor.toString());
                                     }
-                                    nuevaPregunta.setTipo(valor);
+                                    //nuevaPregunta.setTipo(valor);
                                     break;
                                 case "idpregunta":
                                     if(valor.equals(""))
@@ -945,7 +964,13 @@ public class Interfaz extends javax.swing.JFrame {
     {        
         listaErrores.add(new Error(detalle, fila, columna));                
     }
-        
+       
+    
+    public boolean analizarCelda(String cadena)
+    {
+        boolean resultado  = false;                
+        return resultado;
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
