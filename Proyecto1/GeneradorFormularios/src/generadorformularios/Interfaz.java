@@ -195,9 +195,9 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(115, 115, 115)
                 .addComponent(botonGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addComponent(jTabbedPane1)
@@ -209,7 +209,9 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonGenerar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(botonGenerar)))
                 .addGap(18, 18, 18)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
                 .addGap(31, 31, 31))
@@ -577,10 +579,11 @@ public class Interfaz extends javax.swing.JFrame {
             int colContador = 0;     // Contador de columna 
             int columna = 0;
             int fil = 0;
-            Pregunta nuevaPregunta = null;            
+            Pregunta nuevaPregunta = null;               
             while(filaIterator.hasNext())
-            {
+            {                
                 fila = filaIterator.next();
+                Mensaje("Mensaje",fila.getCell(0).toString());
                 //Ahora obtenemos las celdas de la fila.
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
@@ -891,8 +894,8 @@ public class Interfaz extends javax.swing.JFrame {
     
     public String leerArchivoXLSX(String path) throws IOException
     {
-        listaPreguntas.clear();
-        String cadena = "";
+        limpiarListas();
+        String cadena = "";        
         cadena+= leerArchivoXEncuesta(path);        
         cadena+= leerArchivoXOpcion(path);
         cadena+= leerArchivoXConfiguracion(path);
@@ -903,8 +906,8 @@ public class Interfaz extends javax.swing.JFrame {
     
     public String leerArchivoXLS(String path) throws IOException
     {
-    
-        String cadena = ""; 
+        limpiarListas();
+        String cadena = "";         
         cadena+= leerArchivoEncuesta(path);        
         cadena+= leerArchivoOpcion(path);
         cadena+= leerArchivoConfiguracion(path);
@@ -939,7 +942,12 @@ public class Interfaz extends javax.swing.JFrame {
 
     }
     
-    
+    public void limpiarListas()
+    {
+        listaEncabezadosPreguntas.clear();
+        listaErrores.clear();
+        listaPreguntas.clear();
+    }
     public void mostrarErrores()
     {                                      
         DefaultTableModel filasErrores = new DefaultTableModel();        
@@ -1043,7 +1051,7 @@ public class Interfaz extends javax.swing.JFrame {
                 catch(TokenMgrError te)
                 {   
                     //archivoActual, fila, fila
-                    registrarError(te.getMessage(), fila, fila, ERROR, fila, "Lexico");                                                 
+                    registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
                 }
             }
             catch (ParseException e)
