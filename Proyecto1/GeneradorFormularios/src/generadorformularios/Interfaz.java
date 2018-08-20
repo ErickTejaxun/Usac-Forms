@@ -43,6 +43,7 @@ public class Interfaz extends javax.swing.JFrame {
     private String archivoActual = "";
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
     ArrayList<String> encabezados = new ArrayList();
+    DefaultTableModel filasErrores;
     
     
     excelParser analizador = null;
@@ -50,8 +51,19 @@ public class Interfaz extends javax.swing.JFrame {
     /**
      * Creates new form Interfaz
      */
-    public Interfaz() {
+    public Interfaz()
+    {
         initComponents();
+        
+        filasErrores = new DefaultTableModel();        
+        filasErrores.addColumn("Archivo");
+        filasErrores.addColumn("Línea");
+        filasErrores.addColumn("Columna");
+        filasErrores.addColumn("Fila");
+        filasErrores.addColumn("Celda");
+        filasErrores.addColumn("Detalle"); 
+        filasErrores.addColumn("Tipo");                 
+        tablaErrores.setModel(filasErrores);        
     }
 
     /**
@@ -661,32 +673,28 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setColumna("fichero", columna);
                                     break;
                             }                            
-                            
-                            
-                            /*Verificamos que estén las obligatorias.*/
-                            
- 
+                            /*Verificamos que estén las obligatorias.*/                             
                             colContador ++ ;
                             if(colContador>= encabezados.size())
                             { 
                                 colContador =0 ;
                             }                        
                         }
-                    }                    
+                    }                   
                     if(filaContador>0)
                     {
                         nuevaPregunta.setFila(filaContador);
                         listaPreguntas.add(nuevaPregunta);
                     }
-                    
-                    ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(columna);
-                     for(Error err : listaTemporal)
-                     {
-                         listaErrores.add(err);
-                     }                    
-                    
+                    ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(fil);
+                    listaTemporal.forEach((err) -> 
+                    {
+                        listaErrores.add(err);
+                    });                     
                     filaContador = filaContador + 1;                
-                }                
+                }    
+                
+               
             }             
             /*Recorremos el array list*/               
             cadenaArchivo+= "<encuesta>\n";
@@ -936,8 +944,7 @@ public class Interfaz extends javax.swing.JFrame {
         filasErrores.addColumn("Fila");
         filasErrores.addColumn("Celda");
         filasErrores.addColumn("Detalle"); 
-        filasErrores.addColumn("Tipo");         
-        //filasErrores.addRow(new String[]{"Archivo","Linea","Columna","Detalle","Tipo"});
+        filasErrores.addColumn("Tipo");                 
         tablaErrores.setModel(filasErrores);                            
         
         /*Primero verificamos que los errores sean correctos.
@@ -978,9 +985,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     public void registrarEncabezado(String valor, int columna)
-    {
-        encabezados.add(valor.toLowerCase());
-        
+    {                
         if(
           valor.toLowerCase().equals("tipo") ||
           valor.toLowerCase().equals("idpregunta") ||                
@@ -1006,7 +1011,8 @@ public class Interfaz extends javax.swing.JFrame {
         }
         else
         {
-           registrarError("Celda '"+valor+"' no válida.", 0, 0,1, columna, "Sintactico");                                                         
+           registrarError("Celda '"+valor+"' no válida.", 0, 0,1, columna, "Sintactico");   
+           encabezados.add(valor.toLowerCase());
         }    
     }
     

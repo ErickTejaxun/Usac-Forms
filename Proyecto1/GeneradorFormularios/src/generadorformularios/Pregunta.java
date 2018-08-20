@@ -366,7 +366,7 @@ public class Pregunta
     public ArrayList<Error> verificarErrores(int columna)
     {
        ArrayList<Error> errores  = new ArrayList();
-       if(getTipo().equals("iniciar agrupacion") || getTipo().equals("iniciar ciclo"))//Verificamos si es inicio
+       if(getTipo().toLowerCase().equals("iniciar agrupacion") || getTipo().toLowerCase().equals("iniciar ciclo"))//Verificamos si es inicio
        {
             if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
             if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
@@ -386,7 +386,7 @@ public class Pregunta
             if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
             if(getIdPregunta().equals("")){errores.add(new Error("Falta idpregunta", 1, 1, columna, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}
        }
-       if(getTipo().equals("finalizar agrupacion") || getTipo().equals("finalizar ciclo"))//Verificamos si es inicio
+       if(getTipo().toLowerCase().equals("finalizar agrupacion") || getTipo().toLowerCase().equals("finalizar ciclo"))//Verificamos si es inicio
        {
             if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
             if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
