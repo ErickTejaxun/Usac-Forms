@@ -42,7 +42,7 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Error> listaErrores = new ArrayList();
     private String archivoActual = "";
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
-    ArrayList<String> encabezados = new ArrayList();
+    ArrayList<String> listaEncabezadosPreguntas = new ArrayList();
     DefaultTableModel filasErrores;
     
     
@@ -308,14 +308,14 @@ public class Interfaz extends javax.swing.JFrame {
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
                         {     
-                            encabezados.add(celda.toString());                             
+                            listaEncabezadosPreguntas.add(celda.toString());                             
                         }
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
                             String valor = celda.toString(); 
                             posicion = celda.getColumnIndex();
-                            switch(encabezados.get(celda.getColumnIndex()).toLowerCase())
+                            switch(listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase())
                             {
                                 case "tipo":
                                     if(valor.equals(""))
@@ -396,7 +396,7 @@ public class Interfaz extends javax.swing.JFrame {
                             }                            
                             
                             colContador ++ ;
-                            if(colContador>= encabezados.size())
+                            if(colContador>= listaEncabezadosPreguntas.size())
                             { 
                                 colContador =0 ;
                             }                        
@@ -597,7 +597,7 @@ public class Interfaz extends javax.swing.JFrame {
                             String valor = celda.toString(); 
                             columna = celda.getColumnIndex();
                             fil = celda.getRowIndex();
-                            String encabezado = encabezados.get(celda.getColumnIndex()).toLowerCase();
+                            String encabezado = listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase();
                             switch(encabezado)
                             {
                                 case "tipo":
@@ -675,7 +675,7 @@ public class Interfaz extends javax.swing.JFrame {
                             }                            
                             /*Verificamos que estén las obligatorias.*/                             
                             colContador ++ ;
-                            if(colContador>= encabezados.size())
+                            if(colContador>= listaEncabezadosPreguntas.size())
                             { 
                                 colContador =0 ;
                             }                        
@@ -935,8 +935,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     
     public void mostrarErrores()
-    {                
-                      
+    {                                      
         DefaultTableModel filasErrores = new DefaultTableModel();        
         filasErrores.addColumn("Archivo");
         filasErrores.addColumn("Línea");
@@ -945,7 +944,8 @@ public class Interfaz extends javax.swing.JFrame {
         filasErrores.addColumn("Celda");
         filasErrores.addColumn("Detalle"); 
         filasErrores.addColumn("Tipo");                 
-        tablaErrores.setModel(filasErrores);                            
+        tablaErrores.setModel(filasErrores);
+        comprobarCabeceras();
         
         /*Primero verificamos que los errores sean correctos.
         Por ejemplo que si son agrupación no se toman encuenta como errores si no trae idPregunta y etiqueta        
@@ -962,7 +962,8 @@ public class Interfaz extends javax.swing.JFrame {
                     listaErrores.get(x).getRow(),
                     listaErrores.get(x).getColumn(),
                     listaErrores.get(x).getDetalle(),
-                    listaErrores.get(x).getTipo()});                                            
+                    listaErrores.get(x).getTipo()
+                });                                            
         }                                             
     }  
     
@@ -1007,12 +1008,12 @@ public class Interfaz extends javax.swing.JFrame {
           valor.toLowerCase().equals("fichero")                  
           )
         {
-             encabezados.add(valor); 
+             listaEncabezadosPreguntas.add(valor); 
         }
         else
         {
            registrarError("Celda '"+valor+"' no válida.", 0, 0,1, columna, "Sintactico");   
-           encabezados.add(valor.toLowerCase());
+           listaEncabezadosPreguntas.add(valor.toLowerCase());
         }    
     }
     
@@ -1045,6 +1046,37 @@ public class Interfaz extends javax.swing.JFrame {
             }                                                
             fila++;
         }        
+    }
+    
+    /*Este metodo sirve para comprobar que vengan las columnas obligatorias.*/
+    public void comprobarCabeceras()
+    {        
+        /*Primero verificamos la pagina Encuestas*/
+        int flag = 0;
+        for(String cab : listaEncabezadosPreguntas)
+        {
+          if(cab.toLowerCase().equals("tipo")){ flag += 1;}
+          if(cab.toLowerCase().equals("idpregunta")){ flag += 1;}
+          if(cab.toLowerCase().equals("etiqueta")){ flag += 1;}          
+        }
+        switch(flag)
+        {
+            case 0:
+                registrarError("Hace falta la columna Tipo", 0, 0);
+                registrarError("Hace falta la columna idPregunta", 0, 0);
+                registrarError("Hace falta la columna etiqueta", 0, 0);
+                break;
+            case 1:                
+                registrarError("Hace falta la columna idPregunta", 0, 0);
+                registrarError("Hace falta la columna etiqueta", 0, 0);
+                break;  
+            case 2:
+                registrarError("Hace falta la columna etiqueta", 0, 0);
+                break;                
+        }
+
+        /*Segundo verificamos la pagina Opciones*/
+        /*Tercer verificamos la pagina configuraciones*/
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

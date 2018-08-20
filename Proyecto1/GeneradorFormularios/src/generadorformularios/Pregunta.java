@@ -363,48 +363,48 @@ public class Pregunta
                 ;
     }    
     
-    public ArrayList<Error> verificarErrores(int columna)
+    public ArrayList<Error> verificarErrores(int fila)
     {
        ArrayList<Error> errores  = new ArrayList();
        if(getTipo().toLowerCase().equals("iniciar agrupacion") || getTipo().toLowerCase().equals("iniciar ciclo"))//Verificamos si es inicio
        {
-            if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
-            if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
-            if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
-            if(!getCalculo().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("calculo")), "Sintactico"));}
-            if(!getAplicable().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("aplicable")), "Sintactico"));}
-            if(!getSugerir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("sugerir")), "Sintactico"));}
-            if(!getRestringir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("restringir")), "Sintactico"));}
-            if(!getRestringirmsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("restringirmsn")), "Sintactico"));}
-            if(!getRequerido().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("requerido")), "Sintactico"));}
-            if(!getRequeridoMsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("requeridomsn")), "Sintactico"));}
-            if(!getPredeterminado().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("predeterminado")), "Sintactico"));}            
-            if(!getLectura().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("lectura")), "Sintactico"));}
-            if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
-            if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
-            if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
-            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
-            if(getIdPregunta().equals("")){errores.add(new Error("Falta idpregunta", 1, 1, columna, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}
+            if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
+            if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
+            if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
+            if(!getCalculo().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("calculo")), "Sintactico"));}
+            if(!getAplicable().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("aplicable")), "Sintactico"));}
+            if(!getSugerir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("sugerir")), "Sintactico"));}
+            if(!getRestringir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("restringir")), "Sintactico"));}
+            if(!getRestringirmsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("restringirmsn")), "Sintactico"));}
+            if(!getRequerido().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("requerido")), "Sintactico"));}
+            if(!getRequeridoMsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("requeridomsn")), "Sintactico"));}
+            if(!getPredeterminado().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("predeterminado")), "Sintactico"));}            
+            if(!getLectura().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("lectura")), "Sintactico"));}
+            if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
+            if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
+            if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
+            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
+            if(getIdPregunta().equals("")){errores.add(new Error("Falta idpregunta", 1, 1, fila, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}
        }
        if(getTipo().toLowerCase().equals("finalizar agrupacion") || getTipo().toLowerCase().equals("finalizar ciclo"))//Verificamos si es inicio
        {
-            if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
-            if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
-            if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
-            if(!getCalculo().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("calculo")), "Sintactico"));}
-            if(!getAplicable().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("aplicable")), "Sintactico"));}
-            if(!getSugerir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("sugerir")), "Sintactico"));}
-            if(!getRestringir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("restringir")), "Sintactico"));}
-            if(!getRestringirmsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("restringirmsn")), "Sintactico"));}
-            if(!getRequerido().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("requerido")), "Sintactico"));}
-            if(!getRequeridoMsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("requeridomsn")), "Sintactico"));}
-            if(!getPredeterminado().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("predeterminado")), "Sintactico"));}            
-            if(!getLectura().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("lectura")), "Sintactico"));}
-            if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
-            if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
-            if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
-            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
-            if(!getIdPregunta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, columna, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}                      
+            if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
+            if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
+            if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
+            if(!getCalculo().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("calculo")), "Sintactico"));}
+            if(!getAplicable().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("aplicable")), "Sintactico"));}
+            if(!getSugerir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("sugerir")), "Sintactico"));}
+            if(!getRestringir().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("restringir")), "Sintactico"));}
+            if(!getRestringirmsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("restringirmsn")), "Sintactico"));}
+            if(!getRequerido().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("requerido")), "Sintactico"));}
+            if(!getRequeridoMsn().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("requeridomsn")), "Sintactico"));}
+            if(!getPredeterminado().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("predeterminado")), "Sintactico"));}            
+            if(!getLectura().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("lectura")), "Sintactico"));}
+            if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
+            if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
+            if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
+            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
+            if(!getIdPregunta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}                      
        }      
        if(
                 getApariencia().equals("") &&
@@ -430,7 +430,7 @@ public class Pregunta
                
          )//Decimos que es una celda  y ya 
         {
-               System.out.println("Celda vacía.");         
+               System.out.println("Fila "+fila+" vacía.");         
         }         
        return errores;
     }
