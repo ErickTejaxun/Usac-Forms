@@ -308,9 +308,9 @@ public class Pregunta
         this.posiciones.put(clave.toLowerCase(), valor);
     }
     
-    public String getColumna(String clave)
+    public int getColumna(String clave)
     {
-        return this.posiciones.get(clave).toString();
+        return this.posiciones.get(clave);
     }
     
     
