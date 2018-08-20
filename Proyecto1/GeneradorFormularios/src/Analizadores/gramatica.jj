@@ -55,13 +55,16 @@ public class excelParser
     {
         if(args.length>0)
         {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            excelParser analizador = new excelParser(data);
+            analizador.Inicio();
+/*
             try
             {
                 try
                 {
-                    InputStream data = new ByteArrayInputStream(args[0].getBytes());
-                    excelParser analizador = new excelParser(data);
-                    analizador.Inicio();
+
                 }
                 catch(TokenMgrError te)
                 {   
@@ -73,7 +76,8 @@ public class excelParser
             {
                 System.out.println(e.getMessage());
                 System.out.println("Errores------------------");
-            }            
+            } 
+*/           
         }
         else
         {

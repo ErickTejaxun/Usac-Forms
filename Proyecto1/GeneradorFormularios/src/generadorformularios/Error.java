@@ -14,6 +14,9 @@ public class Error
     String detalle="";
     int fila;
     int columna;
+    int row;
+    int column;
+    String tipo;
     
     public Error(String detalle, int fila, int columna)
     {
@@ -21,7 +24,36 @@ public class Error
         this.fila = fila;
         this.columna = columna;
     }
+    
+    public Error(String detalle, int fila, int columna, int row, int column, String tipo)
+    {
+        this.detalle = detalle;
+        this.fila = fila;
+        this.columna = columna;
+        this.row = row;
+        this.column = column;
+        this.tipo = tipo;
+    }    
+    
+    public String getTipo()
+    {
+        return this.tipo;
+    }
+    public void setLexico()
+    {
+        this.tipo = "Léxico";
+    }
 
+    public void setSintactico()
+    {
+        this.tipo = "Sintactico";
+    }
+    
+    public void setSemantico()
+    {
+        this.tipo = "Semantico";
+    }
+    
     public void setDetalle(String detalle) {
         this.detalle = detalle;
     }
@@ -44,6 +76,22 @@ public class Error
 
     public int getColumna() {
         return columna;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
            
 }

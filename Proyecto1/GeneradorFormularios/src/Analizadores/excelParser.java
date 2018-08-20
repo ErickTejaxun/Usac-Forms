@@ -10,25 +10,29 @@ public class excelParser implements excelParserConstants {
     {
         if(args.length>0)
         {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            excelParser analizador = new excelParser(data);
+            analizador.Inicio();
+/*
             try
             {
                 try
                 {
-                    InputStream data = new ByteArrayInputStream(args[0].getBytes());
-                    excelParser analizador = new excelParser(data);
-                    analizador.Inicio();
+
                 }
                 catch(TokenMgrError te)
-                {
+                {   
                     System.out.println(te.getMessage());
-                    System.out.println("Errores------------------");
+                    System.out.println("Errores------------------");                    
                 }
             }
             catch (ParseException e)
             {
                 System.out.println(e.getMessage());
                 System.out.println("Errores------------------");
-            }
+            } 
+*/
         }
         else
         {

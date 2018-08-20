@@ -86,8 +86,6 @@ public class Interfaz extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1000, 800));
         setName("frameInterfaz"); // NOI18N
-        setResizable(false);
-        getContentPane().setLayout(null);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.setLayout(null);
@@ -121,19 +119,14 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel1.add(jLabel3);
         jLabel3.setBounds(151, 58, 60, 20);
 
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(30, 10, 690, 100);
-
         botonGenerar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/run.png"))); // NOI18N
         botonGenerar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonGenerarActionPerformed(evt);
             }
         });
-        getContentPane().add(botonGenerar);
-        botonGenerar.setBounds(810, 20, 82, 83);
 
-        jPanel2.setLayout(null);
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setLayout(new javax.swing.OverlayLayout(jPanel3));
 
@@ -154,29 +147,15 @@ public class Interfaz extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Errores", jPanel3);
 
-        jPanel2.add(jTabbedPane2);
-        jTabbedPane2.setBounds(20, 330, 880, 240);
+        jPanel2.add(jTabbedPane2, java.awt.BorderLayout.CENTER);
+
+        jPanel4.setLayout(new java.awt.BorderLayout());
 
         areaEdicion.setColumns(20);
         areaEdicion.setRows(5);
         jScrollPane3.setViewportView(areaEdicion);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 856, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
-        );
+        jPanel4.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
         jTabbedPane3.addTab("Entrada", jPanel4);
 
@@ -184,7 +163,7 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 885, Short.MAX_VALUE)
+            .addGap(0, 1104, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,42 +172,46 @@ public class Interfaz extends javax.swing.JFrame {
 
         jTabbedPane3.addTab("Salida", jPanel5);
 
-        jPanel2.add(jTabbedPane3);
-        jTabbedPane3.setBounds(10, 10, 890, 290);
+        jPanel2.add(jTabbedPane3, java.awt.BorderLayout.PAGE_START);
 
         jTabbedPane1.addTab("Entrada", jPanel2);
 
-        getContentPane().add(jTabbedPane1);
-        jTabbedPane1.setBounds(30, 130, 940, 650);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(botonGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonGenerar))
+                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
+                .addGap(31, 31, 31))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
-                        
-        String[] argumentos = new String[3];
         
-        int fila = 1;
-        for(Pregunta pre : listaPreguntas)
-        {
-            argumentos[0] = "tipo\n"+ pre.getTipo();
-            argumentos[1] = String.valueOf(fila); // Fila hoja de excel.
-            argumentos[2] = pre.getColumna("tipo"); // Columna hoja de excel.
-            try 
-            {
-                excelParser.main(argumentos);
-            } 
-            catch (ParseException ex) 
-            {
-                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-            }            
-            fila++;
-        }
+        analizar();
+        mostrarErrores();
         
-        
-
-        
-        
+                               
     }//GEN-LAST:event_botonGenerarActionPerformed
 
     private void botonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrirActionPerformed
@@ -574,7 +557,8 @@ public class Interfaz extends javax.swing.JFrame {
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
             int colContador = 0;     // Contador de columna 
-            int posicion = 0;
+            int columna = 0;
+            int fil = 0;
             Pregunta nuevaPregunta = null;            
             while(filaIterator.hasNext())
             {
@@ -593,99 +577,100 @@ public class Interfaz extends javax.swing.JFrame {
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
                         {     
-                            registrarEncabezado(celda.toString());                            
+                            registrarEncabezado(celda.toString(), celda.getColumnIndex());                            
                         }
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
                             String valor = celda.toString(); 
-                            posicion = celda.getColumnIndex();
+                            columna = celda.getColumnIndex();
+                            fil = celda.getRowIndex();
                             String encabezado = encabezados.get(celda.getColumnIndex()).toLowerCase();
                             switch(encabezado)
                             {
                                 case "tipo":
                                     if(valor.equals(""))
                                     {                                        
-                                        registrarError("Celda tipo vacia.", filaContador, colContador);                                        
+                                        registrarError("Celda tipo vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
                                     }
                                     nuevaPregunta.setTipo(valor);
-                                    nuevaPregunta.setColumna("tipo", posicion);
+                                    nuevaPregunta.setColumna("tipo", columna);
                                     break;
                                 case "idpregunta":
                                     if(valor.equals(""))
                                     {
-                                        registrarError("Celda idpregunta vacia.", filaContador, colContador);                                        
+                                        registrarError("Celda idpregunta vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
                                     }
                                     nuevaPregunta.setIdPregunta(valor);
-                                    nuevaPregunta.setColumna("idpregunta", posicion);
+                                    nuevaPregunta.setColumna("idpregunta", columna);
                                     break;               
                                 case "etiqueta":
                                     if(valor.equals(""))
                                     {
-                                        registrarError("Celda etiqueta vacia.", filaContador, colContador);                                        
+                                        registrarError("Celda etiqueta vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
                                     }
                                     nuevaPregunta.setEtiqueta(valor);
-                                    nuevaPregunta.setColumna("etiqueta", posicion);
+                                    nuevaPregunta.setColumna("etiqueta", columna);
                                     break;
                                 case "parametro":
                                     nuevaPregunta.setParametro(valor);
-                                    nuevaPregunta.setColumna("parametro", posicion);
+                                    nuevaPregunta.setColumna("parametro", columna);
                                     break;
                                 case "calculo":
                                     nuevaPregunta.setCalcular(valor);
-                                    nuevaPregunta.setColumna("calculo", posicion);
+                                    nuevaPregunta.setColumna("calculo", columna);
                                     break;
                                 case "aplicable":
                                     nuevaPregunta.setAplicable(valor);
-                                    nuevaPregunta.setColumna("aplicable", posicion);
+                                    nuevaPregunta.setColumna("aplicable", columna);
                                     break;
                                 case "sugerir":
                                     nuevaPregunta.setSugerencia(valor);
-                                    nuevaPregunta.setColumna("sugerir", posicion);
+                                    nuevaPregunta.setColumna("sugerir", columna);
                                     break;
                                 case "restringir":
                                     nuevaPregunta.setRestringir(valor);
-                                    nuevaPregunta.setColumna("restringir", posicion);
+                                    nuevaPregunta.setColumna("restringir", columna);
                                     break;                
                                 case "restringirmsn":
                                     nuevaPregunta.setRestringirmsn(valor);
-                                    nuevaPregunta.setColumna("restringirmsn", posicion);
+                                    nuevaPregunta.setColumna("restringirmsn", columna);
                                     break;
                                 case "requeridomsn":
                                     nuevaPregunta.setRequeridoMsn(valor);
-                                    nuevaPregunta.setColumna("requeridomsn", posicion);
+                                    nuevaPregunta.setColumna("requeridomsn", columna);
                                     break;
                                 case "requerido":
                                     nuevaPregunta.setRequerido(valor);
-                                    nuevaPregunta.setColumna("requerido", posicion);
+                                    nuevaPregunta.setColumna("requerido", columna);
                                     break;
                                 case "predeterminado":
                                     nuevaPregunta.setPredeterminado(valor);
-                                    nuevaPregunta.setColumna("predeterminado", posicion);
+                                    nuevaPregunta.setColumna("predeterminado", columna);
                                     break;
                                 case "lectura":
                                     nuevaPregunta.setLectura(valor);
-                                    nuevaPregunta.setColumna("lectura", posicion);
+                                    nuevaPregunta.setColumna("lectura", columna);
                                     break;
                                 case "repeticion":
                                     nuevaPregunta.setRepeticion(valor);
-                                    nuevaPregunta.setColumna("repeticion", posicion);
+                                    nuevaPregunta.setColumna("repeticion", columna);
                                     break;
                                 case "apariencia":
                                     nuevaPregunta.setApariencia(valor);
-                                    nuevaPregunta.setColumna("apariencia", posicion);
+                                    nuevaPregunta.setColumna("apariencia", columna);
                                     break;
                                 case "codigo_pre":
                                     nuevaPregunta.setCodigo_pre(valor);
-                                    nuevaPregunta.setColumna("codigo_pre", posicion);
+                                    nuevaPregunta.setColumna("codigo_pre", columna);
                                     break;
                                 case "codigo_post":
                                     nuevaPregunta.setCodigo_post(valor);
-                                    nuevaPregunta.setColumna("codigo_post", posicion);
+                                    nuevaPregunta.setColumna("codigo_post", columna);
                                     break;
                                 case "fichero":
                                     nuevaPregunta.setMultimedia(valor);
-                                    nuevaPregunta.setColumna("fichero", posicion);
+                                    nuevaPregunta.setColumna("fichero", columna);
                                     break;
                             }                            
                             
@@ -949,6 +934,8 @@ public class Interfaz extends javax.swing.JFrame {
         filasErrores.addColumn("Archivo");
         filasErrores.addColumn("Línea");
         filasErrores.addColumn("Columna");
+        filasErrores.addColumn("Fila");
+        filasErrores.addColumn("Celda");
         filasErrores.addColumn("Detalle"); 
         filasErrores.addColumn("Tipo");         
         //filasErrores.addRow(new String[]{"Archivo","Linea","Columna","Detalle","Tipo"});
@@ -984,8 +971,10 @@ public class Interfaz extends javax.swing.JFrame {
                     this.getArchivoActual(), 
                     listaErrores.get(x).getFila(),
                     listaErrores.get(x).getColumna(),
+                    listaErrores.get(x).getRow(),
+                    listaErrores.get(x).getColumn(),
                     listaErrores.get(x).getDetalle(),
-                    "Lexico"});                                            
+                    listaErrores.get(x).getTipo()});                                            
         }                                             
     }  
     
@@ -994,6 +983,11 @@ public class Interfaz extends javax.swing.JFrame {
     {        
         listaErrores.add(new Error(detalle, fila, columna));                
     }
+    
+    public void registrarError(String detalle, int fila, int columna, int row, int column, String type)
+    {        
+        listaErrores.add(new Error(detalle, fila, columna, row, column, type));                
+    }    
        
     
     public boolean analizarCelda(String cadena)
@@ -1002,9 +996,68 @@ public class Interfaz extends javax.swing.JFrame {
         return resultado;
     }
     
-    public void registrarEncabezado(String valor)
+    public void registrarEncabezado(String valor, int columna)
     {
         encabezados.add(valor.toLowerCase());
+        
+        if(
+          valor.toLowerCase().equals("tipo") ||
+          valor.toLowerCase().equals("idpregunta") ||                
+          valor.toLowerCase().equals("etiqueta") ||                
+          valor.toLowerCase().equals("parametro") ||                
+          valor.toLowerCase().equals("calculo") ||                
+          valor.toLowerCase().equals("aplicable") ||                
+          valor.toLowerCase().equals("sugerir") ||                
+          valor.toLowerCase().equals("restringir") ||      
+          valor.toLowerCase().equals("restringirmsn") ||      
+          valor.toLowerCase().equals("requeridomsn") ||      
+          valor.toLowerCase().equals("requerido") ||      
+          valor.toLowerCase().equals("predeterminado") ||   
+          valor.toLowerCase().equals("lectura") ||      
+          valor.toLowerCase().equals("repeticion") ||      
+          valor.toLowerCase().equals("apariencia") ||      
+          valor.toLowerCase().equals("codigo_pre") ||      
+          valor.toLowerCase().equals("codigo_post") ||                      
+          valor.toLowerCase().equals("fichero")                  
+          )
+        {
+             encabezados.add(valor); 
+        }
+        else
+        {
+           registrarError("Celda '"+valor+"' no válida.", 0, 0,1, columna, "Sintactico");                                                         
+        }    
+    }
+    
+    
+    public void analizar()
+    {
+        String[] argumentos = new String[3]; //Argumentos        
+        int fila = 1;
+        for(Pregunta pre : listaPreguntas)
+        {
+            argumentos[0] = "tipo\n"+ pre.getTipo();
+            argumentos[1] = String.valueOf(fila); // Fila hoja de excel.
+            argumentos[2] = pre.getColumna("tipo"); // Columna hoja de excel.
+            
+            try
+            {
+                try
+                {
+                excelParser.main(argumentos);
+                }
+                catch(TokenMgrError te)
+                {   
+                    registrarError(archivoActual, fila, fila);
+                    System.out.println(te.getMessage());                                    
+                }
+            }
+            catch (ParseException e)
+            {
+                registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn);
+            }                                                
+            fila++;
+        }        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
