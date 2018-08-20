@@ -337,13 +337,13 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setParametro(valor);
                                     break;
                                 case "calculo":
-                                    nuevaPregunta.setCalcular(valor);
+                                    nuevaPregunta.setCalculo(valor);
                                     break;
                                 case "aplicable":
                                     nuevaPregunta.setAplicable(valor);
                                     break;
                                 case "sugerir":
-                                    nuevaPregunta.setSugerencia(valor);
+                                    nuevaPregunta.setSugerir(valor);
                                     break;
                                 case "restringir":
                                     nuevaPregunta.setRestringir(valor);
@@ -379,7 +379,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setCodigo_post(valor);
                                     break;
                                 case "multimedia":
-                                    nuevaPregunta.setMultimedia(valor);
+                                    nuevaPregunta.setFichero(valor);
                                     break;
                             }                            
                             
@@ -589,26 +589,14 @@ public class Interfaz extends javax.swing.JFrame {
                             switch(encabezado)
                             {
                                 case "tipo":
-                                    if(valor.equals(""))
-                                    {                                        
-                                        registrarError("Celda tipo vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
-                                    }
                                     nuevaPregunta.setTipo(valor);
                                     nuevaPregunta.setColumna("tipo", columna);
                                     break;
                                 case "idpregunta":
-                                    if(valor.equals(""))
-                                    {
-                                        registrarError("Celda idpregunta vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
-                                    }
                                     nuevaPregunta.setIdPregunta(valor);
                                     nuevaPregunta.setColumna("idpregunta", columna);
                                     break;               
-                                case "etiqueta":
-                                    if(valor.equals(""))
-                                    {
-                                        registrarError("Celda etiqueta vacia.", filaContador, colContador,fil, columna, "Sintactico");                                        
-                                    }
+                                case "etiqueta":                                    
                                     nuevaPregunta.setEtiqueta(valor);
                                     nuevaPregunta.setColumna("etiqueta", columna);
                                     break;
@@ -617,7 +605,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setColumna("parametro", columna);
                                     break;
                                 case "calculo":
-                                    nuevaPregunta.setCalcular(valor);
+                                    nuevaPregunta.setCalculo(valor);
                                     nuevaPregunta.setColumna("calculo", columna);
                                     break;
                                 case "aplicable":
@@ -625,7 +613,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setColumna("aplicable", columna);
                                     break;
                                 case "sugerir":
-                                    nuevaPregunta.setSugerencia(valor);
+                                    nuevaPregunta.setSugerir(valor);
                                     nuevaPregunta.setColumna("sugerir", columna);
                                     break;
                                 case "restringir":
@@ -669,11 +657,15 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setColumna("codigo_post", columna);
                                     break;
                                 case "fichero":
-                                    nuevaPregunta.setMultimedia(valor);
+                                    nuevaPregunta.setFichero(valor);
                                     nuevaPregunta.setColumna("fichero", columna);
                                     break;
                             }                            
                             
+                            
+                            /*Verificamos que estén las obligatorias.*/
+                            
+ 
                             colContador ++ ;
                             if(colContador>= encabezados.size())
                             { 
@@ -686,6 +678,13 @@ public class Interfaz extends javax.swing.JFrame {
                         nuevaPregunta.setFila(filaContador);
                         listaPreguntas.add(nuevaPregunta);
                     }
+                    
+                    ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(columna);
+                     for(Error err : listaTemporal)
+                     {
+                         listaErrores.add(err);
+                     }                    
+                    
                     filaContador = filaContador + 1;                
                 }                
             }             
@@ -944,24 +943,6 @@ public class Interfaz extends javax.swing.JFrame {
         /*Primero verificamos que los errores sean correctos.
         Por ejemplo que si son agrupación no se toman encuenta como errores si no trae idPregunta y etiqueta        
         */
-        for(int x = 0 ; x< listaErrores.size(); x++)
-        {
-            Error err = listaErrores.get(x);
-            Pregunta preg = listaPreguntas.get(err.getFila());
-            if(preg.getTipo().toLowerCase().equals("iniciar agrupacion")|| 
-                    preg.getTipo().toLowerCase().equals("iniciar ciclo") )
-            {
-                if(!preg.getIdPregunta().equals(""))
-                { 
-                    listaErrores.remove(x);
-                }
-            }
-            if(preg.getTipo().toLowerCase().equals("finalizar agrupacion")||
-                    preg.getTipo().toLowerCase().equals("finalizar ciclo"))
-            {
-                    listaErrores.remove(x);
-            }            
-        }
         
         
         for(int x=0;x<listaErrores.size();x++)

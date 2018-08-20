@@ -82,7 +82,12 @@ public class Opcion
         data+="\t\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
         data+="\t</opcion>\n";  
         return data;
-    }    
+    }   
+    
+    
+
+    
+    
 }
 
 
