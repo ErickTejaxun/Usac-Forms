@@ -13,62 +13,67 @@ public interface excelParserConstants {
   /** RegularExpression Id. */
   int tipo = 1;
   /** RegularExpression Id. */
-  int texto = 3;
+  int idpregunta = 2;
   /** RegularExpression Id. */
-  int entero = 4;
+  int texto = 4;
   /** RegularExpression Id. */
-  int decimal = 5;
+  int entero = 5;
   /** RegularExpression Id. */
-  int rango = 6;
+  int decimal = 6;
   /** RegularExpression Id. */
-  int condicion = 7;
+  int rango = 7;
   /** RegularExpression Id. */
-  int fecha = 8;
+  int condicion = 8;
   /** RegularExpression Id. */
-  int hora = 9;
+  int fecha = 9;
   /** RegularExpression Id. */
-  int fechahora = 10;
+  int hora = 10;
   /** RegularExpression Id. */
-  int seleccionaUno = 11;
+  int fechahora = 11;
   /** RegularExpression Id. */
-  int seleccionaMultiple = 12;
+  int seleccionaUno = 12;
   /** RegularExpression Id. */
-  int nota = 13;
+  int seleccionaMultiple = 13;
   /** RegularExpression Id. */
-  int fichero = 14;
+  int nota = 14;
   /** RegularExpression Id. */
-  int calcular = 15;
+  int fichero = 15;
   /** RegularExpression Id. */
-  int iniciar = 16;
+  int calcular = 16;
   /** RegularExpression Id. */
-  int finalizar = 17;
+  int iniciar = 17;
   /** RegularExpression Id. */
-  int id = 18;
+  int finalizar = 18;
   /** RegularExpression Id. */
-  int digito = 19;
+  int id = 19;
   /** RegularExpression Id. */
-  int letra = 20;
+  int digito = 20;
   /** RegularExpression Id. */
-  int coma = 21;
+  int letra = 21;
   /** RegularExpression Id. */
-  int punto = 22;
+  int coma = 22;
   /** RegularExpression Id. */
-  int agrupacion = 25;
+  int punto = 23;
   /** RegularExpression Id. */
-  int ciclo = 26;
+  int agrupacion = 26;
+  /** RegularExpression Id. */
+  int ciclo = 27;
 
   /** Lexical state. */
   int DEFAULT = 0;
   /** Lexical state. */
   int TIPO = 1;
   /** Lexical state. */
-  int AGCI = 2;
+  int IDPREGUNTA = 2;
+  /** Lexical state. */
+  int AGCI = 3;
 
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
     "\"tipo\"",
-    "<token of kind 2>",
+    "\"idpregunta\"",
+    "<token of kind 3>",
     "\"texto\"",
     "\"entero\"",
     "\"decimal\"",
@@ -89,8 +94,8 @@ public interface excelParserConstants {
     "<letra>",
     "\",\"",
     "\".\"",
-    "<token of kind 23>",
     "<token of kind 24>",
+    "<token of kind 25>",
     "\"agrupacion\"",
     "\"ciclo\"",
     "\"\\\"\"",

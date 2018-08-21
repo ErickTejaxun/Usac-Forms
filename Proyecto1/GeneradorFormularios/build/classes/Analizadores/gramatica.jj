@@ -51,33 +51,14 @@ import java.io.InputStream;
 public class excelParser 
 {
 
-    public static void main(String args[]) throws ParseException
+    public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
             excelParser analizador = new excelParser(data);
-            analizador.Inicio();
-/*
-            try
-            {
-                try
-                {
-
-                }
-                catch(TokenMgrError te)
-                {   
-                    System.out.println(te.getMessage());
-                    System.out.println("Errores------------------");                    
-                }
-            }
-            catch (ParseException e)
-            {
-                System.out.println(e.getMessage());
-                System.out.println("Errores------------------");
-            } 
-*/           
+            return analizador.Inicio();   
         }
         else
         {
@@ -92,7 +73,7 @@ public class excelParser
                 System.out.println("Errores------------------");
             }              
         }
-
+        return null;
     }
 
     void errorPanico(int tokenSinc) 
@@ -122,6 +103,7 @@ TOKEN_ESPCIAL: saber
 TOKEN:
 {
     <tipo:"tipo">:TIPO
+|   <idpregunta:"idpregunta">:IDPREGUNTA
 }
 
 SKIP:
@@ -148,7 +130,7 @@ SKIP:
     |<finalizar:"finalizar">:AGCI
 }
 
-<TIPO>TOKEN:
+<TIPO,IDPREGUNTA>TOKEN:
 {
     <id:(<letra>)(<letra>|<digito>|"_")*  >
 |   <#digito:["0" - "9"] > 
@@ -157,7 +139,7 @@ SKIP:
 |   <punto:".">
 }
 
-<TIPO>SKIP:
+<TIPO,IDPREGUNTA>SKIP:
 {
     <(" " | "\t" | "\n" | "\r" )+>
 }
@@ -176,53 +158,196 @@ SKIP:
 
 
 /*Area de analis sintactico. */
-void Inicio():
-{}
+Nodo Inicio():
+{
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
 {
     (
-    <tipo>Tipo()<EOF>{System.out.println("Celda tipo");}
+    t=<tipo>nodo=Tipo()<EOF>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
+        u.add(nodo);
+        return u;
+    }
+    |t=<idpregunta>nodo=idPregunta()<EOF>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
+        u.add(nodo);
+        return u;
+    }
     )+
 }
 
-void Tipo():
-{}
+Nodo idPregunta():
 {
-     <texto>
-    |<entero>
-    |<decimal>
-    |<rango>
-    |<condicion>
-    |<fecha>
-    |<hora>
-    |<fechahora>
-    |<seleccionaUno><id>
-    |<seleccionaMultiple><id>
-    |<nota>    
-    |<fichero>listaFormatos()
-    |<calcular>
-    |<iniciar>agci()    
-    |<finalizar>agci()    
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+    t=<id>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);        
+        return u;
+    }
+|   {u = new Nodo("Vacio perro",0,0);  return u;}
+
 }
 
-void agci():
-{}
+
+
+Nodo Tipo():
 {
-    <ciclo>
-   |<agrupacion>
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+     t=<texto>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<entero>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<decimal>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<rango>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<condicion>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<fecha>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<hora>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<fechahora>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |<seleccionaUno>t=<id>
+    {
+        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        return u;
+    }
+    |<seleccionaMultiple>t=<id>
+    {
+        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        return u;
+    }
+    |t=<nota>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<fichero>u=listaFormatos()
+    {
+        nodo = new Nodo(t.image,t.beginColumn,t.beginLine);
+        nodo.add(u);
+        return nodo;
+    }
+    |t=<calcular>
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<iniciar>nodo=agci()    
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        return u;
+    }
+    |t=<finalizar>nodo=agci()    
+    {
+        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        return u;
+    }
+|   {u = new Nodo("Vacio perro",0,0);  return u;}
+
+
 }
 
-void listaFormatos():
-{}
+Nodo agci():
 {
-    "\""<punto><id>listaFormatos1()"\""
-    |{System.out.println("Sin formatos");}
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+    t=<ciclo>
+    {
+        u = new Nodo("ciclo",t.beginColumn,t.beginLine);
+        return u;
+    }
+   |t=<agrupacion>
+    {
+        u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
+        return u;
+    }
 }
 
-void listaFormatos1():
-{}
+Nodo listaFormatos():
 {
-    <coma><punto><id>listaFormatos1()
-|   {System.out.println("Final fila");}
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+    "\""<punto>t=<id>u=listaFormatos1()"\""
+        {
+            Nodo aux = u;
+            u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
+            return u;
+        }    
+    |    
+    {
+        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+        return aux;
+    }
+}
+
+Nodo listaFormatos1():
+{
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+    <coma><punto>t=<id>u=listaFormatos1()
+    {
+        Nodo aux = u;
+        u.add( new Nodo(t.image,t.beginColumn,t.beginLine));
+        return u;
+    }
+|     //Epsilon Creamos la lista
+    {
+        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+        return aux;
+    }
 }
 
 

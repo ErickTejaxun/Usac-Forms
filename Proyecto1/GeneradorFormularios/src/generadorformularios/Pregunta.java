@@ -435,4 +435,50 @@ public class Pregunta
        return errores;
     }
     
+    
+    
+    public String getAtributo(String atrib)
+    {        
+        switch(atrib)
+        {
+            case "tipo":
+                return getTipo();                
+            case "idpregunta":
+                return getIdPregunta();
+            case "etiqueta":
+                return getEtiqueta();
+            case "parametro":
+                return getParametro();
+            case "calculo":
+                return getCalculo();
+            case "aplicable":
+                return getAplicable();
+            case "sugerir":
+                return getSugerir();
+            case "restringir":
+                return getRestringir();
+            case "restringirmsn":
+                return getRestringirmsn();
+            case "requerido":
+                return getRequerido();
+            case "requeridomsn":
+                return getRequeridoMsn();
+            case "predeterminado":
+                return getPredeterminado();
+            case "lectura":
+                return getLectura();
+            case "repeticion":
+                return getRepeticion();
+            case "apariencia":
+                return getApariencia();
+            case "codigo_pre":
+                return getCodigo_pre();
+            case "codigo_post":
+                return getCodigo_post();
+            case "fichero":
+                return getFichero();
+        }
+        return "";
+    }
+    
 }

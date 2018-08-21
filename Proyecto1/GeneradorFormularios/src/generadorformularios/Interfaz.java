@@ -30,8 +30,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 
 import Analizadores.*;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 /**
  *
@@ -44,6 +42,8 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
     ArrayList<String> listaEncabezadosPreguntas = new ArrayList();
     DefaultTableModel filasErrores;
+    
+    public Nodo raizArbol;
     
     
     excelParser analizador = null;
@@ -222,7 +222,11 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
         
-        analizar();
+        try {
+            analizar();
+        } catch (IOException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
         mostrarErrores();
         
                                
@@ -579,11 +583,41 @@ public class Interfaz extends javax.swing.JFrame {
             int colContador = 0;     // Contador de columna 
             int columna = 0;
             int fil = 0;
-            Pregunta nuevaPregunta = null;               
+            Pregunta nuevaPregunta = null; 
+            
+            int totalFilas = hojaActual.getLastRowNum();
+            int totalCeldas = 0;
+            
+            /*
+            try
+            {
+                while(colContador<totalFilas)
+                {
+                    totalCeldas = hojaActual.getRow(colContador).getLastCellNum();                    
+                    while(filaContador<totalCeldas)
+                    {
+                        if(hojaActual.getRow(colContador).getCell(filaContador)!=null)
+                        {
+                            System.out.print(hojaActual.getRow(colContador).getCell(filaContador).toString()+"  ");
+                        }
+                        
+                        filaContador++;
+                    }  
+                    System.out.println("");
+                    filaContador=0;
+                    colContador++;
+                }
+            }catch(Exception e)
+            {
+                Mensaje(e.getMessage(),"error");
+            }
+            */
+           
+            
             while(filaIterator.hasNext())
             {                
                 fila = filaIterator.next();
-                Mensaje("Mensaje",fila.getCell(0).toString());
+                //Mensaje("Mensaje",fila.getCell(0).toString());
                 //Ahora obtenemos las celdas de la fila.
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
@@ -1032,34 +1066,49 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar()
+    public void analizar() throws IOException
     {
+        //Inicializamos la raíz del arbol general.
+        raizArbol = new Nodo("XLS");
+        dibujador printer = new dibujador();
         String[] argumentos = new String[3]; //Argumentos        
         int fila = 1;
+        String[] encabezados = 
+        {
+            "tipo","idpregunta"/*,"etiqueta","parametro","calculo","aplicable","sugerir","restringir",
+            "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
+            "codigo_post","fichero"*/
+        };
+        
         for(Pregunta pre : listaPreguntas)
         {
-            argumentos[0] = "tipo\n"+ pre.getTipo();
-            argumentos[1] = String.valueOf(fila); // Fila hoja de excel.
-            //argumentos[2] = pre.getColumna("tipo"); // Columna hoja de excel.
-            
-            try
+            Nodo arbolPregunta  = new Nodo("Pregunta");
+            for(String parametro : encabezados)
             {
+                argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                
                 try
                 {
-                    excelParser.main(argumentos);
+                    try
+                    {
+                        arbolPregunta.add(excelParser.main(argumentos));
+                    }
+                    catch(TokenMgrError te)
+                    {   
+                        //archivoActual, fila, fila
+                        registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
+                    }
                 }
-                catch(TokenMgrError te)
-                {   
-                    //archivoActual, fila, fila
-                    registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
-                }
+                catch (ParseException e)
+                {
+                    registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
+                }                   
             }
-            catch (ParseException e)
-            {
-                registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
-            }                                                
+                                             
+            //printer.grafo(arbolPregunta);
+            raizArbol.add(arbolPregunta);
             fila++;
         }        
+        printer.grafo(raizArbol);
     }
     
     /*Este metodo sirve para comprobar que vengan las columnas obligatorias.*/

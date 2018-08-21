@@ -6,33 +6,14 @@ import java.io.InputStream;
 
 public class excelParser implements excelParserConstants {
 
-    public static void main(String args[]) throws ParseException
+    public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
             excelParser analizador = new excelParser(data);
-            analizador.Inicio();
-/*
-            try
-            {
-                try
-                {
-
-                }
-                catch(TokenMgrError te)
-                {   
-                    System.out.println(te.getMessage());
-                    System.out.println("Errores------------------");                    
-                }
-            }
-            catch (ParseException e)
-            {
-                System.out.println(e.getMessage());
-                System.out.println("Errores------------------");
-            } 
-*/
+            return analizador.Inicio();
         }
         else
         {
@@ -47,7 +28,7 @@ public class excelParser implements excelParserConstants {
                 System.out.println("Errores------------------");
             }
         }
-
+        return null;
     }
 
     void errorPanico(int tokenSinc)
@@ -62,145 +43,244 @@ public class excelParser implements excelParserConstants {
     }
 
 /*Area de analis sintactico. */
-  final public void Inicio() throws ParseException {
+  final public Nodo Inicio() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
     label_1:
     while (true) {
-      jj_consume_token(tipo);
-      Tipo();
-      jj_consume_token(0);
-System.out.println("Celda tipo");
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case tipo:{
-        ;
+        t = jj_consume_token(tipo);
+        nodo = Tipo();
+        jj_consume_token(0);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        {if ("" != null) return u;}
+        break;
+        }
+      case idpregunta:{
+        t = jj_consume_token(idpregunta);
+        nodo = idPregunta();
+        jj_consume_token(0);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        {if ("" != null) return u;}
         break;
         }
       default:
         jj_la1[0] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case tipo:
+      case idpregunta:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[1] = jj_gen;
         break label_1;
       }
     }
+    throw new Error("Missing return statement in function");
   }
 
-  final public void Tipo() throws ParseException {
+  final public Nodo idPregunta() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case texto:{
-      jj_consume_token(texto);
-      break;
-      }
-    case entero:{
-      jj_consume_token(entero);
-      break;
-      }
-    case decimal:{
-      jj_consume_token(decimal);
-      break;
-      }
-    case rango:{
-      jj_consume_token(rango);
-      break;
-      }
-    case condicion:{
-      jj_consume_token(condicion);
-      break;
-      }
-    case fecha:{
-      jj_consume_token(fecha);
-      break;
-      }
-    case hora:{
-      jj_consume_token(hora);
-      break;
-      }
-    case fechahora:{
-      jj_consume_token(fechahora);
-      break;
-      }
-    case seleccionaUno:{
-      jj_consume_token(seleccionaUno);
-      jj_consume_token(id);
-      break;
-      }
-    case seleccionaMultiple:{
-      jj_consume_token(seleccionaMultiple);
-      jj_consume_token(id);
-      break;
-      }
-    case nota:{
-      jj_consume_token(nota);
-      break;
-      }
-    case fichero:{
-      jj_consume_token(fichero);
-      listaFormatos();
-      break;
-      }
-    case calcular:{
-      jj_consume_token(calcular);
-      break;
-      }
-    case iniciar:{
-      jj_consume_token(iniciar);
-      agci();
-      break;
-      }
-    case finalizar:{
-      jj_consume_token(finalizar);
-      agci();
-      break;
-      }
-    default:
-      jj_la1[1] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  final public void agci() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case ciclo:{
-      jj_consume_token(ciclo);
-      break;
-      }
-    case agrupacion:{
-      jj_consume_token(agrupacion);
+    case id:{
+      t = jj_consume_token(id);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
       break;
       }
     default:
       jj_la1[2] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+u = new Nodo("Vacio perro",0,0);  {if ("" != null) return u;}
     }
+    throw new Error("Missing return statement in function");
   }
 
-  final public void listaFormatos() throws ParseException {
+  final public Nodo Tipo() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case 27:{
-      jj_consume_token(27);
-      jj_consume_token(punto);
-      jj_consume_token(id);
-      listaFormatos1();
-      jj_consume_token(27);
+    case texto:{
+      t = jj_consume_token(texto);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case entero:{
+      t = jj_consume_token(entero);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case decimal:{
+      t = jj_consume_token(decimal);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case rango:{
+      t = jj_consume_token(rango);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case condicion:{
+      t = jj_consume_token(condicion);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case fecha:{
+      t = jj_consume_token(fecha);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case hora:{
+      t = jj_consume_token(hora);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case fechahora:{
+      t = jj_consume_token(fechahora);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case seleccionaUno:{
+      jj_consume_token(seleccionaUno);
+      t = jj_consume_token(id);
+u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        {if ("" != null) return u;}
+      break;
+      }
+    case seleccionaMultiple:{
+      jj_consume_token(seleccionaMultiple);
+      t = jj_consume_token(id);
+u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        {if ("" != null) return u;}
+      break;
+      }
+    case nota:{
+      t = jj_consume_token(nota);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case fichero:{
+      t = jj_consume_token(fichero);
+      u = listaFormatos();
+nodo = new Nodo(t.image,t.beginColumn,t.beginLine);
+        nodo.add(u);
+        {if ("" != null) return nodo;}
+      break;
+      }
+    case calcular:{
+      t = jj_consume_token(calcular);
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case iniciar:{
+      t = jj_consume_token(iniciar);
+      nodo = agci();
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        {if ("" != null) return u;}
+      break;
+      }
+    case finalizar:{
+      t = jj_consume_token(finalizar);
+      nodo = agci();
+u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u.add(nodo);
+        {if ("" != null) return u;}
       break;
       }
     default:
       jj_la1[3] = jj_gen;
-System.out.println("Sin formatos");
+u = new Nodo("Vacio perro",0,0);  {if ("" != null) return u;}
     }
+    throw new Error("Missing return statement in function");
   }
 
-  final public void listaFormatos1() throws ParseException {
+  final public Nodo agci() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case coma:{
-      jj_consume_token(coma);
-      jj_consume_token(punto);
-      jj_consume_token(id);
-      listaFormatos1();
+    case ciclo:{
+      t = jj_consume_token(ciclo);
+u = new Nodo("ciclo",t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case agrupacion:{
+      t = jj_consume_token(agrupacion);
+u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
       break;
       }
     default:
       jj_la1[4] = jj_gen;
-System.out.println("Final fila");
+      jj_consume_token(-1);
+      throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo listaFormatos() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 28:{
+      jj_consume_token(28);
+      jj_consume_token(punto);
+      t = jj_consume_token(id);
+      u = listaFormatos1();
+      jj_consume_token(28);
+Nodo aux = u;
+            u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
+            {if ("" != null) return u;}
+      break;
+      }
+    default:
+      jj_la1[5] = jj_gen;
+Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+        {if ("" != null) return aux;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo listaFormatos1() throws ParseException {Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case coma:{
+      jj_consume_token(coma);
+      jj_consume_token(punto);
+      t = jj_consume_token(id);
+      u = listaFormatos1();
+Nodo aux = u;
+        u.add( new Nodo(t.image,t.beginColumn,t.beginLine));
+        {if ("" != null) return u;}
+      break;
+      }
+    default:
+      jj_la1[6] = jj_gen;
+Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+        {if ("" != null) return aux;}
+    }
+    throw new Error("Missing return statement in function");
   }
 
   /** Generated Token Manager. */
@@ -212,13 +292,13 @@ System.out.println("Final fila");
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[5];
+  final private int[] jj_la1 = new int[7];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x2,0x3fff8,0x6000000,0x8000000,0x200000,};
+      jj_la1_0 = new int[] {0x6,0x6,0x80000,0x7fff0,0xc000000,0x10000000,0x400000,};
    }
 
   /** Constructor with InputStream. */
@@ -232,7 +312,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -246,7 +326,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -256,7 +336,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -266,7 +346,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -275,7 +355,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -284,7 +364,7 @@ System.out.println("Final fila");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -335,12 +415,12 @@ System.out.println("Final fila");
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[28];
+    boolean[] la1tokens = new boolean[29];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 7; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -349,7 +429,7 @@ System.out.println("Final fila");
         }
       }
     }
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < 29; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
