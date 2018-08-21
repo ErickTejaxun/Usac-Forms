@@ -32,6 +32,9 @@ public class Pregunta
    String	codigo_pre	=	""	;
    String	codigo_post	=	""	;
    String	fichero	=	""	;
+   boolean vacio = false;
+   boolean iniciar = false;
+   boolean finalizar = false;
    
    
    private Hashtable<String, Integer> posiciones= new Hashtable<String, Integer>();
@@ -186,6 +189,19 @@ public class Pregunta
         this.fila = fila;
     }
     
+    public void setVacio()
+    {
+        this.vacio=true;
+    }
+    public void setNoVacio()
+    {
+        this.vacio = false;
+    }
+    
+    public boolean getVacio()
+    {
+        return this.vacio;
+    }
     public int getFila()
     {
         return this.fila;
@@ -199,6 +215,22 @@ public class Pregunta
     public boolean getError()
     {
         return this.error;
+    }
+    
+    public void setIniciar()
+    {
+        this.iniciar = true;
+    }
+    
+    public void setNoEncabezado()
+    {
+        this.iniciar = false;
+    }    
+    
+    
+    public boolean getEncabezado()
+    {
+        return this.iniciar;
     }
     
     public void insertarAtributo(String tipo, String valor)
@@ -368,6 +400,7 @@ public class Pregunta
        ArrayList<Error> errores  = new ArrayList();
        if(getTipo().toLowerCase().equals("iniciar agrupacion") || getTipo().toLowerCase().equals("iniciar ciclo"))//Verificamos si es inicio
        {
+            setIniciar();
             if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
             if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
             if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
@@ -388,6 +421,7 @@ public class Pregunta
        }
        if(getTipo().toLowerCase().equals("finalizar agrupacion") || getTipo().toLowerCase().equals("finalizar ciclo"))//Verificamos si es inicio
        {
+            //setFinalizar();
             if(!getApariencia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("apariencia")), "Sintactico"));}
             if(!getEtiqueta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
             if(!getParametro().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("parametro")), "Sintactico"));}
@@ -430,7 +464,8 @@ public class Pregunta
                
          )//Decimos que es una celda  y ya 
         {
-               System.out.println("Fila "+fila+" vacía.");         
+               System.out.println("Fila "+fila+" vacía.");      
+               setVacio();
         }         
        return errores;
     }

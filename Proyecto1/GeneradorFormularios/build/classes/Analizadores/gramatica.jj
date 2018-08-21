@@ -193,7 +193,7 @@ Nodo idPregunta():
         u = new Nodo(t.image,t.beginColumn,t.beginLine);        
         return u;
     }
-|   {u = new Nodo("Vacio perro",0,0);  return u;}
+|   {u = new Nodo("",0,0);  return u;}
 
 }
 
@@ -286,7 +286,7 @@ Nodo Tipo():
         u.add(nodo);
         return u;
     }
-|   {u = new Nodo("Vacio perro",0,0);  return u;}
+|   {u = new Nodo("",0,0);  return u;}
 
 
 }

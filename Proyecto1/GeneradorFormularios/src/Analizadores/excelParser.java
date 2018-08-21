@@ -98,7 +98,7 @@ u = new Nodo(t.image,t.beginColumn,t.beginLine);
       }
     default:
       jj_la1[2] = jj_gen;
-u = new Nodo("Vacio perro",0,0);  {if ("" != null) return u;}
+u = new Nodo("",0,0);  {if ("" != null) return u;}
     }
     throw new Error("Missing return statement in function");
   }
@@ -209,7 +209,7 @@ u = new Nodo(t.image,t.beginColumn,t.beginLine);
       }
     default:
       jj_la1[3] = jj_gen;
-u = new Nodo("Vacio perro",0,0);  {if ("" != null) return u;}
+u = new Nodo("",0,0);  {if ("" != null) return u;}
     }
     throw new Error("Missing return statement in function");
   }

@@ -1067,7 +1067,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     
     public void analizar() throws IOException
-    {
+    {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
         dibujador printer = new dibujador();
@@ -1085,23 +1085,26 @@ public class Interfaz extends javax.swing.JFrame {
             Nodo arbolPregunta  = new Nodo("Pregunta");
             for(String parametro : encabezados)
             {
-                argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                
-                try
+                if(!pre.getVacio())
                 {
+                    argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                
                     try
                     {
-                        arbolPregunta.add(excelParser.main(argumentos));
+                        try
+                        {
+                            arbolPregunta.add(excelParser.main(argumentos));
+                        }
+                        catch(TokenMgrError te)
+                        {   
+                            //archivoActual, fila, fila
+                            registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
+                        }
                     }
-                    catch(TokenMgrError te)
-                    {   
-                        //archivoActual, fila, fila
-                        registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
-                    }
+                    catch (ParseException e)
+                    {
+                        registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
+                    }                     
                 }
-                catch (ParseException e)
-                {
-                    registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
-                }                   
             }
                                              
             //printer.grafo(arbolPregunta);
