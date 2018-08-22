@@ -15,7 +15,7 @@ public class Error
     int fila;
     int columna;
     int row;
-    int column;
+    String column;
     String tipo;
     
     public Error(String detalle, int fila, int columna)
@@ -31,7 +31,7 @@ public class Error
         this.fila = fila;
         this.columna = columna;
         this.row = row;
-        this.column = column;
+        this.column = getCelda(column);
         this.tipo = tipo;
     }    
     
@@ -82,7 +82,7 @@ public class Error
         return row;
     }
 
-    public int getColumn() {
+    public String getColumn() {
         return column;
     }
 
@@ -90,10 +90,25 @@ public class Error
         this.row = row;
     }
 
-    public void setColumn(int column) {
+    public void setColumn(String column) {
         this.column = column;
     }
            
+    
+    public String getCelda(int valor)
+    {
+        
+        int primera = valor / 28;
+        int segunda = valor % 28;        
+        if(primera!=0)
+        {
+            return String.valueOf((char)(primera+65) + (char)(segunda+65));            
+        }
+        else
+        {
+             return  String.valueOf((char)(segunda+65)); 
+        }                
+    }    
 }
 
 

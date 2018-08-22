@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Analizadores;
+package AST;
 
+import AST.Nodo;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

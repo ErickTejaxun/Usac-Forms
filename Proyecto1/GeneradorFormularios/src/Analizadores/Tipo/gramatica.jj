@@ -42,14 +42,15 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(excelParser)
+PARSER_BEGIN(parserTipo)
 
-package Analizadores;
+package Analizadores.Tipo;
+import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class excelParser 
-{
+public class parserTipo 
+{    
 
     public static Nodo main(String args[]) throws ParseException
     {
@@ -57,14 +58,14 @@ public class excelParser
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
-            excelParser analizador = new excelParser(data);
+            parserTipo analizador = new parserTipo(data);
             return analizador.Inicio();   
         }
         else
         {
             try
             {
-                excelParser analizador = new excelParser(System.in);
+                parserTipo analizador = new parserTipo(System.in);
                 analizador.Inicio();
             }
             catch (ParseException e)
@@ -88,7 +89,7 @@ public class excelParser
     }
 
 }
-PARSER_END(excelParser)
+PARSER_END(parserTipo)
 
 
 /*
@@ -103,7 +104,6 @@ TOKEN_ESPCIAL: saber
 TOKEN:
 {
     <tipo:"tipo">:TIPO
-|   <idpregunta:"idpregunta">:IDPREGUNTA
 }
 
 SKIP:
@@ -130,7 +130,7 @@ SKIP:
     |<finalizar:"finalizar">:AGCI
 }
 
-<TIPO,IDPREGUNTA>TOKEN:
+<TIPO,IDPREGUNTA,EST1>TOKEN:
 {
     <id:(<letra>)(<letra>|<digito>|"_")*  >
 |   <#digito:["0" - "9"] > 
@@ -167,12 +167,6 @@ Nodo Inicio():
 {
     (
     t=<tipo>nodo=Tipo()<EOF>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
-        u.add(nodo);
-        return u;
-    }
-    |t=<idpregunta>nodo=idPregunta()<EOF>
     {
         u = new Nodo(t.image,t.beginColumn,t.beginLine);  
         u.add(nodo);

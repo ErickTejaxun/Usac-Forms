@@ -6,6 +6,11 @@
 package generadorformularios;
 
 
+import Analizadores.idPregunta.excelParser;
+import Analizadores.idPregunta.ParseException;
+import Analizadores.idPregunta.TokenMgrError;
+import AST.dibujador;
+import AST.Nodo;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 
-import Analizadores.*;
+import Analizadores.Tipo.parserTipo;
 
 /**
  *
@@ -42,6 +47,7 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
     ArrayList<String> listaEncabezadosPreguntas = new ArrayList();
     DefaultTableModel filasErrores;
+    boolean encuestaFlag = true;
     
     public Nodo raizArbol;
     
@@ -223,7 +229,11 @@ public class Interfaz extends javax.swing.JFrame {
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
         
         try {
-            analizar();
+            try {
+                analizar();
+            } catch (Analizadores.Tipo.ParseException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException ex) {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -289,8 +299,8 @@ public class Interfaz extends javax.swing.JFrame {
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
             //Leer el archivo plano de excel.                        
-            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
-            XSSFSheet hojaActual = libro.getSheet("encuesta");                                    
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);              
+            XSSFSheet hojaActual = libro.getSheet("encuesta");  
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
@@ -432,7 +442,13 @@ public class Interfaz extends javax.swing.JFrame {
         }
         catch(Exception error)
         {
-            Mensaje(error.getMessage(), "Error");
+            if(error instanceof java.lang.NullPointerException)
+            {
+                //Mensaje(error.getMessage(), "Error");
+                //encuestaFlag = false;
+                //registrarError("Hoja Encuesta no encontrada", 0, 0,0, 0, "Sintactico"); 
+            }
+            
         }                                        
         return cadenaArchivo;
     }
@@ -576,7 +592,7 @@ public class Interfaz extends javax.swing.JFrame {
         {
             //Leer el archivo plano de excel.                        
             HSSFWorkbook libro = new HSSFWorkbook(archivo);                                                                      
-            HSSFSheet hojaActual = libro.getSheet("encuesta");                                    
+            HSSFSheet hojaActual = libro.getSheet("encuesta");             
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
@@ -1066,7 +1082,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException
+    public void analizar() throws IOException, Analizadores.Tipo.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1085,25 +1101,17 @@ public class Interfaz extends javax.swing.JFrame {
             Nodo arbolPregunta  = new Nodo("Pregunta");
             for(String parametro : encabezados)
             {
-                if(!pre.getVacio())
+                if(!pre.getVacio()) // Verificamos que no mandemos una celda vacía.
                 {
-                    argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                
-                    try
+                    argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                                                                                  
+                    
+                    switch(parametro)
                     {
-                        try
-                        {
-                            arbolPregunta.add(excelParser.main(argumentos));
-                        }
-                        catch(TokenMgrError te)
-                        {   
-                            //archivoActual, fila, fila
-                            registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
-                        }
+                        case "tipo":
+                            arbolPregunta.add(analizarTipo(argumentos,fila,fila,fila,pre.getColumna("tipo")));                                                        
+                            break;
                     }
-                    catch (ParseException e)
-                    {
-                        registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
-                    }                     
+                   
                 }
             }
                                              
@@ -1114,36 +1122,107 @@ public class Interfaz extends javax.swing.JFrame {
         printer.grafo(raizArbol);
     }
     
+    
+    
+    public Nodo analizarTipo(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Tipo.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Tipo.parserTipo.main(argumentos);                                                        
+             }
+             catch(TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Tipo.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }
+    
+    /*Metodo para ver donde se va a nalizar la puta data.*/
+    
+    /*
+    public Nodo analizarTipo(String[] argumentos)
+    {
+        try
+        {
+            try
+            {                                                  
+                excelParser.main(argumentos);                                                        
+            }
+            catch(TokenMgrError te)
+            {   
+                //archivoActual, fila, fila
+                registrarError(te.getMessage(), fila, fila, fila, pre.getColumna("tipo"), "Lexico");                                                 
+            }
+        }
+        catch (ParseException e)
+        {
+            registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, pre.getColumna("tipo"),"Sintactico");
+        }        
+    }
+    */
+    
+    
+    
+    
     /*Este metodo sirve para comprobar que vengan las columnas obligatorias.*/
     public void comprobarCabeceras()
-    {        
-        /*Primero verificamos la pagina Encuestas*/
-        int flag = 0;
-        for(String cab : listaEncabezadosPreguntas)
+    {     
+        if(encuestaFlag)
         {
-          if(cab.toLowerCase().equals("tipo")){ flag += 1;}
-          if(cab.toLowerCase().equals("idpregunta")){ flag += 1;}
-          if(cab.toLowerCase().equals("etiqueta")){ flag += 1;}          
+            /*Primero verificamos la pagina Encuestas*/
+            int flag = 0;
+            for(String cab : listaEncabezadosPreguntas)
+            {
+              if(cab.toLowerCase().equals("tipo")){ flag += 1;}
+              if(cab.toLowerCase().equals("idpregunta")){ flag += 1;}
+              if(cab.toLowerCase().equals("etiqueta")){ flag += 1;}          
+            }
+            switch(flag)
+            {
+                case 0:
+                    registrarError("Hace falta la columna Tipo", 0, 0);
+                    registrarError("Hace falta la columna idPregunta", 0, 0);
+                    registrarError("Hace falta la columna etiqueta", 0, 0);
+                    break;
+                case 1:                
+                    registrarError("Hace falta la columna idPregunta", 0, 0);
+                    registrarError("Hace falta la columna etiqueta", 0, 0);
+                    break;  
+                case 2:
+                    registrarError("Hace falta la columna etiqueta", 0, 0);
+                    break;                
+            }            
         }
-        switch(flag)
-        {
-            case 0:
-                registrarError("Hace falta la columna Tipo", 0, 0);
-                registrarError("Hace falta la columna idPregunta", 0, 0);
-                registrarError("Hace falta la columna etiqueta", 0, 0);
-                break;
-            case 1:                
-                registrarError("Hace falta la columna idPregunta", 0, 0);
-                registrarError("Hace falta la columna etiqueta", 0, 0);
-                break;  
-            case 2:
-                registrarError("Hace falta la columna etiqueta", 0, 0);
-                break;                
-        }
+
 
         /*Segundo verificamos la pagina Opciones*/
         /*Tercer verificamos la pagina configuraciones*/
     }
+    
+    public String getCelda(int valor)
+    {
+        int primera = valor / 28;
+        int segunda = valor % 28;        
+        if(primera!=0)
+        {
+            return Character.getName(primera+65) + Character.getName(segunda+65);            
+        }
+        else
+        {
+             return  Character.getName(segunda+65); 
+        }                
+    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
