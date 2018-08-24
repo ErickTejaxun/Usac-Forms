@@ -11,19 +11,19 @@ public interface parserEtiquetaConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int ID = 4;
+  int numeral = 4;
   /** RegularExpression Id. */
-  int Numeral = 5;
+  int corchA = 5;
   /** RegularExpression Id. */
-  int Acor = 6;
+  int corchC = 6;
   /** RegularExpression Id. */
-  int Ccor = 7;
+  int punto = 7;
   /** RegularExpression Id. */
-  int Punto = 8;
+  int doblepunto = 8;
   /** RegularExpression Id. */
-  int PuntoP = 9;
+  int Cualquiera = 9;
   /** RegularExpression Id. */
-  int Cualquiera = 10;
+  int ID = 10;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -34,13 +34,13 @@ public interface parserEtiquetaConstants {
     "\" \"",
     "\"\\r\"",
     "\"\\t\"",
-    "<ID>",
     "\"#\"",
     "\"[\"",
     "\"]\"",
     "\".\"",
     "\"..\"",
     "<Cualquiera>",
+    "<ID>",
   };
 
 }

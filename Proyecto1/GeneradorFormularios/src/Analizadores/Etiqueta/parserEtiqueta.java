@@ -43,19 +43,24 @@ public class parserEtiqueta implements parserEtiquetaConstants {
         while (t.kind != tokenSinc);
     }
 
+    public void imprimir(String mensaje)
+    {
+        System.out.println(mensaje);
+    }
+
   final public Nodo Etiqueta() throws ParseException {String Cad;
     Nodo nuevo;
     Token t= null;
     label_1:
     while (true) {
       Cad = ETQ();
-System.out.println(Cad);
+imprimir("Cad->"+Cad);
         nuevo = new Nodo(Cad,0,0);
         {if ("" != null) return nuevo;}
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case Numeral:
-      case Punto:
-      case PuntoP:
+      case numeral:
+      case punto:
+      case doblepunto:
       case Cualquiera:{
         ;
         break;
@@ -80,9 +85,9 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
   final public String ETQ2() throws ParseException {String Cad;
 String aux;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case Numeral:
-    case Punto:
-    case PuntoP:
+    case numeral:
+    case punto:
+    case doblepunto:
     case Cualquiera:{
       Cad = T();
       aux = ETQ2();
@@ -103,32 +108,55 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
   }
 
   final public String T() throws ParseException {Token t;
+String aux;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
-{if ("" != null) return t.image + " ";}
+imprimir("Cual->"+t.image);{if ("" != null) return t.image + " ";}
       break;
       }
-    case Numeral:{
-      jj_consume_token(Numeral);
-      jj_consume_token(Acor);
-      t = jj_consume_token(ID);
-      jj_consume_token(Ccor);
-{if ("" != null) return t.image + " ";}
+    case numeral:{
+      t = jj_consume_token(numeral);
+      aux = ET3();
+imprimir("#->"+t.image);{if ("" != null) return aux + " ";}
       break;
       }
-    case Punto:{
-      jj_consume_token(Punto);
-{if ("" != null) return "padre ";}
+    case punto:{
+      t = jj_consume_token(punto);
+imprimir(".->"+t.image);{if ("" != null) return "padre ";}
       break;
       }
-    case PuntoP:{
-      jj_consume_token(PuntoP);
-{if ("" != null) return "madre";}
+    case doblepunto:{
+      t = jj_consume_token(doblepunto);
+imprimir("..->"+t.image);{if ("" != null) return "madre";}
       break;
       }
     default:
       jj_la1[2] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String ET3() throws ParseException {String cad;
+    String auxiliar;
+    Token t= null;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case corchA:{
+      jj_consume_token(corchA);
+      t = jj_consume_token(Cualquiera);
+      jj_consume_token(corchC);
+imprimir("Var->"+t.image);{if ("" != null) return t.image +" ";}
+      break;
+      }
+    case Cualquiera:{
+      t = jj_consume_token(Cualquiera);
+imprimir("Color->"+t.image);{if ("" != null) return t.image +" ";}
+      break;
+      }
+    default:
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -144,13 +172,13 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[3];
+  final private int[] jj_la1 = new int[4];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x720,0x721,0x720,};
+      jj_la1_0 = new int[] {0x390,0x391,0x390,0x220,};
    }
 
   /** Constructor with InputStream. */
@@ -164,7 +192,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -178,7 +206,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -188,7 +216,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -198,7 +226,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -207,7 +235,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -216,7 +244,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -272,7 +300,7 @@ Cad = Cad + aux;  {if ("" != null) return Cad;}
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

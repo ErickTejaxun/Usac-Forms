@@ -88,6 +88,11 @@ public class parserEtiqueta
         while (t.kind != tokenSinc);
     }
 
+    public void imprimir(String mensaje)
+    {
+        System.out.println(mensaje);
+    }   
+
 }
 PARSER_END(parserEtiqueta)
 
@@ -111,14 +116,14 @@ SKIP:
 
 TOKEN :
 {
-<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
 
-|<numeral : "#">
+<numeral : "#">
 |<corchA : "[" >
 |<corchC : "]" >
 |<punto: ".">
 |<doblepunto: "..">
 |<Cualquiera : (~["#",".", "[", "]"])+ >
+|<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
 }
 
 
@@ -131,7 +136,7 @@ Nodo Etiqueta() :
 }
 {
   (Cad = ETQ() {
-        System.out.println(Cad);
+        imprimir("Cad->"+Cad);
         nuevo = new Nodo(Cad,0,0);
         return nuevo;
         })+ <EOF>
@@ -155,10 +160,23 @@ String aux;}
 }
 
 String T() :
-{Token t;}
+{Token t;
+String aux;}
 {
-t = <Cualquiera> {return t.image + " ";}
-|<numeral> <corchA> t=<ID> <Ccor> {return t.image + " ";}
-| <punto> {return "padre ";}
-| <doblepunto> {return "madre";}
+  t=<Cualquiera> {imprimir("Cual->"+t.image);return t.image + " ";}
+| t=<numeral> aux = ET3() { imprimir("#->"+t.image);return aux + " ";}
+| t=<punto> { imprimir(".->"+t.image);return "padre ";}
+| t=<doblepunto> { imprimir("..->"+t.image);return "madre";}
+}
+
+String ET3():
+{
+    String cad;
+    String auxiliar;
+    Token t= null;
+}
+
+{
+    <corchA> t=<Cualquiera> <corchC>{ imprimir("Var->"+t.image);return t.image +" ";}
+    |t=<Cualquiera> { imprimir("Color->"+t.image);return t.image +" ";}
 }
