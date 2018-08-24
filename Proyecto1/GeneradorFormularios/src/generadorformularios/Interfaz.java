@@ -233,6 +233,8 @@ public class Interfaz extends javax.swing.JFrame {
                 analizar();
             } catch (Analizadores.Tipo.ParseException ex) {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Analizadores.Etiqueta.ParseException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IOException ex) {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
@@ -653,7 +655,7 @@ public class Interfaz extends javax.swing.JFrame {
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            String valor = celda.toString(); 
+                            String valor = celda.toString().trim(); 
                             columna = celda.getColumnIndex();
                             fil = celda.getRowIndex();
                             String encabezado = listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase();
@@ -1001,7 +1003,7 @@ public class Interfaz extends javax.swing.JFrame {
     public void mostrarErrores()
     {                                      
         DefaultTableModel filasErrores = new DefaultTableModel();        
-        filasErrores.addColumn("Archivo");
+        filasErrores.addColumn("Archivo");        
         filasErrores.addColumn("Línea");
         filasErrores.addColumn("Columna");
         filasErrores.addColumn("Fila");
@@ -1082,7 +1084,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException, Analizadores.Tipo.ParseException
+    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1091,7 +1093,7 @@ public class Interfaz extends javax.swing.JFrame {
         int fila = 1;
         String[] encabezados = 
         {
-            "tipo","idpregunta"/*,"etiqueta","parametro","calculo","aplicable","sugerir","restringir",
+            /*"tipo","idpregunta",*/"etiqueta"/*,"parametro","calculo","aplicable","sugerir","restringir",
             "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
             "codigo_post","fichero"*/
         };
@@ -1103,12 +1105,21 @@ public class Interfaz extends javax.swing.JFrame {
             {
                 if(!pre.getVacio()) // Verificamos que no mandemos una celda vacía.
                 {
-                    argumentos[0] = parametro+"\n"+ pre.getAtributo(parametro);                                                                                  
+                    argumentos[0] =  pre.getAtributo(parametro);                                                                                  
                     
                     switch(parametro)
                     {
                         case "tipo":
-                            arbolPregunta.add(analizarTipo(argumentos,fila,fila,fila,pre.getColumna("tipo")));                                                        
+                            arbolPregunta.add(analizarTipo(argumentos,fila,fila,fila,pre.getColumna(parametro)));                                                        
+                            break;
+                        case "etiqueta":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if (!pre.getVacio()) 
+                                {
+                                    arbolPregunta.add(analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro)));                            
+                                }
+                            }
                             break;
                     }
                    
@@ -1146,6 +1157,30 @@ public class Interfaz extends javax.swing.JFrame {
         
         return null;
     }
+    
+    
+    public Nodo analizarEtiqueta(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Etiqueta.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Etiqueta.parserEtiqueta.main(argumentos);                                                        
+             }
+             catch(TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Etiqueta.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }    
     
     /*Metodo para ver donde se va a nalizar la puta data.*/
     

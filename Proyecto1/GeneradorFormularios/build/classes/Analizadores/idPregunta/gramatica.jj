@@ -42,15 +42,16 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(excelParser)
+PARSER_BEGIN(idPregunta)
 
-package Analizadores;
+package Analizadores.idPregunta;
+import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class excelParser 
+public class idPregunta 
 {    
-
+    public String cadenaAuxiliar="";
     public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
@@ -88,7 +89,7 @@ public class excelParser
     }
 
 }
-PARSER_END(excelParser)
+PARSER_END(idPregunta)
 
 
 /*
@@ -100,309 +101,55 @@ TOKEN_ESPCIAL: saber
 */
 
 
-TOKEN:
-{
-    <tipo:"tipo">:TIPO
-|   <idpregunta:"idpregunta">:IDPREGUNTA
-|   <etiqueta:"etiqueta">:ETIQUETA
-}
-
 SKIP:
 {
-    <(" " | "\t" | "\n" | "\r" )+>
+" "
+| "\r"
+| "\t"
 }
 
-<TIPO>TOKEN:
+
+TOKEN :
 {
-    <texto:"texto">
-    |<entero:"entero">
-    |<decimal:"decimal">
-    |<rango:"rango">
-    |<condicion:"condicion">
-    |<fecha:"fecha">
-    |<hora:"hora">
-    |<fechahora:"fechahora">
-    |<seleccionaUno:"selecciona_uno">
-    |<seleccionaMultiple:"selecciona_multiple">
-    |<nota:"nota">
-    |<fichero:"fichero">
-    |<calcular:"calcular">
-    |<iniciar:"iniciar">:AGCI
-    |<finalizar:"finalizar">:AGCI
+<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
+
+|<Numeral : "#">
+|<Acor : "[" >
+|<Ccor : "]" >
+|<Punto: ".">
+|<PuntoP: "..">
+|<Cualquiera : (~["#",".", "[", "]"])+ >
 }
 
-<TIPO,IDPREGUNTA,EST1>TOKEN:
+
+void Etiqueta() :
+{String Cad;}
 {
-    <id:(<letra>)(<letra>|<digito>|"_")*  >
-|   <#digito:["0" - "9"] > 
-|   <#letra:["A"-"Z"]> 
-|   <coma:",">
-|   <punto:".">
+  (Cad = ETQ() {System.out.println(Cad);})+ <EOF>
 }
 
-<TIPO,IDPREGUNTA>SKIP:
+
+String ETQ() :
+{String Cad;
+String aux;}
 {
-    <(" " | "\t" | "\n" | "\r" )+>
+Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
 }
 
-// Agrupacion y Ciclo AGCI
-<AGCI>SKIP:
+
+String ETQ2() :
+{String Cad;
+String aux;}
 {
-    <(" " | "\t" | "\n" | "\r" )+>
+ Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
+| <EOF> {return "";}
 }
 
-<AGCI>TOKEN:
+String T() :
+{Token t;}
 {
-    <agrupacion:"agrupacion">
-    |<ciclo:"ciclo">     
+t = <Cualquiera> {return t.image + " ";}
+|<Numeral> <Acor> t=<ID> <Ccor> {return t.image + " ";}
+| <Punto> {return "padre ";}
+| <PuntoP> {return "madre";}
 }
-
-
-
-
-/*-------------------------------------------------------Etiqueta---------------------------------------------------------*/
-<ETIQUETA>MORE:
-{
-    <~[]>
-}
-
-<ETIQUETA>TOKEN:
-{
-    <arroba:"@">:EST1
-}
-
-<EST1>:TOKEN:
-{
-    <llavea:"{">
-|   <numeral:"#">
-|   <corchetea:"[">
-|   <corchetec:"]">
-|   <negrilla:"negrilla">
-|   <subrayado:"subrayado">
-|   <color:"color">
-|   <dospuntos:":">
-|   <tamano:"tam">
-|   <numero:(<digito>)+>
-|   <llavec:"}">:EST2
-}
-
-<EST2>:TOKEN
-{
-|   <finEstilo:":">    
-|   <textoI:"{">:EST3
-}
-
-<EST3>:MORE
-{
-    <~[]>
-}
-
-<EST3>:TOKEN
-{
-    <
-}
-
-<EST1>SKIP:
-{
-    <(" " | "\t" | "\n" | "\r" )+>
-}
-
-
-
-
-
-
-/*Area de analis sintactico. */
-Nodo Inicio():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    (
-    t=<tipo>nodo=Tipo()<EOF>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
-        u.add(nodo);
-        return u;
-    }
-    |t=<idpregunta>nodo=idPregunta()<EOF>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
-        u.add(nodo);
-        return u;
-    }
-    )+
-}
-
-Nodo idPregunta():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    t=<id>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);        
-        return u;
-    }
-|   {u = new Nodo("",0,0);  return u;}
-
-}
-
-
-
-Nodo Tipo():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-     t=<texto>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<entero>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<decimal>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<rango>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<condicion>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<fecha>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<hora>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<fechahora>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |<seleccionaUno>t=<id>
-    {
-        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
-        return u;
-    }
-    |<seleccionaMultiple>t=<id>
-    {
-        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
-        return u;
-    }
-    |t=<nota>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<fichero>u=listaFormatos()
-    {
-        nodo = new Nodo(t.image,t.beginColumn,t.beginLine);
-        nodo.add(u);
-        return nodo;
-    }
-    |t=<calcular>
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        return u;
-    }
-    |t=<iniciar>nodo=agci()    
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
-        return u;
-    }
-    |t=<finalizar>nodo=agci()    
-    {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
-        return u;
-    }
-|   {u = new Nodo("",0,0);  return u;}
-
-
-}
-
-Nodo agci():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    t=<ciclo>
-    {
-        u = new Nodo("ciclo",t.beginColumn,t.beginLine);
-        return u;
-    }
-   |t=<agrupacion>
-    {
-        u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
-        return u;
-    }
-}
-
-Nodo listaFormatos():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    "\""<punto>t=<id>u=listaFormatos1()"\""
-        {
-            Nodo aux = u;
-            u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
-            return u;
-        }    
-    |    
-    {
-        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
-        return aux;
-    }
-}
-
-Nodo listaFormatos1():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    <coma><punto>t=<id>u=listaFormatos1()
-    {
-        Nodo aux = u;
-        u.add( new Nodo(t.image,t.beginColumn,t.beginLine));
-        return u;
-    }
-|     //Epsilon Creamos la lista
-    {
-        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
-        return aux;
-    }
-}
-
-

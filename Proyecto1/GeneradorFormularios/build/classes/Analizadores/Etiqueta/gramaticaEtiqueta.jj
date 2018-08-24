@@ -42,14 +42,14 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(idPregunta)
+PARSER_BEGIN(parserEtiqueta)
 
-package Analizadores.idPregunta;
+package Analizadores.Etiqueta;
 import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class idPregunta 
+public class parserEtiqueta 
 {    
     public String cadenaAuxiliar="";
     public static Nodo main(String args[]) throws ParseException
@@ -58,15 +58,15 @@ public class idPregunta
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
-            excelParser analizador = new excelParser(data);
-            return analizador.Inicio();   
+            parserEtiqueta analizador = new parserEtiqueta(data);
+            return analizador.Etiqueta();   
         }
         else
         {
             try
             {
-                excelParser analizador = new excelParser(System.in);
-                analizador.Inicio();
+                parserEtiqueta analizador = new parserEtiqueta(System.in);
+                analizador.Etiqueta();
             }
             catch (ParseException e)
             {
@@ -89,7 +89,7 @@ public class idPregunta
     }
 
 }
-PARSER_END(idPregunta)
+PARSER_END(parserEtiqueta)
 
 
 /*
@@ -113,19 +113,28 @@ TOKEN :
 {
 <ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
 
-|<Numeral : "#">
-|<Acor : "[" >
-|<Ccor : "]" >
-|<Punto: ".">
-|<PuntoP: "..">
+|<numeral : "#">
+|<corchA : "[" >
+|<corchC : "]" >
+|<punto: ".">
+|<doblepunto: "..">
 |<Cualquiera : (~["#",".", "[", "]"])+ >
 }
 
 
-void Etiqueta() :
-{String Cad;}
+Nodo Etiqueta() :
 {
-  (Cad = ETQ() {System.out.println(Cad);})+ <EOF>
+    String Cad;
+    Nodo nuevo;
+    Token t= null;
+
+}
+{
+  (Cad = ETQ() {
+        System.out.println(Cad);
+        nuevo = new Nodo(Cad,0,0);
+        return nuevo;
+        })+ <EOF>
 }
 
 
@@ -149,7 +158,7 @@ String T() :
 {Token t;}
 {
 t = <Cualquiera> {return t.image + " ";}
-|<Numeral> <Acor> t=<ID> <Ccor> {return t.image + " ";}
-| <Punto> {return "padre ";}
-| <PuntoP> {return "madre";}
+|<numeral> <corchA> t=<ID> <Ccor> {return t.image + " ";}
+| <punto> {return "padre ";}
+| <doblepunto> {return "madre";}
 }

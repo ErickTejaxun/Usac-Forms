@@ -200,7 +200,25 @@ public class Pregunta
     
     public boolean getVacio()
     {
-        return this.vacio;
+        return  getApariencia().equals("") &&
+                getEtiqueta().equals("")&&
+                getParametro().equals("")&&
+                getCalculo().equals("")&&
+                getAplicable().equals("")&&
+                getSugerir().equals("")&&
+                getRestringir().equals("")&&
+                getRestringirmsn().equals("")&&
+                getRequerido().equals("")&&
+                getRequeridoMsn().equals("")&&
+                getPredeterminado().equals("")&&
+                getLectura().equals("")&&
+                getRepeticion().equals("")&&
+                getApariencia().equals("")&&
+                getCodigo_post().equals("")&&
+                getCodigo_pre().equals("")&&
+                getFichero().equals("")&&
+                getEtiqueta().equals("")&&
+                getTipo().equals("");
     }
     public int getFila()
     {
@@ -222,78 +240,80 @@ public class Pregunta
         this.iniciar = true;
     }
     
-    public void setNoEncabezado()
+    public void setNoIniciar()
     {
         this.iniciar = false;
     }    
     
     
-    public boolean getEncabezado()
+    public boolean esIniciar()
     {
         return this.iniciar;
     }
     
     public void insertarAtributo(String tipo, String valor)
     {
-        valor = valor.trim();
+        String valorN = valor.trim();
+        System.out.print("+"+valor+"+");
+        System.out.print("+"+valorN+"+");
         switch(tipo.toLowerCase())
         {
             case "tipo":
-                this.setTipo(valor);
+                this.setTipo(valorN);
                 break;
             case "idpregunta":
-                this.setIdPregunta(valor);
+                this.setIdPregunta(valorN);
                 break;               
             case "etiqueta":
-                this.setEtiqueta(valor);
+                this.setEtiqueta(valorN);
                 break;
             case "parametro":
-                this.setParametro(valor);
+                this.setParametro(valorN);
                 break;
             case "calculo":
-                this.setCalculo(valor);
+                this.setCalculo(valorN);
                 break;
             case "aplicable":
-                this.setAplicable(valor);
+                this.setAplicable(valorN);
                 break;
             case "sugerir":
-                this.setSugerir(valor);
+                this.setSugerir(valorN);
                 break;
             case "restringir":
-                this.setRestringir(valor);
+                this.setRestringir(valorN);
                 break;
             case "restriccion":
-                this.setRestringir(valor);
+                this.setRestringir(valorN);
                 break;                
             case "restringirmsn":
-                this.setRestringirmsn(valor);
+                this.setRestringirmsn(valorN);
                 break;
             case "requeridomsn":
-                this.setRequeridoMsn(valor);
+                this.setRequeridoMsn(valorN);
                 break;
             case "requerido":
-                this.setRequerido(valor);
+                this.setRequerido(valorN);
                 break;
             case "predeterminado":
-                this.setPredeterminado(valor);
+                this.setPredeterminado(valorN);
                 break;
             case "lectura":
-                this.setLectura(valor);
+                this.setLectura(valorN);
                 break;
             case "repeticion":
-                this.setRepeticion(valor);
+                this.setRepeticion(valorN);
                 break;
             case "apariencia":
-                this.setApariencia(valor);
+                this.setApariencia(valorN);
                 break;
             case "codigo_pre":
-                this.setCodigo_pre(valor);
+                this.setCodigo_pre(valorN);
                 break;
             case "codigo_post":
-                this.setCodigo_post(valor);
+                this.setCodigo_post(valorN);
                 break;
             case "fichero":
-                this.setFichero(valor);
+                this.setFichero(valorN);
                 break;
         }
     }
@@ -366,8 +386,8 @@ public class Pregunta
                 getCodigo_post().equals("")&&
                 getCodigo_pre().equals("")&&
                 getFichero().equals("")&&
-                !getEtiqueta().equals("")&&
-                (getTipo().equals("iniciar agrupacion") || getTipo().equals("iniciar ciclo"))
+                !getIdPregunta().equals("")&&
+                (getTipo().trim().toLowerCase().equals("iniciar agrupacion") || getTipo().trim().toLowerCase().equals("iniciar ciclo"))
                 ;
     }   
     public boolean esFinal()
@@ -391,7 +411,8 @@ public class Pregunta
                 getCodigo_pre().equals("")&&
                 getFichero().equals("")&&
                 getEtiqueta().equals("")&&
-                (getTipo().equals("iniciar agrupacion") || getTipo().equals("iniciar ciclo"))
+                getIdPregunta().equals("")&&
+                (getTipo().trim().toLowerCase().equals("finalizar agrupacion") || getTipo().trim().toLowerCase().equals("finalizar ciclo"))
                 ;
     }    
     
