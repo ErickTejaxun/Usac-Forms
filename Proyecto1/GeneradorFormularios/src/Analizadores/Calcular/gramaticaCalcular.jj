@@ -44,7 +44,7 @@ options {
 
 PARSER_BEGIN(parserEtiqueta)
 
-package Analizadores.Etiqueta;
+package Analizadores.Calcular;
 import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

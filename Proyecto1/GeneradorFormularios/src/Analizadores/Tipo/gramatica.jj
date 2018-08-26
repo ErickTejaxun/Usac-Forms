@@ -101,17 +101,12 @@ TOKEN_ESPCIAL: saber
 */
 
 
-TOKEN:
-{
-    <tipo:"tipo">:TIPO
-}
-
 SKIP:
 {
     <(" " | "\t" | "\n" | "\r" )+>
 }
 
-<TIPO>TOKEN:
+TOKEN:
 {
     <texto:"texto">
     |<entero:"entero">
@@ -126,11 +121,13 @@ SKIP:
     |<nota:"nota">
     |<fichero:"fichero">
     |<calcular:"calcular">
-    |<iniciar:"iniciar">:AGCI
-    |<finalizar:"finalizar">:AGCI
+    |<iniciar:"iniciar">
+    |<finalizar:"finalizar">
+    |<agrupacion:"agrupacion">
+    |<ciclo:"ciclo">
 }
 
-<TIPO,IDPREGUNTA,EST1>TOKEN:
+TOKEN:
 {
     <id:(<letra>)(<letra>|<digito>|"_")*  >
 |   <#digito:["0" - "9"] > 
@@ -139,24 +136,10 @@ SKIP:
 |   <punto:".">
 }
 
-<TIPO,IDPREGUNTA>SKIP:
+SKIP:
 {
     <(" " | "\t" | "\n" | "\r" )+>
 }
-
-// Agrupacion y Ciclo AGCI
-<AGCI>SKIP:
-{
-    <(" " | "\t" | "\n" | "\r" )+>
-}
-
-<AGCI>TOKEN:
-{
-    <agrupacion:"agrupacion">
-    |<ciclo:"ciclo">     
-}
-
-
 /*Area de analis sintactico. */
 Nodo Inicio():
 {
@@ -166,11 +149,11 @@ Nodo Inicio():
 }
 {
     (
-    t=<tipo>nodo=Tipo()<EOF>
+    nodo=Tipo()<EOF>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);  
+        u = new Nodo("tipo",0,0);  
         u.add(nodo);
-        return u;
+        return nodo;
     }
     )+
 }
@@ -184,7 +167,7 @@ Nodo idPregunta():
 {
     t=<id>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);        
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);        
         return u;
     }
 |   {u = new Nodo("",0,0);  return u;}
@@ -202,82 +185,81 @@ Nodo Tipo():
 {
      t=<texto>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<entero>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<decimal>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<rango>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<condicion>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<fecha>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<hora>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<fechahora>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |<seleccionaUno>t=<id>
     {
         u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         return u;
     }
     |<seleccionaMultiple>t=<id>
     {
         u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         return u;
     }
     |t=<nota>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
     |t=<fichero>u=listaFormatos()
     {
-        nodo = new Nodo(t.image,t.beginColumn,t.beginLine);
+        nodo = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         nodo.add(u);
         return nodo;
     }
     |t=<calcular>
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
-    |t=<iniciar>nodo=agci()    
+    |t=<iniciar> nodo=agci()    
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
+        u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
+        
         return u;
     }
     |t=<finalizar>nodo=agci()    
     {
-        u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
+        u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);        
         return u;
     }
 |   {u = new Nodo("",0,0);  return u;}
@@ -334,7 +316,7 @@ Nodo listaFormatos1():
     <coma><punto>t=<id>u=listaFormatos1()
     {
         Nodo aux = u;
-        u.add( new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add( new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         return u;
     }
 |     //Epsilon Creamos la lista

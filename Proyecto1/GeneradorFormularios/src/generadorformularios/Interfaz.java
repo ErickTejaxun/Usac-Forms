@@ -655,7 +655,30 @@ public class Interfaz extends javax.swing.JFrame {
                         else                   
                         {
                             //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            String valor = celda.toString().trim(); 
+                            String valor = celda.toString().trim();
+                            
+                            /*celda.getCellType()
+                            celda.toString().trim();*/
+                                                                                    
+                            if(celda.getCellType()==4)
+                            {
+                                if(celda.getBooleanCellValue())
+                                {
+                                    valor = "verdadero";
+                                }
+                                else
+                                {
+                                    valor = "falso";
+                                }
+                            }
+                            else
+                            {
+                                valor = celda.toString().trim();
+                            }
+                            
+                            //Mensaje(celda.getCellType()+"", valor);
+                            
+                            
                             columna = celda.getColumnIndex();
                             fil = celda.getRowIndex();
                             String encabezado = listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase();
@@ -1093,7 +1116,7 @@ public class Interfaz extends javax.swing.JFrame {
         int fila = 1;
         String[] encabezados = 
         {
-            /*"tipo","idpregunta",*/"etiqueta"/*,"parametro","calculo","aplicable","sugerir","restringir",
+            "tipo"/*,"idpregunta","etiqueta","parametro","calculo","aplicable","sugerir","restringir",
             "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
             "codigo_post","fichero"*/
         };
@@ -1101,6 +1124,8 @@ public class Interfaz extends javax.swing.JFrame {
         for(Pregunta pre : listaPreguntas)
         {
             Nodo arbolPregunta  = new Nodo("Pregunta");
+            Nodo hijoAuxiliar = null; // En caso se ser un nuevo
+            Nodo temporal = null;
             for(String parametro : encabezados)
             {
                 if(!pre.getVacio()) // Verificamos que no mandemos una celda vacía.
@@ -1109,7 +1134,7 @@ public class Interfaz extends javax.swing.JFrame {
                     
                     switch(parametro)
                     {
-                        case "tipo":
+                        case "tipo":                            
                             arbolPregunta.add(analizarTipo(argumentos,fila,fila,fila,pre.getColumna(parametro)));                                                        
                             break;
                         case "etiqueta":
@@ -1117,15 +1142,13 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 if (!pre.getVacio()) 
                                 {
-                                    arbolPregunta.add(analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro)));                            
+                                    //arbolPregunta.add(analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro)));                            
                                 }
                             }
                             break;
-                    }
-                   
+                    }                    
                 }
-            }
-                                             
+            }                                             
             //printer.grafo(arbolPregunta);
             raizArbol.add(arbolPregunta);
             fila++;
@@ -1143,7 +1166,7 @@ public class Interfaz extends javax.swing.JFrame {
              {                                                  
                  return Analizadores.Tipo.parserTipo.main(argumentos);                                                        
              }
-             catch(TokenMgrError te)
+             catch(Analizadores.Tipo.TokenMgrError te)
              {   
                  //archivoActual, fila, fila
                  registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 

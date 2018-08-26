@@ -11,68 +11,57 @@ public interface parserTipoConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int tipo = 1;
+  int texto = 2;
   /** RegularExpression Id. */
-  int texto = 3;
+  int entero = 3;
   /** RegularExpression Id. */
-  int entero = 4;
+  int decimal = 4;
   /** RegularExpression Id. */
-  int decimal = 5;
+  int rango = 5;
   /** RegularExpression Id. */
-  int rango = 6;
+  int condicion = 6;
   /** RegularExpression Id. */
-  int condicion = 7;
+  int fecha = 7;
   /** RegularExpression Id. */
-  int fecha = 8;
+  int hora = 8;
   /** RegularExpression Id. */
-  int hora = 9;
+  int fechahora = 9;
   /** RegularExpression Id. */
-  int fechahora = 10;
+  int seleccionaUno = 10;
   /** RegularExpression Id. */
-  int seleccionaUno = 11;
+  int seleccionaMultiple = 11;
   /** RegularExpression Id. */
-  int seleccionaMultiple = 12;
+  int nota = 12;
   /** RegularExpression Id. */
-  int nota = 13;
+  int fichero = 13;
   /** RegularExpression Id. */
-  int fichero = 14;
+  int calcular = 14;
   /** RegularExpression Id. */
-  int calcular = 15;
+  int iniciar = 15;
   /** RegularExpression Id. */
-  int iniciar = 16;
+  int finalizar = 16;
   /** RegularExpression Id. */
-  int finalizar = 17;
+  int agrupacion = 17;
   /** RegularExpression Id. */
-  int id = 18;
+  int ciclo = 18;
   /** RegularExpression Id. */
-  int digito = 19;
+  int id = 19;
   /** RegularExpression Id. */
-  int letra = 20;
+  int digito = 20;
   /** RegularExpression Id. */
-  int coma = 21;
+  int letra = 21;
   /** RegularExpression Id. */
-  int punto = 22;
+  int coma = 22;
   /** RegularExpression Id. */
-  int agrupacion = 25;
-  /** RegularExpression Id. */
-  int ciclo = 26;
+  int punto = 23;
 
   /** Lexical state. */
   int DEFAULT = 0;
-  /** Lexical state. */
-  int TIPO = 1;
-  /** Lexical state. */
-  int IDPREGUNTA = 2;
-  /** Lexical state. */
-  int EST1 = 3;
-  /** Lexical state. */
-  int AGCI = 4;
 
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"tipo\"",
-    "<token of kind 2>",
+    "<token of kind 1>",
     "\"texto\"",
     "\"entero\"",
     "\"decimal\"",
@@ -88,15 +77,14 @@ public interface parserTipoConstants {
     "\"calcular\"",
     "\"iniciar\"",
     "\"finalizar\"",
+    "\"agrupacion\"",
+    "\"ciclo\"",
     "<id>",
     "<digito>",
     "<letra>",
     "\",\"",
     "\".\"",
-    "<token of kind 23>",
     "<token of kind 24>",
-    "\"agrupacion\"",
-    "\"ciclo\"",
     "\"\\\"\"",
   };
 

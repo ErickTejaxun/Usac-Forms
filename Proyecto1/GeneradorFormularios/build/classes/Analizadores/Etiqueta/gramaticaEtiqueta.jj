@@ -106,11 +106,9 @@ TOKEN_ESPCIAL: saber
 */
 
 
-SKIP:
+SPECIAL_TOKEN:
 {
-" "
-| "\r"
-| "\t"
+    <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
 }
 
 
@@ -124,59 +122,143 @@ TOKEN :
 |<doblepunto: "..">
 |<Cualquiera : (~["#",".", "[", "]"])+ >
 |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
+|<funcion_vacia:<ID><ESPACIO>":"<ESPACIO>"("<ESPACIO>")">
 }
 
 
 Nodo Etiqueta() :
 {
-    String Cad;
+    Nodo Cad;
     Nodo nuevo;
     Token t= null;
 
 }
 {
-  (Cad = ETQ() {
-        imprimir("Cad->"+Cad);
-        nuevo = new Nodo(Cad,0,0);
+(Cad = ETQ())+ <EOF> 
+{
+    imprimir("Cad->"+Cad);
+    nuevo = Cad;
+    return nuevo;
+}
+}
+
+
+Nodo ETQ() :
+{
+    String Cad;
+    String aux;
+    Nodo nuevo = null;
+    Nodo derecha = null;
+    Nodo izquierda = null;
+}
+{
+    derecha = T() izquierda = ETQ2() 
+    {
+        //Cad = Cad + aux;  //return Cad;
+        nuevo = new Nodo("etiqueta",0,0);
+        nuevo.add(derecha);
+        nuevo.add(izquierda);
         return nuevo;
-        })+ <EOF>
+    }
+    
 }
 
 
-String ETQ() :
-{String Cad;
-String aux;}
+Nodo ETQ2() :
 {
-Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
+    String Cad;
+    String aux;
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Nodo nuevo  = null;
 }
-
-
-String ETQ2() :
-{String Cad;
-String aux;}
 {
- Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
-| <EOF> {return "";}
+        izquierdo = T()  derecho= ETQ2() 
+        {
+            //Cad = Cad + aux; // return Cad;
+            nuevo = new Nodo("etiqueta",0,0);
+            nuevo.setValue(derecho.getValue()+izquierdo.getValue());
+            //nuevo.add(derecho);
+            //nuevo.add(izquierdo);
+            return nuevo;
+        }
+    |   <EOF> {return null;}
 }
 
-String T() :
-{Token t;
-String aux;}
+Nodo T() :
 {
-  t=<Cualquiera> {imprimir("Cual->"+t.image);return t.image + " ";}
-| t=<numeral> aux = ET3() { imprimir("#->"+t.image);return aux + " ";}
-| t=<punto> { imprimir(".->"+t.image);return "padre ";}
-| t=<doblepunto> { imprimir("..->"+t.image);return "madre";}
+Token t;
+//String aux;
+Nodo nuevo = null;
+Nodo aux;
+}
+{
+    t=<Cualquiera> {
+        imprimir("Cual->"+t.image);//return t.image + " ";
+        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+        return nuevo;
+    }
+
+
+
+    | t=<numeral> aux = ET3() 
+    {
+        imprimir("#->"+t.image);//return aux + " ";
+        if(aux.getTipo().equals("cadena"))
+        {
+            nuevo = aux;
+            nuevo.setValue(aux.getTipo()+"#");
+            return nuevo;
+        }
+        else    
+        {
+            nuevo = new Nodo();
+        }   
+
+    }
+    | t=<punto> 
+    {
+         imprimir(".->"+t.image);//return "padre ";
+         nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+         return nuevo;
+
+    }
+    | t=<doblepunto> 
+    { 
+        imprimir("..->"+t.image);//return "madre";
+        nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
+        return nuevo;
+    }
+    | t=<funcion_vacia>
+    {
+        imprimir("funcion()->"+t.image);//
+        nuevo = new Nodo("funcion",t.image,t.beginColumn, t.beginLine);
+        return nuevo;
+    }
 }
 
-String ET3():
+Nodo ET3():
 {
     String cad;
     String auxiliar;
     Token t= null;
+    Nodo nuevo = null;
 }
 
 {
-    <corchA> t=<Cualquiera> <corchC>{ imprimir("Var->"+t.image);return t.image +" ";}
-    |t=<Cualquiera> { imprimir("Color->"+t.image);return t.image +" ";}
+    <corchA> t=<Cualquiera> <corchC>
+    {
+        nuevo = new Nodo("variable",t.image, t.beginColumn, t.beginLine);        
+        imprimir("Var->"+t.image);
+        //return  "+ " + t.image +"+ ";
+        return nuevo;
+     
+    }
+    |t=<Cualquiera> 
+    {                      
+        nuevo = new Nodo("cadena",t.image, t.beginColumn,t.beginLine);        
+        imprimir("Color->"+t.image);
+        //return "#"+t.image +" ";
+        return nuevo;
+    }
 }

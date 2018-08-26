@@ -49,14 +49,28 @@ public class parserTipo implements parserTipoConstants {
     Token t = null;
     label_1:
     while (true) {
-      t = jj_consume_token(tipo);
       nodo = Tipo();
       jj_consume_token(0);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",0,0);
         u.add(nodo);
-        {if ("" != null) return u;}
+        {if ("" != null) return nodo;}
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case tipo:{
+      case 0:
+      case texto:
+      case entero:
+      case decimal:
+      case rango:
+      case condicion:
+      case fecha:
+      case hora:
+      case fechahora:
+      case seleccionaUno:
+      case seleccionaMultiple:
+      case nota:
+      case fichero:
+      case calcular:
+      case iniciar:
+      case finalizar:{
         ;
         break;
         }
@@ -74,7 +88,7 @@ u = new Nodo(t.image,t.beginColumn,t.beginLine);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case id:{
       t = jj_consume_token(id);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
@@ -91,49 +105,49 @@ u = new Nodo("",0,0);  {if ("" != null) return u;}
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case texto:{
       t = jj_consume_token(texto);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case entero:{
       t = jj_consume_token(entero);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case decimal:{
       t = jj_consume_token(decimal);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case rango:{
       t = jj_consume_token(rango);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case condicion:{
       t = jj_consume_token(condicion);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case fecha:{
       t = jj_consume_token(fecha);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case hora:{
       t = jj_consume_token(hora);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case fechahora:{
       t = jj_consume_token(fechahora);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
@@ -141,7 +155,7 @@ u = new Nodo(t.image,t.beginColumn,t.beginLine);
       jj_consume_token(seleccionaUno);
       t = jj_consume_token(id);
 u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         {if ("" != null) return u;}
       break;
       }
@@ -149,43 +163,42 @@ u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
       jj_consume_token(seleccionaMultiple);
       t = jj_consume_token(id);
 u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
-        u.add(new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         {if ("" != null) return u;}
       break;
       }
     case nota:{
       t = jj_consume_token(nota);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case fichero:{
       t = jj_consume_token(fichero);
       u = listaFormatos();
-nodo = new Nodo(t.image,t.beginColumn,t.beginLine);
+nodo = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         nodo.add(u);
         {if ("" != null) return nodo;}
       break;
       }
     case calcular:{
       t = jj_consume_token(calcular);
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     case iniciar:{
       t = jj_consume_token(iniciar);
       nodo = agci();
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
+u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
+
         {if ("" != null) return u;}
       break;
       }
     case finalizar:{
       t = jj_consume_token(finalizar);
       nodo = agci();
-u = new Nodo(t.image,t.beginColumn,t.beginLine);
-        u.add(nodo);
+u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
@@ -224,12 +237,12 @@ u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
     Nodo nodo;
     Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case 27:{
-      jj_consume_token(27);
+    case 25:{
+      jj_consume_token(25);
       jj_consume_token(punto);
       t = jj_consume_token(id);
       u = listaFormatos1();
-      jj_consume_token(27);
+      jj_consume_token(25);
 Nodo aux = u;
             u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
             {if ("" != null) return u;}
@@ -253,7 +266,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
       t = jj_consume_token(id);
       u = listaFormatos1();
 Nodo aux = u;
-        u.add( new Nodo(t.image,t.beginColumn,t.beginLine));
+        u.add( new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         {if ("" != null) return u;}
       break;
       }
@@ -280,7 +293,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x2,0x40000,0x3fff8,0x6000000,0x8000000,0x200000,};
+      jj_la1_0 = new int[] {0x1fffd,0x80000,0x1fffc,0x60000,0x2000000,0x400000,};
    }
 
   /** Constructor with InputStream. */
@@ -397,7 +410,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[28];
+    boolean[] la1tokens = new boolean[26];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -411,7 +424,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
         }
       }
     }
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < 26; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
