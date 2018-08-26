@@ -33,7 +33,7 @@ public interface parserTipoConstants {
   /** RegularExpression Id. */
   int nota = 12;
   /** RegularExpression Id. */
-  int fichero = 13;
+  int multimedia = 13;
   /** RegularExpression Id. */
   int calcular = 14;
   /** RegularExpression Id. */
@@ -73,7 +73,7 @@ public interface parserTipoConstants {
     "\"selecciona_uno\"",
     "\"selecciona_multiple\"",
     "\"nota\"",
-    "\"fichero\"",
+    "\"multimedia\"",
     "\"calcular\"",
     "\"iniciar\"",
     "\"finalizar\"",

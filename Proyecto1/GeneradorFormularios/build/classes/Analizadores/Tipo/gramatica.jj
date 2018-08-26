@@ -119,21 +119,17 @@ TOKEN:
     |<seleccionaUno:"selecciona_uno">
     |<seleccionaMultiple:"selecciona_multiple">
     |<nota:"nota">
-    |<fichero:"fichero">
+    |<multimedia:"multimedia">
     |<calcular:"calcular">
     |<iniciar:"iniciar">
     |<finalizar:"finalizar">
     |<agrupacion:"agrupacion">
     |<ciclo:"ciclo">
-}
-
-TOKEN:
-{
-    <id:(<letra>)(<letra>|<digito>|"_")*  >
-|   <#digito:["0" - "9"] > 
-|   <#letra:["A"-"Z"]> 
-|   <coma:",">
-|   <punto:".">
+    |<id:(<letra>)(<letra>|<digito>|"_")*  >
+    |<#digito:["0" - "9"] > 
+    |<#letra:["A"-"Z"]> 
+    |<coma:",">
+    |<punto:".">
 }
 
 SKIP:
@@ -151,30 +147,10 @@ Nodo Inicio():
     (
     nodo=Tipo()<EOF>
     {
-        u = new Nodo("tipo",0,0);  
-        u.add(nodo);
         return nodo;
     }
     )+
 }
-
-Nodo idPregunta():
-{
-    Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-}
-{
-    t=<id>
-    {
-        u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);        
-        return u;
-    }
-|   {u = new Nodo("",0,0);  return u;}
-
-}
-
-
 
 Nodo Tipo():
 {
@@ -240,7 +216,7 @@ Nodo Tipo():
         u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
-    |t=<fichero>u=listaFormatos()
+    |t=<multimedia>u=listaFormatos()
     {
         nodo = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         nodo.add(u);
@@ -251,13 +227,13 @@ Nodo Tipo():
         u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         return u;
     }
-    |t=<iniciar> nodo=agci()    
+    |t=<iniciar> nodo=agrupacion()    
     {
         u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
         
         return u;
     }
-    |t=<finalizar>nodo=agci()    
+    |t=<finalizar>nodo=agrupacion()    
     {
         u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);        
         return u;
@@ -267,7 +243,7 @@ Nodo Tipo():
 
 }
 
-Nodo agci():
+Nodo agrupacion():
 {
     Nodo u = null;
     Nodo nodo;
@@ -295,13 +271,13 @@ Nodo listaFormatos():
 {
     "\""<punto>t=<id>u=listaFormatos1()"\""
         {
-            Nodo aux = u;
+            Nodo aux = new Nodo("formatos",0,0);
             u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
             return u;
         }    
     |    
     {
-        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+        Nodo aux = new Nodo("formatos",t.beginColumn,t.beginLine);
         return aux;
     }
 }
@@ -315,14 +291,14 @@ Nodo listaFormatos1():
 {
     <coma><punto>t=<id>u=listaFormatos1()
     {
-        Nodo aux = u;
+        Nodo aux = new Nodo("formatos",0,0);
         u.add( new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         return u;
     }
 |     //Epsilon Creamos la lista
     {
-        Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
-        return aux;
+        nodo = new Nodo("formatos",0,0);
+        return nodo;
     }
 }
 

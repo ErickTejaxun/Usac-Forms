@@ -51,9 +51,7 @@ public class parserTipo implements parserTipoConstants {
     while (true) {
       nodo = Tipo();
       jj_consume_token(0);
-u = new Nodo("tipo",0,0);
-        u.add(nodo);
-        {if ("" != null) return nodo;}
+{if ("" != null) return nodo;}
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case 0:
       case texto:
@@ -67,7 +65,7 @@ u = new Nodo("tipo",0,0);
       case seleccionaUno:
       case seleccionaMultiple:
       case nota:
-      case fichero:
+      case multimedia:
       case calcular:
       case iniciar:
       case finalizar:{
@@ -78,23 +76,6 @@ u = new Nodo("tipo",0,0);
         jj_la1[0] = jj_gen;
         break label_1;
       }
-    }
-    throw new Error("Missing return statement in function");
-  }
-
-  final public Nodo idPregunta() throws ParseException {Nodo u = null;
-    Nodo nodo;
-    Token t = null;
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case id:{
-      t = jj_consume_token(id);
-u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
-        {if ("" != null) return u;}
-      break;
-      }
-    default:
-      jj_la1[1] = jj_gen;
-u = new Nodo("",0,0);  {if ("" != null) return u;}
     }
     throw new Error("Missing return statement in function");
   }
@@ -173,8 +154,8 @@ u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
-    case fichero:{
-      t = jj_consume_token(fichero);
+    case multimedia:{
+      t = jj_consume_token(multimedia);
       u = listaFormatos();
 nodo = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
         nodo.add(u);
@@ -189,7 +170,7 @@ u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
       }
     case iniciar:{
       t = jj_consume_token(iniciar);
-      nodo = agci();
+      nodo = agrupacion();
 u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
 
         {if ("" != null) return u;}
@@ -197,19 +178,19 @@ u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
       }
     case finalizar:{
       t = jj_consume_token(finalizar);
-      nodo = agci();
+      nodo = agrupacion();
 u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[1] = jj_gen;
 u = new Nodo("",0,0);  {if ("" != null) return u;}
     }
     throw new Error("Missing return statement in function");
   }
 
-  final public Nodo agci() throws ParseException {Nodo u = null;
+  final public Nodo agrupacion() throws ParseException {Nodo u = null;
     Nodo nodo;
     Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -226,7 +207,7 @@ u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -243,14 +224,14 @@ u = new Nodo("agrupacion",t.beginColumn,t.beginLine);
       t = jj_consume_token(id);
       u = listaFormatos1();
       jj_consume_token(25);
-Nodo aux = u;
+Nodo aux = new Nodo("formatos",0,0);
             u.add( new Nodo(t.image,t.beginColumn,t.beginLine ));
             {if ("" != null) return u;}
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
-Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
+      jj_la1[3] = jj_gen;
+Nodo aux = new Nodo("formatos",t.beginColumn,t.beginLine);
         {if ("" != null) return aux;}
     }
     throw new Error("Missing return statement in function");
@@ -265,15 +246,15 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
       jj_consume_token(punto);
       t = jj_consume_token(id);
       u = listaFormatos1();
-Nodo aux = u;
+Nodo aux = new Nodo("formatos",0,0);
         u.add( new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         {if ("" != null) return u;}
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
-Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
-        {if ("" != null) return aux;}
+      jj_la1[4] = jj_gen;
+nodo = new Nodo("formatos",0,0);
+        {if ("" != null) return nodo;}
     }
     throw new Error("Missing return statement in function");
   }
@@ -287,13 +268,13 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[6];
+  final private int[] jj_la1 = new int[5];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1fffd,0x80000,0x1fffc,0x60000,0x2000000,0x400000,};
+      jj_la1_0 = new int[] {0x1fffd,0x1fffc,0x60000,0x2000000,0x400000,};
    }
 
   /** Constructor with InputStream. */
@@ -307,7 +288,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -321,7 +302,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -331,7 +312,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -341,7 +322,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -350,7 +331,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -359,7 +340,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -415,7 +396,7 @@ Nodo aux = new Nodo("LISTAF",t.beginColumn,t.beginLine);
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
