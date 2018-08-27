@@ -4,4 +4,4 @@ SET PATH=%JAVA_HOME%;%PATH%
 SET CLASSPATH=%JAVA_HOME%; 
 SET JFLEX_HOME= C:\LibreriasJava\javacc-6.0\bin\lib
 cd C:\Users\erick\Documents\Compi2\2018S2\Proyecto1\GeneradorFormularios\src\Analizadores\idPregunta
-java -cp %JFLEX_HOME%\javacc.jar javacc gramatica.jj
+java -cp %JFLEX_HOME%\javacc.jar javacc idgramatica.jj

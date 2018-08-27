@@ -69,9 +69,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
       }
     }
     jj_consume_token(0);
-imprimir("Cad->"+Cad);
-    nuevo = Cad;
-    {if ("" != null) return nuevo;}
+{if ("" != null) return Cad;}
     throw new Error("Missing return statement in function");
   }
 
@@ -80,12 +78,12 @@ imprimir("Cad->"+Cad);
     Nodo nuevo = null;
     Nodo derecha = null;
     Nodo izquierda = null;
-    derecha = T();
-    izquierda = ETQ2();
+    izquierda = T();
+    derecha = ETQ2();
 //Cad = Cad + aux;  //return Cad;
         nuevo = new Nodo("etiqueta",0,0);
-        nuevo.add(derecha);
         nuevo.add(izquierda);
+        nuevo.add(derecha);
         {if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
@@ -105,15 +103,21 @@ imprimir("Cad->"+Cad);
       derecho = ETQ2();
 //Cad = Cad + aux; // return Cad;
             nuevo = new Nodo("etiqueta",0,0);
-            nuevo.setValue(derecho.getValue()+izquierdo.getValue());
-            //nuevo.add(derecho);
-            //nuevo.add(izquierdo);
+            if(!derecho.getTipo().equals("vacio"))
+            {
+                nuevo.setValue(derecho.getValue()+izquierdo.getValue());
+            }
+            else
+            {
+                nuevo.setValue(izquierdo.getValue());
+            }
             {if ("" != null) return nuevo;}
       break;
       }
     case 0:{
       jj_consume_token(0);
-{if ("" != null) return null;}
+nuevo = new Nodo("vacio","vacio",0,0);
+        {if ("" != null) return nuevo;}
       break;
       }
     default:
@@ -124,10 +128,10 @@ imprimir("Cad->"+Cad);
     throw new Error("Missing return statement in function");
   }
 
-  final public Nodo T() throws ParseException {Token t;
-//String aux;
-Nodo nuevo = null;
-Nodo aux;
+  final public Nodo T() throws ParseException {String auxiliar;
+    Nodo nuevo = null;
+    Nodo aux = null;
+    Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
@@ -139,17 +143,8 @@ imprimir("Cual->"+t.image);//return t.image + " ";
     case numeral:{
       t = jj_consume_token(numeral);
       aux = ET3();
-imprimir("#->"+t.image);//return aux + " ";
-        if(aux.getTipo().equals("cadena"))
-        {
-            nuevo = aux;
-            nuevo.setValue(aux.getTipo()+"#");
-            {if ("" != null) return nuevo;}
-        }
-        else
-        {
-            nuevo = new Nodo();
-        }
+imprimir("#->"+t.image);
+        {if ("" != null) return aux;}
       break;
       }
     case punto:{
@@ -161,15 +156,13 @@ imprimir(".->"+t.image);//return "padre ";
       }
     case doblepunto:{
       t = jj_consume_token(doblepunto);
-imprimir("..->"+t.image);//return "madre";
-        nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
-        {if ("" != null) return nuevo;}
+nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
+       {if ("" != null) return nuevo;}
       break;
       }
     case funcion_vacia:{
       t = jj_consume_token(funcion_vacia);
-imprimir("funcion()->"+t.image);//
-        nuevo = new Nodo("funcion",t.image,t.beginColumn, t.beginLine);
+nuevo = new Nodo("funcion",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
       }
@@ -181,26 +174,20 @@ imprimir("funcion()->"+t.image);//
     throw new Error("Missing return statement in function");
   }
 
-  final public Nodo ET3() throws ParseException {String cad;
-    String auxiliar;
-    Token t= null;
-    Nodo nuevo = null;
+  final public Nodo ET3() throws ParseException {Nodo nuevo = null;
+    Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case corchA:{
       jj_consume_token(corchA);
       t = jj_consume_token(Cualquiera);
       jj_consume_token(corchC);
-nuevo = new Nodo("variable",t.image, t.beginColumn, t.beginLine);
-        imprimir("Var->"+t.image);
-        //return  "+ " + t.image +"+ ";
+nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
       }
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
-nuevo = new Nodo("cadena",t.image, t.beginColumn,t.beginLine);
-        imprimir("Color->"+t.image);
-        //return "#"+t.image +" ";
+nuevo = new Nodo("color",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
       }

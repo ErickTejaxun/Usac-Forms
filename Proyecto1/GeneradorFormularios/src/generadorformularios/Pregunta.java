@@ -197,7 +197,7 @@ public class Pregunta
     {
         this.vacio = false;
     }
-    
+
     public boolean getVacio()
     {
         return  getApariencia().equals("") &&

@@ -42,14 +42,14 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(idPregunta)
+PARSER_BEGIN(idParser)
 
 package Analizadores.idPregunta;
 import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class idPregunta 
+public class idParser 
 {    
     public String cadenaAuxiliar="";
     public static Nodo main(String args[]) throws ParseException
@@ -58,14 +58,14 @@ public class idPregunta
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
-            excelParser analizador = new excelParser(data);
+            idParser analizador = new idParser(data);
             return analizador.Inicio();   
         }
         else
         {
             try
             {
-                excelParser analizador = new excelParser(System.in);
+                idParser analizador = new idParser(System.in);
                 analizador.Inicio();
             }
             catch (ParseException e)
@@ -89,67 +89,30 @@ public class idPregunta
     }
 
 }
-PARSER_END(idPregunta)
-
-
-/*
-<ESTADO> -- ESTADO es el nombre del estado en el que vamos a declarar las reglas léxicas.
-SKIP: ignora el no terminal
-MORE: encicla en una producción 
-TOKEN: tokens
-TOKEN_ESPCIAL: saber
-*/
+PARSER_END(idParser)
 
 
 SKIP:
 {
-" "
-| "\r"
-| "\t"
+    <(" " | "\t" | "\n" | "\r" )+>
 }
 
 
 TOKEN :
 {
 <ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
-
-|<Numeral : "#">
-|<Acor : "[" >
-|<Ccor : "]" >
-|<Punto: ".">
-|<PuntoP: "..">
-|<Cualquiera : (~["#",".", "[", "]"])+ >
 }
 
-
-void Etiqueta() :
-{String Cad;}
+Nodo Inicio():
 {
-  (Cad = ETQ() {System.out.println(Cad);})+ <EOF>
+    Nodo nuevo = null;
+    Token t = null;
 }
-
-
-String ETQ() :
-{String Cad;
-String aux;}
 {
-Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
+    t=<ID><EOF>
+    {
+        nuevo = new Nodo("id",t.image,t.beginColumn, t.beginLine);
+        return nuevo;
+    }
 }
 
-
-String ETQ2() :
-{String Cad;
-String aux;}
-{
- Cad = T() aux = ETQ2() {Cad = Cad + aux;  return Cad;}
-| <EOF> {return "";}
-}
-
-String T() :
-{Token t;}
-{
-t = <Cualquiera> {return t.image + " ";}
-|<Numeral> <Acor> t=<ID> <Ccor> {return t.image + " ";}
-| <Punto> {return "padre ";}
-| <PuntoP> {return "madre";}
-}

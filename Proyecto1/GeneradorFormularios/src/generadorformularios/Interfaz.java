@@ -6,7 +6,7 @@
 package generadorformularios;
 
 
-import Analizadores.idPregunta.excelParser;
+import Analizadores.idPregunta.idParser;
 import Analizadores.idPregunta.ParseException;
 import Analizadores.idPregunta.TokenMgrError;
 import AST.dibujador;
@@ -47,13 +47,8 @@ public class Interfaz extends javax.swing.JFrame {
     public ArrayList<Pregunta> listaPreguntas = new ArrayList();
     ArrayList<String> listaEncabezadosPreguntas = new ArrayList();
     DefaultTableModel filasErrores;
-    boolean encuestaFlag = true;
-    
-    public Nodo raizArbol;
-    
-    
-    excelParser analizador = null;
-
+    boolean encuestaFlag = true;    
+    public Nodo raizArbol;            
     /**
      * Creates new form Interfaz
      */
@@ -231,9 +226,8 @@ public class Interfaz extends javax.swing.JFrame {
         try {
             try {
                 analizar();
-            } catch (Analizadores.Tipo.ParseException ex) {
-                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Analizadores.Etiqueta.ParseException ex) {
+            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException ex) 
+            {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IOException ex) {
@@ -1107,7 +1101,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException
+    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1116,7 +1110,7 @@ public class Interfaz extends javax.swing.JFrame {
         int fila = 1;
         String[] encabezados = 
         {
-            "tipo"/*,"idpregunta","etiqueta","parametro","calculo","aplicable","sugerir","restringir",
+            "tipo","idpregunta","etiqueta"/*,"parametro","calculo","aplicable","sugerir","restringir",
             "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
             "codigo_post","fichero"*/
         };
@@ -1134,23 +1128,43 @@ public class Interfaz extends javax.swing.JFrame {
                     
                     switch(parametro)
                     {
-                        case "tipo":                            
-                            arbolPregunta.add(analizarTipo(argumentos,fila,fila,fila,pre.getColumna(parametro)));                                                        
+                        case "tipo":  
+                            temporal = analizarTipo(argumentos,fila,fila,fila,pre.getColumna(parametro));
+                            if(temporal!=null)
+                            {
+                                arbolPregunta.add(temporal);                                                        
+                            }
+                            break;
+                        case "idpregunta":
+                            //Mensaje(pre.getTipo(),"----");
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                temporal = analizarId(argumentos,fila,fila,fila,pre.getColumna(parametro));
+                            }                                                        
+                            if(temporal!=null)
+                            {
+                                arbolPregunta.add(temporal);
+                            }
                             break;
                         case "etiqueta":
                             if(!pre.esFinal() && !pre.esIniciar())
                             {
-                                if (!pre.getVacio()) 
-                                {
-                                    //arbolPregunta.add(analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro)));                            
-                                }
+                                temporal = analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                            }
+                            if(temporal !=null)
+                            {
+                                arbolPregunta.add(temporal);
                             }
                             break;
                     }                    
                 }
-            }                                             
-            //printer.grafo(arbolPregunta);
-            raizArbol.add(arbolPregunta);
+                temporal = null;
+            }              
+            if(arbolPregunta.tieneHijos())
+            {
+                raizArbol.add(arbolPregunta);
+            }
+            
             fila++;
         }        
         printer.grafo(raizArbol);
@@ -1181,6 +1195,29 @@ public class Interfaz extends javax.swing.JFrame {
         return null;
     }
     
+    
+    public Nodo analizarId(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.idPregunta.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.idPregunta.idParser.main(argumentos);                                                        
+             }
+             catch(Analizadores.idPregunta.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.idPregunta.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }    
     
     public Nodo analizarEtiqueta(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Etiqueta.ParseException
     {        

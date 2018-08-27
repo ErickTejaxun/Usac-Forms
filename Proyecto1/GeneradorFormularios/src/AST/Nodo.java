@@ -87,6 +87,11 @@ public class Nodo
     public ArrayList<Nodo> getHijos() {
         return hijos;
     }
+    
+    public boolean tieneHijos()
+    {
+        return !this.hijos.isEmpty();
+    }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
