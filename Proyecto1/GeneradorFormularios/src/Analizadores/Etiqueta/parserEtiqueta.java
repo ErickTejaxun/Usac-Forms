@@ -84,7 +84,10 @@ raiz.add(Cad);
     derecha = ETQ2();
 nuevo = new Nodo("etiqueta","etiqueta",0,0);
         nuevo.add(izquierda);
-        nuevo.add(derecha);
+        if(!derecha.getTipo().equals("vacio"))
+        {
+            nuevo.add(derecha);
+        }
         {if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
@@ -102,7 +105,10 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
     case funcion_vacia:{
       izquierdo = T();
       derecho = ETQ2();
-izquierdo.add(derecho);
+if(derecho.getTipo().equals("vacio"))
+            {
+                izquierdo.add(derecho);
+            }
             {if ("" != null) return izquierdo;}
       break;
       }

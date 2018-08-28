@@ -123,7 +123,10 @@ Nodo ETQ() :
     {
         nuevo = new Nodo("etiqueta","etiqueta",0,0);
         nuevo.add(izquierda);
-        nuevo.add(derecha);
+        if(!derecha.getTipo().equals("vacio"))
+        {
+            nuevo.add(derecha);   
+        }       
         return nuevo;
     }    
 }
@@ -140,8 +143,11 @@ Nodo ETQ2() :
 {
         izquierdo = T()  derecho= ETQ2() 
         {            
-            izquierdo.add(derecho);
-            return izquierdo;
+            if(derecho.getTipo().equals("vacio"))
+            {
+                izquierdo.add(derecho);
+            }
+            return izquierdo;                
         }
     |   <EOF> 
     {
