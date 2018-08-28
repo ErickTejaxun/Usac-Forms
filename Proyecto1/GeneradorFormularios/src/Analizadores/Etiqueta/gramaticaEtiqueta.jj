@@ -1,27 +1,3 @@
-
-/*
- * Copyright © 2002 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * California 95054, U.S.A. All rights reserved.  Sun Microsystems, Inc. has
- * intellectual property rights relating to technology embodied in the product
- * that is described in this document. In particular, and without limitation,
- * these intellectual property rights may include one or more of the U.S.
- * patents listed at http://www.sun.com/patents and one or more additional
- * patents or pending patent applications in the U.S. and in other countries.
- * U.S. Government Rights - Commercial software. Government users are subject
- * to the Sun Microsystems, Inc. standard license agreement and applicable
- * provisions of the FAR and its supplements.  Use is subject to license terms.
- * Sun,  Sun Microsystems,  the Sun logo and  Java are trademarks or registered
- * trademarks of Sun Microsystems, Inc. in the U.S. and other countries.  This
- * product is covered and controlled by U.S. Export Control laws and may be
- * subject to the export or import laws in other countries.  Nuclear, missile,
- * chemical biological weapons or nuclear maritime end uses or end users,
- * whether direct or indirect, are strictly prohibited.  Export or reexport
- * to countries subject to U.S. embargo or to entities identified on U.S.
- * export exclusion lists, including, but not limited to, the denied persons
- * and specially designated nationals lists is strictly prohibited.
- */
-
-
 options {
   LOOKAHEAD = 1;
   CHOICE_AMBIGUITY_CHECK = 2;
@@ -52,6 +28,7 @@ import java.io.InputStream;
 public class parserEtiqueta 
 {    
     public String cadenaAuxiliar="";
+    public Nodo raiz = new Nodo("etiqueta","etiqueta",0,0);
     public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
@@ -109,7 +86,7 @@ TOKEN :
     |<corchC : "]" >
     |<punto: ".">
     |<doblepunto: "..">
-    |<Cualquiera : (~["#",".", "[", "]"])+ >
+    |<Cualquiera : (~["#",".", "[", "]"])+>    
     |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
     |<funcion_vacia:<ID><ESPACIO>":"<ESPACIO>"("<ESPACIO>")">
 }
@@ -122,9 +99,13 @@ Nodo Etiqueta() :
     Token t= null;
 }
 {
-    (Cad = ETQ())+ <EOF> 
-    {               
-        return Cad;
+    (Cad = ETQ()
+        {
+            raiz.add(Cad);
+        }
+        )+ <EOF> 
+    {                             
+        return raiz;
     }
 }
 
@@ -140,13 +121,11 @@ Nodo ETQ() :
 {
     izquierda = T() derecha = ETQ2() 
     {
-        //Cad = Cad + aux;  //return Cad;
-        nuevo = new Nodo("etiqueta",0,0);
+        nuevo = new Nodo("etiqueta","etiqueta",0,0);
         nuevo.add(izquierda);
         nuevo.add(derecha);
         return nuevo;
-    }
-    
+    }    
 }
 
 
@@ -160,18 +139,9 @@ Nodo ETQ2() :
 }
 {
         izquierdo = T()  derecho= ETQ2() 
-        {
-            //Cad = Cad + aux; // return Cad;
-            nuevo = new Nodo("etiqueta",0,0);
-            if(!derecho.getTipo().equals("vacio"))
-            {
-                nuevo.setValue(derecho.getValue()+izquierdo.getValue());
-            }
-            else
-            {
-                nuevo.setValue(izquierdo.getValue());
-            }
-            return nuevo;
+        {            
+            izquierdo.add(derecho);
+            return izquierdo;
         }
     |   <EOF> 
     {
@@ -189,23 +159,14 @@ Nodo T() :
 }
 {
     t=<Cualquiera> 
-    {
-        imprimir("Cual->"+t.image);//return t.image + " ";
+    {        
         nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
-
-    | t=<numeral> aux = ET3() 
-    {
-        imprimir("#->"+t.image);        
-        return aux;
-    }
     | t=<punto> 
-    {
-         imprimir(".->"+t.image);//return "padre ";
+    {         
          nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
          return nuevo;
-
     }
     | t=<doblepunto> 
     { 
@@ -217,11 +178,11 @@ Nodo T() :
         nuevo = new Nodo("funcion",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
+    | t=<numeral> aux = ET3() 
+    {          
+        return aux;
+    }
 }
-
-
-
-
 
 
 Nodo ET3():
@@ -238,7 +199,7 @@ Nodo ET3():
     }
     |t=<Cualquiera> 
     {                      
-        nuevo = new Nodo("color",t.image, t.beginColumn, t.beginLine);
+        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
 }

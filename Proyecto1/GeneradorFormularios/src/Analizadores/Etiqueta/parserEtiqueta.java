@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 public class parserEtiqueta implements parserEtiquetaConstants {
     public String cadenaAuxiliar="";
+    public Nodo raiz = new Nodo("etiqueta","etiqueta",0,0);
     public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
@@ -54,6 +55,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
     label_1:
     while (true) {
       Cad = ETQ();
+raiz.add(Cad);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case numeral:
       case punto:
@@ -69,7 +71,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
       }
     }
     jj_consume_token(0);
-{if ("" != null) return Cad;}
+{if ("" != null) return raiz;}
     throw new Error("Missing return statement in function");
   }
 
@@ -80,8 +82,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
     Nodo izquierda = null;
     izquierda = T();
     derecha = ETQ2();
-//Cad = Cad + aux;  //return Cad;
-        nuevo = new Nodo("etiqueta",0,0);
+nuevo = new Nodo("etiqueta","etiqueta",0,0);
         nuevo.add(izquierda);
         nuevo.add(derecha);
         {if ("" != null) return nuevo;}
@@ -101,17 +102,8 @@ public class parserEtiqueta implements parserEtiquetaConstants {
     case funcion_vacia:{
       izquierdo = T();
       derecho = ETQ2();
-//Cad = Cad + aux; // return Cad;
-            nuevo = new Nodo("etiqueta",0,0);
-            if(!derecho.getTipo().equals("vacio"))
-            {
-                nuevo.setValue(derecho.getValue()+izquierdo.getValue());
-            }
-            else
-            {
-                nuevo.setValue(izquierdo.getValue());
-            }
-            {if ("" != null) return nuevo;}
+izquierdo.add(derecho);
+            {if ("" != null) return izquierdo;}
       break;
       }
     case 0:{
@@ -135,22 +127,13 @@ nuevo = new Nodo("vacio","vacio",0,0);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
-imprimir("Cual->"+t.image);//return t.image + " ";
-        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
-      break;
-      }
-    case numeral:{
-      t = jj_consume_token(numeral);
-      aux = ET3();
-imprimir("#->"+t.image);
-        {if ("" != null) return aux;}
       break;
       }
     case punto:{
       t = jj_consume_token(punto);
-imprimir(".->"+t.image);//return "padre ";
-         nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
          {if ("" != null) return nuevo;}
       break;
       }
@@ -164,6 +147,12 @@ nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
       t = jj_consume_token(funcion_vacia);
 nuevo = new Nodo("funcion",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
+      break;
+      }
+    case numeral:{
+      t = jj_consume_token(numeral);
+      aux = ET3();
+{if ("" != null) return aux;}
       break;
       }
     default:
@@ -187,7 +176,7 @@ nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
       }
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
-nuevo = new Nodo("color",t.image, t.beginColumn, t.beginLine);
+nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
       }

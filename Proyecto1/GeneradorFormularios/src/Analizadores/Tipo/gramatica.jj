@@ -207,7 +207,7 @@ Nodo Tipo():
     }
     |<seleccionaMultiple>t=<id>
     {
-        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.beginColumn,t.beginLine);
         u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         return u;
     }
@@ -229,13 +229,13 @@ Nodo Tipo():
     }
     |t=<iniciar> nodo=agrupacion()    
     {
-        u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
+        u = new Nodo("tipo",t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
         
         return u;
     }
     |t=<finalizar>nodo=agrupacion()    
     {
-        u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);        
+        u = new Nodo("tipo",t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);        
         return u;
     }
 |   {u = new Nodo("",0,0);  return u;}

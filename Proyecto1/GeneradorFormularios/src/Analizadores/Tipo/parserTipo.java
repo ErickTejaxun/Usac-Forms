@@ -143,7 +143,7 @@ u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
     case seleccionaMultiple:{
       jj_consume_token(seleccionaMultiple);
       t = jj_consume_token(id);
-u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.beginColumn,t.beginLine);
         u.add(new Nodo("tipo",t.image,t.beginColumn,t.beginLine));
         {if ("" != null) return u;}
       break;
@@ -171,7 +171,7 @@ u = new Nodo("tipo",t.image,t.beginColumn,t.beginLine);
     case iniciar:{
       t = jj_consume_token(iniciar);
       nodo = agrupacion();
-u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
 
         {if ("" != null) return u;}
       break;
@@ -179,7 +179,7 @@ u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
     case finalizar:{
       t = jj_consume_token(finalizar);
       nodo = agrupacion();
-u = new Nodo(t.image,t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
+u = new Nodo("tipo",t.image +" "+ nodo.getValue(),t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
       }

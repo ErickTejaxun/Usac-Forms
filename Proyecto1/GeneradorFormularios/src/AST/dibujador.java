@@ -64,7 +64,7 @@ public class dibujador
               rt.exec( cmd );
               
     }
-    public String dibujarArbol(Nodo raiz)
+    public String dibujarArbol2(Nodo raiz)
     {
         String cadena = "N"+raiz.hashCode()+"[label=\""+raiz.getValue()+"\"]; \n";
         
@@ -88,7 +88,30 @@ public class dibujador
         }               
         return cadena;
     }
-    
+    public String dibujarArbol(Nodo raiz)
+    {
+        String cadena = "N"+raiz.hashCode()+"[label=\"["+raiz.getTipo()+"]"+raiz.getValue()+"\"]; \n";
+        
+        if(!raiz.getHijos().isEmpty())
+        {
+            for(int cont = 0; cont<raiz.getHijos().size();cont++)
+            {
+                cadena = cadena +"N"+raiz.getHijos().get(cont).hashCode()+"[label=\""+"["+raiz.getHijos().get(cont).getTipo()+"]"+raiz.getHijos().get(cont).getValue()+"\"]; \n";
+                //a -> b[label="0.2",weight="0.2"];
+            }
+            for(int cont = 0; cont<raiz.getHijos().size();cont++)
+            {
+                cadena = cadena +"N"+raiz.hashCode()+"->"  +"N"+raiz.getHijos().get(cont).hashCode()+" ; \n";
+                //a -> b[label="0.2",weight="0.2"];
+            }
+            
+            for(int cont = 0; cont<raiz.getHijos().size();cont++)
+            {
+                cadena = cadena + dibujarArbol(raiz.getHijos().get(cont));                
+            }            
+        }               
+        return cadena;
+    }    
     
     public String PathActual(){
         String path="";
