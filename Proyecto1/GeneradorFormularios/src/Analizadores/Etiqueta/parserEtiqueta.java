@@ -104,11 +104,25 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
     case funcion_vacia:{
       izquierdo = T();
       derecho = ETQ2();
-if(!derecho.getTipo().equals("vacio"))
+nuevo = new Nodo("etiqueta","etiqueta",0,0);
+            if(izquierdo.getHijos().isEmpty())
             {
-                izquierdo.add(derecho);
+                nuevo.add(izquierdo);
             }
-            {if ("" != null) return izquierdo;}
+            else
+            {
+                for(Nodo ni: izquierdo.getHijos())
+                {
+                    nuevo.add(ni);
+                }
+            }
+
+            for(Nodo nd: derecho.getHijos())
+            {
+                nuevo.add(nd);
+            }
+            //nuevo.add(derecho);               
+            {if ("" != null) return nuevo;}
       break;
       }
     case 0:{
