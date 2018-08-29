@@ -143,7 +143,7 @@ Nodo ETQ2() :
 {
         izquierdo = T()  derecho= ETQ2() 
         {            
-            if(derecho.getTipo().equals("vacio"))
+            if(!derecho.getTipo().equals("vacio"))
             {
                 izquierdo.add(derecho);
             }

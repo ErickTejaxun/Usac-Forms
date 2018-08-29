@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/generadorformularios/Pregunta.java</file>
-            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/Analizadores/build.bat</file>
+            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/AST/Nodo.java</file>
+            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/Analizadores/Etiqueta/gramaticaEtiqueta.jj</file>
+            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/Analizadores/Etiqueta/parserEtiqueta.java</file>
+            <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/Analizadores/Etiqueta/build.bat</file>
             <file>file:/C:/Users/erick/Documents/Compi2/2018S2/Proyecto1/GeneradorFormularios/src/generadorformularios/Interfaz.java</file>
         </group>
     </open-files>

@@ -105,7 +105,7 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
     case funcion_vacia:{
       izquierdo = T();
       derecho = ETQ2();
-if(derecho.getTipo().equals("vacio"))
+if(!derecho.getTipo().equals("vacio"))
             {
                 izquierdo.add(derecho);
             }
