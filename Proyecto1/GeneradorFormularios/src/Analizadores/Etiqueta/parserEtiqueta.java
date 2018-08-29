@@ -7,7 +7,6 @@ import java.io.InputStream;
 
 public class parserEtiqueta implements parserEtiquetaConstants {
     public String cadenaAuxiliar="";
-    public Nodo raiz = new Nodo("etiqueta","etiqueta",0,0);
     public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
@@ -55,7 +54,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
     label_1:
     while (true) {
       Cad = ETQ();
-raiz.add(Cad);
+nuevo = Cad;
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case numeral:
       case punto:
@@ -71,7 +70,7 @@ raiz.add(Cad);
       }
     }
     jj_consume_token(0);
-{if ("" != null) return raiz;}
+{if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
 
