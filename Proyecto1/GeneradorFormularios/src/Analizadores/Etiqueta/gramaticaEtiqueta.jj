@@ -121,11 +121,38 @@ Nodo ETQ() :
     izquierda = T() derecha = ETQ2() 
     {
         nuevo = new Nodo("etiqueta","etiqueta",0,0);
-        nuevo.add(izquierda);
-        if(!derecha.getTipo().equals("vacio"))
+        if(izquierda.getHijos().isEmpty())
         {
-            nuevo.add(derecha);   
-        }       
+            nuevo.add(izquierda);
+        }
+        else
+        {
+            for(Nodo ni: izquierda.getHijos())
+            {
+                if(!ni.getTipo().equals("vacio"))
+                {
+                    nuevo.add(ni);
+                }   
+            }
+        }
+        if(derecha.getHijos().isEmpty())
+        {
+            nuevo.add(derecha);
+        }
+        else
+        {
+            for(Nodo nd: derecha.getHijos())
+            {
+                if(!nd.getTipo().equals("vacio"))
+                {
+                    nuevo.add(nd);
+                }   
+                
+            }
+        }
+
+        
+        
         return nuevo;
     }    
 }
@@ -142,7 +169,7 @@ Nodo ETQ2() :
 {
         izquierdo = T()  derecho= ETQ2() 
         {   
-            nuevo = new Nodo("etiqueta","etiqueta",0,0);    
+            nuevo = new Nodo("ET2","ET2",0,0);    
             if(izquierdo.getHijos().isEmpty())
             {
                 nuevo.add(izquierdo);
@@ -151,7 +178,10 @@ Nodo ETQ2() :
             {
                 for(Nodo ni: izquierdo.getHijos())
                 {
-                    nuevo.add(ni);
+                    if(!ni.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(ni);
+                    }                    
                 }
             }
             
@@ -214,11 +244,12 @@ Nodo ET3():
     <corchA> t=<Cualquiera> <corchC>
     {
         nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
+        System.out.println("Invocando variable: "+t.image);
         return nuevo;
     }
     |t=<Cualquiera> 
     {                      
-        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+        nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
 }

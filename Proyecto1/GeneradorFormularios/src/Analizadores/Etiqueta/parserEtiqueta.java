@@ -82,11 +82,38 @@ nuevo = Cad;
     izquierda = T();
     derecha = ETQ2();
 nuevo = new Nodo("etiqueta","etiqueta",0,0);
-        nuevo.add(izquierda);
-        if(!derecha.getTipo().equals("vacio"))
+        if(izquierda.getHijos().isEmpty())
+        {
+            nuevo.add(izquierda);
+        }
+        else
+        {
+            for(Nodo ni: izquierda.getHijos())
+            {
+                if(!ni.getTipo().equals("vacio"))
+                {
+                    nuevo.add(ni);
+                }
+            }
+        }
+        if(derecha.getHijos().isEmpty())
         {
             nuevo.add(derecha);
         }
+        else
+        {
+            for(Nodo nd: derecha.getHijos())
+            {
+                if(!nd.getTipo().equals("vacio"))
+                {
+                    nuevo.add(nd);
+                }
+
+            }
+        }
+
+
+
         {if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
@@ -104,7 +131,7 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
     case funcion_vacia:{
       izquierdo = T();
       derecho = ETQ2();
-nuevo = new Nodo("etiqueta","etiqueta",0,0);
+nuevo = new Nodo("ET2","ET2",0,0);
             if(izquierdo.getHijos().isEmpty())
             {
                 nuevo.add(izquierdo);
@@ -113,7 +140,10 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
             {
                 for(Nodo ni: izquierdo.getHijos())
                 {
-                    nuevo.add(ni);
+                    if(!ni.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(ni);
+                    }
                 }
             }
 
@@ -190,12 +220,13 @@ nuevo = new Nodo("funcion",t.image, t.beginColumn, t.beginLine);
       t = jj_consume_token(Cualquiera);
       jj_consume_token(corchC);
 nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
+        System.out.println("Invocando variable: "+t.image);
         {if ("" != null) return nuevo;}
       break;
       }
     case Cualquiera:{
       t = jj_consume_token(Cualquiera);
-nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
       }
