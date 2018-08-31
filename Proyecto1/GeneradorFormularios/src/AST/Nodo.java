@@ -125,6 +125,14 @@ public class Nodo
         }
     }
     
+    public void addI(Nodo nuevo)
+    {
+        if(nuevo!=null)
+        {
+            this.hijos.add(0, nuevo);
+        }
+    }
+    
     public void addLista(Nodo nuevo)
     {
         if(nuevo!=null)

@@ -79,19 +79,38 @@ PARSER_END(parserEtiqueta)
 }
 TOKEN :
 {
+     <llaveA: "{">   
+    |<llaveC: "}">
+    |<parA: "(">:PAR
+    |<Cualquiera : (~["{","}","#",".", "[", "]","(",")", "@", " "])+>               
+}
+
+
+<PAR> TOKEN:
+{
+    <plus:"+">
+|   <minus:"-">
+|   <times:"*">
+|   <div:"/">
+|   <verdadero:"verdadero">
+|   <falso:"falso">
+|   <coma:",">
+|   <numero:(["0"- "9"])+> 
+|   <parC:")">:DEFAULT
+}
+
+
+<PAR,DEFAULT>TOKEN:
+{
     <numeral : "#">
     |<corchA : "[" >
     |<corchC : "]" >
     |<punto: ".">
     |<doblepunto: "..">
-    |<arroba: "@">
-    |<llaveA: "{">
-    |<llaveC: "}">
-    |<parA: "(">
-    |<parC: ")">
-    |<Cualquiera : (~["{","}","#",".", "[", "]","(",")", "@", " "])+>        
-    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>    
+    |<arroba: "@">       
+    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
 }
+
 Nodo Etiqueta() :
 {
     Nodo Cad;
@@ -294,12 +313,12 @@ Nodo T() :
     }
     | t=<punto> 
     {         
-         nuevo = new Nodo("var",".",t.beginColumn, t.beginLine);
+         nuevo = new Nodo("varP","this",t.beginColumn, t.beginLine);
          return nuevo;
     }
     | t=<doblepunto> 
     { 
-       nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
+       nuevo = new Nodo("varP","padre",t.beginColumn, t.beginLine);
        return nuevo;
     }
 
@@ -340,7 +359,7 @@ Nodo ET3():
 {
     <corchA>t=<Cualquiera><corchC>
     {
-        nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
+        nuevo = new Nodo("varP",t.image, t.beginColumn, t.beginLine);
         System.out.println("Invocando variable: "+t.image);
         return nuevo;
     }
@@ -355,15 +374,66 @@ Nodo ET3():
 Nodo listaParametros():
 {
     Nodo auxiliar = null;
-    Nodo nuevo = null;
+    Nodo nuevo = new Nodo("parametro","lista",0,0);
     Token t = null;
+    Token t2=null;
 
 }
 {
-    t=<Cualquiera>
+    t=<ID>(<coma>auxiliar = parametro(){nuevo.add(auxiliar);})*
     {
-        nuevo = new Nodo("parametro",t.image, t.beginColumn, t.beginLine);
+        nuevo.addI(new Nodo("parametro",t.image,t.beginColumn,t.beginLine));
         return nuevo;
     }   
 
+}
+
+
+Nodo parametro():
+{
+    Nodo nuevo = null;
+    Nodo aux = null;
+    Token t = null;
+    Token t2 = null;
+    Token t1 =null;
+}
+{
+    t=<ID>
+    {
+        return new Nodo("var",t.image,t.beginColumn,t.beginLine);
+    }
+    |<numeral><corchA>t=<ID><corchC>
+    {
+        return new Nodo("varP",t.image,t.beginColumn,t.beginLine);
+    }
+    |t=<verdadero>
+    {
+        return new Nodo("verdadero",t.image,t.beginColumn,t.beginLine);
+    }
+    |t=<falso>
+    {
+        return new Nodo("falso",t.image,t.beginColumn,t.beginLine);
+    }
+    |t=<numero>(t1=<punto>(t2=<numero>)?)?
+    {
+        if(t1==null && t2==null)
+        {
+            // Esto significa que es entero.
+            return new Nodo("entero",t.image,t.beginColumn,t.beginLine);
+        }
+        if(t1!=null && t2==null)
+        {
+            // Esto significa que es entero.
+            return new Nodo("decimal",t.image+".00",t.beginColumn,t.beginLine);
+        }
+        if(t1!=null && t2!=null)
+        {
+            // Esto significa que es entero.
+            return new Nodo("decimal",t.image+"."+t2.image,t.beginColumn,t.beginLine);
+        }        
+    }
+    |t=<punto>
+    {
+        return new Nodo("varP","this",t.beginColumn,t.beginLine);
+    }  
 }

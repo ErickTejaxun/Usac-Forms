@@ -13,29 +13,45 @@ public interface parserEtiquetaConstants {
   /** RegularExpression Id. */
   int ESPACIO = 1;
   /** RegularExpression Id. */
-  int numeral = 2;
+  int llaveA = 2;
   /** RegularExpression Id. */
-  int corchA = 3;
+  int llaveC = 3;
   /** RegularExpression Id. */
-  int corchC = 4;
+  int parA = 4;
   /** RegularExpression Id. */
-  int punto = 5;
+  int Cualquiera = 5;
   /** RegularExpression Id. */
-  int doblepunto = 6;
+  int plus = 6;
   /** RegularExpression Id. */
-  int arroba = 7;
+  int minus = 7;
   /** RegularExpression Id. */
-  int llaveA = 8;
+  int times = 8;
   /** RegularExpression Id. */
-  int llaveC = 9;
+  int div = 9;
   /** RegularExpression Id. */
-  int parA = 10;
+  int verdadero = 10;
   /** RegularExpression Id. */
-  int parC = 11;
+  int falso = 11;
   /** RegularExpression Id. */
-  int Cualquiera = 12;
+  int coma = 12;
   /** RegularExpression Id. */
-  int ID = 13;
+  int numero = 13;
+  /** RegularExpression Id. */
+  int parC = 14;
+  /** RegularExpression Id. */
+  int numeral = 15;
+  /** RegularExpression Id. */
+  int corchA = 16;
+  /** RegularExpression Id. */
+  int corchC = 17;
+  /** RegularExpression Id. */
+  int punto = 18;
+  /** RegularExpression Id. */
+  int doblepunto = 19;
+  /** RegularExpression Id. */
+  int arroba = 20;
+  /** RegularExpression Id. */
+  int ID = 21;
 
   /** Lexical state. */
   int PAR = 0;
@@ -46,17 +62,25 @@ public interface parserEtiquetaConstants {
   String[] tokenImage = {
     "<EOF>",
     "<ESPACIO>",
+    "\"{\"",
+    "\"}\"",
+    "\"(\"",
+    "<Cualquiera>",
+    "\"+\"",
+    "\"-\"",
+    "\"*\"",
+    "\"/\"",
+    "\"verdadero\"",
+    "\"falso\"",
+    "\",\"",
+    "<numero>",
+    "\")\"",
     "\"#\"",
     "\"[\"",
     "\"]\"",
     "\".\"",
     "\"..\"",
     "\"@\"",
-    "\"{\"",
-    "\"}\"",
-    "\"(\"",
-    "\")\"",
-    "<Cualquiera>",
     "<ID>",
   };
 
