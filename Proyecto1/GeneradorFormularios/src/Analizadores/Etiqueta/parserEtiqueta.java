@@ -129,31 +129,45 @@ ArrayList<Nodo> hijos = new ArrayList();
     izquierda = T();
     derecha = ETQ2();
 nuevo = new Nodo("etiqueta","etiqueta",0,0);
-        if(izquierda.getHijos().isEmpty())
+        if(izquierda.getTipo().equals("funcion"))
         {
             nuevo.add(izquierda);
         }
         else
         {
-            for(Nodo ni: izquierda.getHijos())
+            if(izquierda.getHijos().isEmpty())
             {
-                if(!ni.getTipo().equals("vacio"))
+                nuevo.add(izquierda);
+            }
+            else
+            {
+                for(Nodo ni: izquierda.getHijos())
                 {
-                    nuevo.add(ni);
+                    if(!ni.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(ni);
+                    }
                 }
             }
         }
-        if(derecha.getHijos().isEmpty())
+        if(derecha.getTipo().equals("funcion"))
         {
             nuevo.add(derecha);
         }
         else
         {
-            for(Nodo nd: derecha.getHijos())
+            if(derecha.getHijos().isEmpty())
             {
-                if(!nd.getTipo().equals("vacio"))
+                nuevo.add(derecha);
+            }
+            else
+            {
+                for(Nodo nd: derecha.getHijos())
                 {
-                    nuevo.add(nd);
+                    if(!nd.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(nd);
+                    }
                 }
             }
         }
@@ -177,25 +191,38 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
       izquierdo = T();
       derecho = ETQ2();
 nuevo = new Nodo("ET2","ET2",0,0);
-            if(izquierdo.getHijos().isEmpty())
+            if(izquierdo.getTipo().equals("funcion"))
             {
                 nuevo.add(izquierdo);
             }
             else
             {
-                for(Nodo ni: izquierdo.getHijos())
+                if(izquierdo.getHijos().isEmpty())
                 {
-                    if(!ni.getTipo().equals("vacio"))
+                    nuevo.add(izquierdo);
+                }
+                else
+                {
+                    for(Nodo ni: izquierdo.getHijos())
                     {
-                        nuevo.add(ni);
+                        if(!ni.getTipo().equals("vacio"))
+                        {
+                            nuevo.add(ni);
+                        }
                     }
                 }
             }
 
-
-            for(Nodo nd: derecho.getHijos())
+            if(derecho.getTipo().equals("funcion"))
             {
-                nuevo.add(nd);
+                nuevo.add(derecho);
+            }
+            else
+            {
+                for(Nodo nd: derecho.getHijos())
+                {
+                    nuevo.add(nd);
+                }
             }
             {if ("" != null) return nuevo;}
       break;
@@ -232,16 +259,30 @@ nuevo = new Nodo("vacio","vacio",0,0);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case parA:{
         t1 = jj_consume_token(parA);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case Cualquiera:{
+          aux = listaParametros();
+          break;
+          }
+        default:
+          jj_la1[3] = jj_gen;
+          ;
+        }
         t2 = jj_consume_token(parC);
         break;
         }
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[4] = jj_gen;
         ;
       }
 if(t1!=null && t2!=null)
         {
             nuevo = new Nodo("funcion",t.image+"()", t.beginColumn, t.beginLine);
+            if(aux !=null)
+            {
+                nuevo.add(aux);
+                nuevo.setTipo(nuevo.getTipo());
+            }
             {if ("" != null) return nuevo;}
         }
         else
@@ -275,7 +316,7 @@ nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
         break;
         }
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[5] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -284,7 +325,7 @@ nuevo = new Nodo("cadena",t1.image + t2.image,t1.beginColumn, t1.beginLine);
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       if (jj_2_1(2)) {
         t1 = jj_consume_token(arroba);
         t2 = jj_consume_token(llaveA);
@@ -311,7 +352,7 @@ nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
           break;
           }
         default:
-          jj_la1[6] = jj_gen;
+          jj_la1[7] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -339,10 +380,19 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
       break;
       }
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[8] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo listaParametros() throws ParseException {Nodo auxiliar = null;
+    Nodo nuevo = null;
+    Token t = null;
+    t = jj_consume_token(Cualquiera);
+nuevo = new Nodo("parametro",t.image, t.beginColumn, t.beginLine);
+        {if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -372,13 +422,13 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[8];
+  final private int[] jj_la1 = new int[9];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x13e4,0x13e4,0x13e5,0x400,0x1080,0x1260,0x184,0x1008,};
+      jj_la1_0 = new int[] {0x13e4,0x13e4,0x13e5,0x1000,0x400,0x1080,0x1260,0x184,0x1008,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[1];
   private boolean jj_rescan = false;
@@ -395,7 +445,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -410,7 +460,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -421,7 +471,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -432,7 +482,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -442,7 +492,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -452,7 +502,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -570,7 +620,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

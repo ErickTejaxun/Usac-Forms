@@ -73,7 +73,7 @@ public class parserEtiqueta
 }
 PARSER_END(parserEtiqueta)
 
-SPECIAL_TOKEN:
+<PAR,DEFAULT>SPECIAL_TOKEN:
 {
     <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
 }
@@ -88,11 +88,10 @@ TOKEN :
     |<llaveA: "{">
     |<llaveC: "}">
     |<parA: "(">
-    |<parC: ")">    
+    |<parC: ")">
     |<Cualquiera : (~["{","}","#",".", "[", "]","(",")", "@", " "])+>        
     |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>    
 }
-
 Nodo Etiqueta() :
 {
     Nodo Cad;
@@ -158,34 +157,48 @@ Nodo ETQ() :
     izquierda = T() derecha = ETQ2() 
     {
         nuevo = new Nodo("etiqueta","etiqueta",0,0);
-        if(izquierda.getHijos().isEmpty())
+        if(izquierda.getTipo().equals("funcion"))
         {
             nuevo.add(izquierda);
         }
         else
         {
-            for(Nodo ni: izquierda.getHijos())
+            if(izquierda.getHijos().isEmpty())
             {
-                if(!ni.getTipo().equals("vacio"))
+                nuevo.add(izquierda);
+            }
+            else
+            {
+                for(Nodo ni: izquierda.getHijos())
                 {
-                    nuevo.add(ni);
-                }   
+                    if(!ni.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(ni);
+                    }   
+                }
             }
         }
-        if(derecha.getHijos().isEmpty())
+        if(derecha.getTipo().equals("funcion"))
         {
             nuevo.add(derecha);
         }
         else
         {
-            for(Nodo nd: derecha.getHijos())
+            if(derecha.getHijos().isEmpty())
             {
-                if(!nd.getTipo().equals("vacio"))
-                {
-                    nuevo.add(nd);
-                }                   
+                nuevo.add(derecha);
             }
-        }               
+            else
+            {
+                for(Nodo nd: derecha.getHijos())
+                {
+                    if(!nd.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(nd);
+                    }                   
+                }
+            } 
+        }
         return nuevo;
     }    
 }
@@ -202,27 +215,40 @@ Nodo ETQ2() :
 {
         izquierdo = T()  derecho= ETQ2() 
         {   
-            nuevo = new Nodo("ET2","ET2",0,0);    
-            if(izquierdo.getHijos().isEmpty())
+            nuevo = new Nodo("ET2","ET2",0,0); 
+            if(izquierdo.getTipo().equals("funcion"))
             {
                 nuevo.add(izquierdo);
             }
             else
             {
-                for(Nodo ni: izquierdo.getHijos())
+                if(izquierdo.getHijos().isEmpty())
                 {
-                    if(!ni.getTipo().equals("vacio"))
+                    nuevo.add(izquierdo);
+                }
+                else
+                {
+                    for(Nodo ni: izquierdo.getHijos())
                     {
-                        nuevo.add(ni);
-                    }                    
+                        if(!ni.getTipo().equals("vacio"))
+                        {
+                            nuevo.add(ni);
+                        }                    
+                    }                                
                 }
             }
             
-            
-            for(Nodo nd: derecho.getHijos())
+            if(derecho.getTipo().equals("funcion"))
             {
-                nuevo.add(nd);
-            }                         
+                nuevo.add(derecho);
+            }
+            else
+            {
+                for(Nodo nd: derecho.getHijos())
+                {
+                    nuevo.add(nd);
+                }                         
+            }
             return nuevo;
         }
     |   <EOF> 
@@ -248,11 +274,16 @@ Nodo T() :
         nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }*/
-     t=<Cualquiera>(t1=<parA>t2=<parC>)?
+     t=<Cualquiera>(t1=<parA>(aux = listaParametros())?t2=<parC>)?
     {
         if(t1!=null && t2!=null)
         {
             nuevo = new Nodo("funcion",t.image+"()", t.beginColumn, t.beginLine);
+            if(aux !=null)
+            {
+                nuevo.add(aux);   
+                nuevo.setTipo(nuevo.getTipo());
+            }
             return nuevo;
         }
         else
@@ -320,3 +351,19 @@ Nodo ET3():
     }
 }
 
+
+Nodo listaParametros():
+{
+    Nodo auxiliar = null;
+    Nodo nuevo = null;
+    Token t = null;
+
+}
+{
+    t=<Cualquiera>
+    {
+        nuevo = new Nodo("parametro",t.image, t.beginColumn, t.beginLine);
+        return nuevo;
+    }   
+
+}

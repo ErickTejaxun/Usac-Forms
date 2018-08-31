@@ -38,7 +38,9 @@ public interface parserEtiquetaConstants {
   int ID = 13;
 
   /** Lexical state. */
-  int DEFAULT = 0;
+  int PAR = 0;
+  /** Lexical state. */
+  int DEFAULT = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
