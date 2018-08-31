@@ -23,11 +23,19 @@ public interface parserEtiquetaConstants {
   /** RegularExpression Id. */
   int doblepunto = 6;
   /** RegularExpression Id. */
-  int Cualquiera = 7;
+  int arroba = 7;
   /** RegularExpression Id. */
-  int ID = 8;
+  int llaveA = 8;
   /** RegularExpression Id. */
-  int funcion_vacia = 9;
+  int llaveC = 9;
+  /** RegularExpression Id. */
+  int parA = 10;
+  /** RegularExpression Id. */
+  int parC = 11;
+  /** RegularExpression Id. */
+  int Cualquiera = 12;
+  /** RegularExpression Id. */
+  int ID = 13;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -41,9 +49,13 @@ public interface parserEtiquetaConstants {
     "\"]\"",
     "\".\"",
     "\"..\"",
+    "\"@\"",
+    "\"{\"",
+    "\"}\"",
+    "\"(\"",
+    "\")\"",
     "<Cualquiera>",
     "<ID>",
-    "<funcion_vacia>",
   };
 
 }

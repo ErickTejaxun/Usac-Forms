@@ -24,6 +24,7 @@ package Analizadores.Etiqueta;
 import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class parserEtiqueta 
 {    
@@ -76,8 +77,6 @@ SPECIAL_TOKEN:
 {
     <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
 }
-
-
 TOKEN :
 {
     <numeral : "#">
@@ -85,11 +84,14 @@ TOKEN :
     |<corchC : "]" >
     |<punto: ".">
     |<doblepunto: "..">
-    |<Cualquiera : (~["#",".", "[", "]"])+>    
-    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>
-    |<funcion_vacia:<ID><ESPACIO>":"<ESPACIO>"("<ESPACIO>")">
+    |<arroba: "@">
+    |<llaveA: "{">
+    |<llaveC: "}">
+    |<parA: "(">
+    |<parC: ")">    
+    |<Cualquiera : (~["{","}","#",".", "[", "]","(",")", "@", " "])+>        
+    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*>    
 }
-
 
 Nodo Etiqueta() :
 {
@@ -103,8 +105,43 @@ Nodo Etiqueta() :
             nuevo = Cad;
         }
         )+ <EOF> 
-    {                             
+    {                   
+    
+        ArrayList<Nodo> hijos = new ArrayList();
+        nuevo = Cad;
+        //nuevo.getHijos().clear();
+        Nodo auxiliar = new Nodo("cadena","",0,0);
+        for(Nodo nodo : Cad.getHijos())
+        {
+            if(nodo.getTipo().equals("cadena"))
+            {
+                auxiliar.setValue(auxiliar.getValue()+" "+nodo.getValue());
+            }
+            else
+            {
+                if(!auxiliar.getValue().equals(""))
+                {
+                    hijos.add(auxiliar);
+                    hijos.add(nodo);
+                    auxiliar = new Nodo("cadena","",0,0);
+                }
+                else
+                {
+                    hijos.add(nodo);
+                }
+            }
+        }
+        if(!auxiliar.getValue().equals(""))
+        {
+            hijos.add(auxiliar);
+        }
+        nuevo.getHijos().clear();
+        nuevo.setListaHijos(hijos); 
         return nuevo;
+    }
+|   
+    {
+        return new Nodo("etiqueta","etiqueta",0,0);
     }
 }
 
@@ -146,13 +183,9 @@ Nodo ETQ() :
                 if(!nd.getTipo().equals("vacio"))
                 {
                     nuevo.add(nd);
-                }   
-                
+                }                   
             }
-        }
-
-        
-        
+        }               
         return nuevo;
     }    
 }
@@ -185,11 +218,11 @@ Nodo ETQ2() :
                 }
             }
             
+            
             for(Nodo nd: derecho.getHijos())
             {
                 nuevo.add(nd);
-            }
-            //nuevo.add(derecho);               
+            }                         
             return nuevo;
         }
     |   <EOF> 
@@ -205,16 +238,32 @@ Nodo T() :
     Nodo nuevo = null;
     Nodo aux = null;
     Token t = null;
+    Token t2= null;
+    Token t1=null;
 }
 {
+    /*
     t=<Cualquiera> 
     {        
         nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
+    }*/
+     t=<Cualquiera>(t1=<parA>t2=<parC>)?
+    {
+        if(t1!=null && t2!=null)
+        {
+            nuevo = new Nodo("funcion",t.image+"()", t.beginColumn, t.beginLine);
+            return nuevo;
+        }
+        else
+        {
+            nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+            return nuevo;
+        }                
     }
     | t=<punto> 
     {         
-         nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+         nuevo = new Nodo("var",".",t.beginColumn, t.beginLine);
          return nuevo;
     }
     | t=<doblepunto> 
@@ -222,15 +271,32 @@ Nodo T() :
        nuevo = new Nodo("var","padre",t.beginColumn, t.beginLine);
        return nuevo;
     }
-    | t=<funcion_vacia>
+
+    |t1=<llaveC> (t2=<arroba>|t2=<Cualquiera>)
+    {                
+        nuevo = new Nodo("cadena",t1.image + t2.image,t1.beginColumn, t1.beginLine);
+        return nuevo;
+    }
+    | LOOKAHEAD(2)t1=<arroba> t2=<llaveA>
     {
-        nuevo = new Nodo("funcion",t.image, t.beginColumn, t.beginLine);
+        nuevo = new Nodo("cadena","@{", t1.beginColumn, t1.beginLine);
+        return nuevo;        
+    }  
+    | t1=<arroba> 
+    { 
+       nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+       return nuevo;
+    }
+    |t=<llaveA>
+    {
+        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
     | t=<numeral> aux = ET3() 
     {          
         return aux;
     }
+
 }
 
 
@@ -241,7 +307,7 @@ Nodo ET3():
 }
 
 {
-    <corchA> t=<Cualquiera> <corchC>
+    <corchA>t=<Cualquiera><corchC>
     {
         nuevo = new Nodo("var",t.image, t.beginColumn, t.beginLine);
         System.out.println("Invocando variable: "+t.image);
@@ -253,3 +319,4 @@ Nodo ET3():
         return nuevo;
     }
 }
+

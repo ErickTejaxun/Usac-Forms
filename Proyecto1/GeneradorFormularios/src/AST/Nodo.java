@@ -34,7 +34,10 @@ public class Nodo
     }
      
     
-    
+    public void setListaHijos(ArrayList<Nodo> hijos)
+    {
+        this.hijos = hijos;
+    }
     
     
     public Nodo(String value) 

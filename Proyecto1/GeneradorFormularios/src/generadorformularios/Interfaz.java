@@ -224,12 +224,13 @@ public class Interfaz extends javax.swing.JFrame {
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
         
         try {
-            try {
+            try 
+            {
                 analizar();
             } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }                                                            
         } catch (IOException ex) {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1227,7 +1228,7 @@ public class Interfaz extends javax.swing.JFrame {
              {                                                  
                  return Analizadores.Etiqueta.parserEtiqueta.main(argumentos);                                                        
              }
-             catch(TokenMgrError te)
+             catch(Analizadores.Etiqueta.TokenMgrError te)
              {   
                  //archivoActual, fila, fila
                  registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
