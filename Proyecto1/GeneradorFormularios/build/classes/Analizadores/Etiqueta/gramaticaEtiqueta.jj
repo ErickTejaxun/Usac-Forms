@@ -284,7 +284,7 @@ Nodo T() :
     }  
     | t1=<arroba> 
     { 
-       nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+       nuevo = new Nodo("var","this",t1.beginColumn, t1.beginLine);
        return nuevo;
     }
     |t=<llaveA>

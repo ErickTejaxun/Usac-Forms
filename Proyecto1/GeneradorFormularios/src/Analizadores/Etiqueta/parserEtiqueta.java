@@ -294,7 +294,7 @@ nuevo = new Nodo("cadena","@{", t1.beginColumn, t1.beginLine);
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case arroba:{
           t1 = jj_consume_token(arroba);
-nuevo = new Nodo("var","this",t.beginColumn, t.beginLine);
+nuevo = new Nodo("var","this",t1.beginColumn, t1.beginLine);
        {if ("" != null) return nuevo;}
           break;
           }
