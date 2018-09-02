@@ -21,7 +21,9 @@ public interface parserEtiquetaConstants {
   /** RegularExpression Id. */
   int corchC = 5;
   /** RegularExpression Id. */
-  int Cualquiera = 6;
+  int ID = 6;
+  /** RegularExpression Id. */
+  int Cadena = 7;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -34,7 +36,8 @@ public interface parserEtiquetaConstants {
     "\"#\"",
     "\"[\"",
     "\"]\"",
-    "<Cualquiera>",
+    "<ID>",
+    "<Cadena>",
   };
 
 }

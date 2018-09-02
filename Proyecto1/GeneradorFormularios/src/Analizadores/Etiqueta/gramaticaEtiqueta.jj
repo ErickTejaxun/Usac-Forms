@@ -82,13 +82,12 @@ TOKEN:
     |<numeral : "#">
     |<corchA : "[" >
     |<corchC : "]" >        
-    //|<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
 }
 TOKEN :
 {
-    <Cualquiera : (~["#", "[", "]"])+>               
+    <Cadena : (~["#", "[", "]"])+>               
 }
-
 
 
 Nodo Etiqueta() :
@@ -247,7 +246,7 @@ Nodo T() :
     Token t1=null;
 }
 {
-    t=<Cualquiera> 
+    t=<Cadena> 
     {                      
         nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
@@ -269,13 +268,13 @@ Nodo ET3():
     Token t = null;
 }
 {
-    <corchA>t=<Cualquiera><corchC>
+    <corchA>t=<ID><corchC>
     {
         nuevo = new Nodo("varP",t.image, t.beginColumn, t.beginLine);
         System.out.println("Invocando variable: "+t.image);
         return nuevo;
     }
-    |t=<Cualquiera> 
+    |t=<Cadena> 
     {                      
         nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         return nuevo;

@@ -54,7 +54,7 @@ public class parserEtiqueta implements parserEtiquetaConstants {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case dospuntos:
     case numeral:
-    case Cualquiera:{
+    case Cadena:{
       label_1:
       while (true) {
         Cad = ETQ();
@@ -62,7 +62,7 @@ nuevo = Cad;
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case dospuntos:
         case numeral:
-        case Cualquiera:{
+        case Cadena:{
           ;
           break;
           }
@@ -168,7 +168,7 @@ nuevo = new Nodo("etiqueta","etiqueta",0,0);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case dospuntos:
     case numeral:
-    case Cualquiera:{
+    case Cadena:{
       izquierdo = T();
       derecho = ETQ2();
 nuevo = new Nodo("ET2","ET2",0,0);
@@ -214,8 +214,8 @@ nuevo = new Nodo("vacio","vacio",0,0);
     Token t2= null;
     Token t1=null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case Cualquiera:{
-      t = jj_consume_token(Cualquiera);
+    case Cadena:{
+      t = jj_consume_token(Cadena);
 nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
@@ -244,15 +244,15 @@ nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case corchA:{
       jj_consume_token(corchA);
-      t = jj_consume_token(Cualquiera);
+      t = jj_consume_token(ID);
       jj_consume_token(corchC);
 nuevo = new Nodo("varP",t.image, t.beginColumn, t.beginLine);
         System.out.println("Invocando variable: "+t.image);
         {if ("" != null) return nuevo;}
       break;
       }
-    case Cualquiera:{
-      t = jj_consume_token(Cualquiera);
+    case Cadena:{
+      t = jj_consume_token(Cadena);
 nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         {if ("" != null) return nuevo;}
       break;
@@ -280,7 +280,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4c,0x4c,0x4d,0x4c,0x50,};
+      jj_la1_0 = new int[] {0x8c,0x8c,0x8d,0x8c,0x90,};
    }
 
   /** Constructor with InputStream. */
@@ -397,7 +397,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[7];
+    boolean[] la1tokens = new boolean[8];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -411,7 +411,7 @@ nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         }
       }
     }
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 8; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
