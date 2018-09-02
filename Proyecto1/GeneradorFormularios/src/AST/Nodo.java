@@ -142,10 +142,5 @@ public class Nodo
                 this.hijos.add(aux);
             }
         }
-    }
-    
-
-
-    
-    
+    }          
 }

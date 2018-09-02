@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 public class parserEtiqueta 
 {    
-    public String cadenaAuxiliar="";    
     public static Nodo main(String args[]) throws ParseException
     {
         if(args.length>0)
@@ -72,44 +71,25 @@ public class parserEtiqueta
 
 }
 PARSER_END(parserEtiqueta)
-
-<PAR,DEFAULT>SPECIAL_TOKEN:
+SPECIAL_TOKEN:
 {
     <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
 }
+
+TOKEN:
+{
+    <dospuntos:"..">
+    |<numeral : "#">
+    |<corchA : "[" >
+    |<corchC : "]" >        
+    //|<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+}
 TOKEN :
 {
-     <llaveA: "{">   
-    |<llaveC: "}">
-    |<parA: "(">:PAR
-    |<Cualquiera : (~["{","}","#",".", "[", "]","(",")", "@", " "])+>               
+    <Cualquiera : (~["#", "[", "]"])+>               
 }
 
 
-<PAR> TOKEN:
-{
-    <plus:"+">
-|   <minus:"-">
-|   <times:"*">
-|   <div:"/">
-|   <verdadero:"verdadero">
-|   <falso:"falso">
-|   <coma:",">
-|   <numero:(["0"- "9"])+> 
-|   <parC:")">:DEFAULT
-}
-
-
-<PAR,DEFAULT>TOKEN:
-{
-    <numeral : "#">
-    |<corchA : "[" >
-    |<corchC : "]" >
-    |<punto: ".">
-    |<doblepunto: "..">
-    |<arroba: "@">       
-    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
-}
 
 Nodo Etiqueta() :
 {
@@ -118,11 +98,12 @@ Nodo Etiqueta() :
     Token t= null;
 }
 {
-    (Cad = ETQ()
+    (
+        Cad = ETQ()
         {
             nuevo = Cad;
         }
-        )+ <EOF> 
+    )+ <EOF> 
     {                   
     
         ArrayList<Nodo> hijos = new ArrayList();
@@ -133,7 +114,15 @@ Nodo Etiqueta() :
         {
             if(nodo.getTipo().equals("cadena"))
             {
-                auxiliar.setValue(auxiliar.getValue()+" "+nodo.getValue());
+                if(nodo.getValue().equals("."))
+                {
+                    auxiliar.setValue(auxiliar.getValue()+nodo.getValue());
+                }
+                else
+                {
+                    auxiliar.setValue(auxiliar.getValue()+" "+nodo.getValue());
+                }
+                
             }
             else
             {
@@ -176,48 +165,34 @@ Nodo ETQ() :
     izquierda = T() derecha = ETQ2() 
     {
         nuevo = new Nodo("etiqueta","etiqueta",0,0);
-        if(izquierda.getTipo().equals("funcion"))
+        if(izquierda.getHijos().isEmpty())
         {
             nuevo.add(izquierda);
         }
         else
         {
-            if(izquierda.getHijos().isEmpty())
+            for(Nodo ni: izquierda.getHijos())
             {
-                nuevo.add(izquierda);
-            }
-            else
-            {
-                for(Nodo ni: izquierda.getHijos())
+                if(!ni.getTipo().equals("vacio"))
                 {
-                    if(!ni.getTipo().equals("vacio"))
-                    {
-                        nuevo.add(ni);
-                    }   
-                }
+                    nuevo.add(ni);
+                }   
             }
-        }
-        if(derecha.getTipo().equals("funcion"))
+        }        
+        if(derecha.getHijos().isEmpty())
         {
             nuevo.add(derecha);
         }
         else
         {
-            if(derecha.getHijos().isEmpty())
+            for(Nodo nd: derecha.getHijos())
             {
-                nuevo.add(derecha);
-            }
-            else
-            {
-                for(Nodo nd: derecha.getHijos())
+                if(!nd.getTipo().equals("vacio"))
                 {
-                    if(!nd.getTipo().equals("vacio"))
-                    {
-                        nuevo.add(nd);
-                    }                   
-                }
-            } 
-        }
+                    nuevo.add(nd);
+                }                   
+            }
+        }         
         return nuevo;
     }    
 }
@@ -235,39 +210,24 @@ Nodo ETQ2() :
         izquierdo = T()  derecho= ETQ2() 
         {   
             nuevo = new Nodo("ET2","ET2",0,0); 
-            if(izquierdo.getTipo().equals("funcion"))
+            if(izquierdo.getHijos().isEmpty())
             {
                 nuevo.add(izquierdo);
             }
             else
             {
-                if(izquierdo.getHijos().isEmpty())
+                for(Nodo ni: izquierdo.getHijos())
                 {
-                    nuevo.add(izquierdo);
-                }
-                else
-                {
-                    for(Nodo ni: izquierdo.getHijos())
+                    if(!ni.getTipo().equals("vacio"))
                     {
-                        if(!ni.getTipo().equals("vacio"))
-                        {
-                            nuevo.add(ni);
-                        }                    
-                    }                                
-                }
-            }
-            
-            if(derecho.getTipo().equals("funcion"))
+                        nuevo.add(ni);
+                    }                    
+                }                                
+            }           
+            for(Nodo nd: derecho.getHijos())
             {
-                nuevo.add(derecho);
-            }
-            else
-            {
-                for(Nodo nd: derecho.getHijos())
-                {
-                    nuevo.add(nd);
-                }                         
-            }
+                nuevo.add(nd);
+            }                                     
             return nuevo;
         }
     |   <EOF> 
@@ -287,66 +247,19 @@ Nodo T() :
     Token t1=null;
 }
 {
-    /*
     t=<Cualquiera> 
+    {                      
+        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+        return nuevo;
+    }
+    |t=<dospuntos>
     {        
-        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
-        return nuevo;
-    }*/
-     t=<Cualquiera>(t1=<parA>(aux = listaParametros())?t2=<parC>)?
-    {
-        if(t1!=null && t2!=null)
-        {
-            nuevo = new Nodo("funcion",t.image+"()", t.beginColumn, t.beginLine);
-            if(aux !=null)
-            {
-                nuevo.add(aux);   
-                nuevo.setTipo(nuevo.getTipo());
-            }
-            return nuevo;
-        }
-        else
-        {
-            nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
-            return nuevo;
-        }                
-    }
-    | t=<punto> 
-    {         
-         nuevo = new Nodo("varP","this",t.beginColumn, t.beginLine);
-         return nuevo;
-    }
-    | t=<doblepunto> 
-    { 
-       nuevo = new Nodo("varP","padre",t.beginColumn, t.beginLine);
-       return nuevo;
-    }
-
-    |t1=<llaveC> (t2=<arroba>|t2=<Cualquiera>)
-    {                
-        nuevo = new Nodo("cadena",t1.image + t2.image,t1.beginColumn, t1.beginLine);
-        return nuevo;
-    }
-    | LOOKAHEAD(2)t1=<arroba> t2=<llaveA>
-    {
-        nuevo = new Nodo("cadena","@{", t1.beginColumn, t1.beginLine);
-        return nuevo;        
-    }  
-    | t1=<arroba> 
-    { 
-       nuevo = new Nodo("var","this",t1.beginColumn, t1.beginLine);
-       return nuevo;
-    }
-    |t=<llaveA>
-    {
-        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
-        return nuevo;
+        return new Nodo("var","padre",t.beginColumn, t.beginLine);                        
     }
     | t=<numeral> aux = ET3() 
     {          
         return aux;
     }
-
 }
 
 
@@ -355,7 +268,6 @@ Nodo ET3():
     Nodo nuevo = null;
     Token t = null;
 }
-
 {
     <corchA>t=<Cualquiera><corchC>
     {
@@ -368,72 +280,4 @@ Nodo ET3():
         nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
-}
-
-
-Nodo listaParametros():
-{
-    Nodo auxiliar = null;
-    Nodo nuevo = new Nodo("parametro","lista",0,0);
-    Token t = null;
-    Token t2=null;
-
-}
-{
-    t=<ID>(<coma>auxiliar = parametro(){nuevo.add(auxiliar);})*
-    {
-        nuevo.addI(new Nodo("parametro",t.image,t.beginColumn,t.beginLine));
-        return nuevo;
-    }   
-
-}
-
-
-Nodo parametro():
-{
-    Nodo nuevo = null;
-    Nodo aux = null;
-    Token t = null;
-    Token t2 = null;
-    Token t1 =null;
-}
-{
-    t=<ID>
-    {
-        return new Nodo("var",t.image,t.beginColumn,t.beginLine);
-    }
-    |<numeral><corchA>t=<ID><corchC>
-    {
-        return new Nodo("varP",t.image,t.beginColumn,t.beginLine);
-    }
-    |t=<verdadero>
-    {
-        return new Nodo("verdadero",t.image,t.beginColumn,t.beginLine);
-    }
-    |t=<falso>
-    {
-        return new Nodo("falso",t.image,t.beginColumn,t.beginLine);
-    }
-    |t=<numero>(t1=<punto>(t2=<numero>)?)?
-    {
-        if(t1==null && t2==null)
-        {
-            // Esto significa que es entero.
-            return new Nodo("entero",t.image,t.beginColumn,t.beginLine);
-        }
-        if(t1!=null && t2==null)
-        {
-            // Esto significa que es entero.
-            return new Nodo("decimal",t.image+".00",t.beginColumn,t.beginLine);
-        }
-        if(t1!=null && t2!=null)
-        {
-            // Esto significa que es entero.
-            return new Nodo("decimal",t.image+"."+t2.image,t.beginColumn,t.beginLine);
-        }        
-    }
-    |t=<punto>
-    {
-        return new Nodo("varP","this",t.beginColumn,t.beginLine);
-    }  
 }
