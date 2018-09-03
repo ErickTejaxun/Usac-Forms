@@ -227,7 +227,7 @@ public class Interfaz extends javax.swing.JFrame {
             try 
             {
                 analizar();
-            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException ex) 
+            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
@@ -654,24 +654,31 @@ public class Interfaz extends javax.swing.JFrame {
                             
                             /*celda.getCellType()
                             celda.toString().trim();*/
-                                                                                    
-                            if(celda.getCellType()==4)
-                            {
-                                if(celda.getBooleanCellValue())
-                                {
-                                    valor = "verdadero";
-                                }
-                                else
-                                {
-                                    valor = "falso";
-                                }
-                            }
-                            else
-                            {
-                                valor = celda.toString().trim();
-                            }
+                             
                             
-                            //Mensaje(celda.getCellType()+"", valor);
+                            switch (celda.getCellType()) 
+                            {
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    valor = String.valueOf(celda.getNumericCellValue());
+                                    //System.out.println(celda.getNumericCellValue() + "(Integer)\t");
+                                    break;
+                                case Cell.CELL_TYPE_STRING:
+                                    //System.out.println(celda.getStringCellValue() + "(String)\t");
+                                    valor = String.valueOf(celda.getStringCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    //System.out.println(celda.getBooleanCellValue()+ "(Booleano)\t");
+                                    if(celda.getBooleanCellValue())
+                                    {
+                                        valor = "verdadero";
+                                    }
+                                    else
+                                    {
+                                        valor = "falso";
+                                    }
+                                    break;
+                            }                                                                                                                
+                                                        
                             
                             
                             columna = celda.getColumnIndex();
@@ -1102,7 +1109,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException
+    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException, Analizadores.Parametro.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1111,7 +1118,7 @@ public class Interfaz extends javax.swing.JFrame {
         int fila = 1;
         String[] encabezados = 
         {
-            "tipo","idpregunta","etiqueta"/*,"parametro","calculo","aplicable","sugerir","restringir",
+            "tipo","idpregunta","etiqueta","parametro",/*"calculo","aplicable","sugerir","restringir",
             "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
             "codigo_post","fichero"*/
         };
@@ -1157,6 +1164,16 @@ public class Interfaz extends javax.swing.JFrame {
                                 arbolPregunta.add(temporal);
                             }
                             break;
+                        case "parametro":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                temporal = analizarParametro(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                            }
+                            if(temporal !=null)
+                            {
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                            
                     }                    
                 }
                 temporal = null;
@@ -1242,6 +1259,29 @@ public class Interfaz extends javax.swing.JFrame {
         
         return null;
     }    
+    
+    public Nodo analizarParametro(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Parametro.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Parametro.parseParametro.main(argumentos);                                                        
+             }
+             catch(Analizadores.Parametro.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Parametro.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }       
     
     /*Metodo para ver donde se va a nalizar la puta data.*/
     

@@ -20,13 +20,20 @@ namespace xForms
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+
+        }
+
+
+        public void metodo()
+        {
             List<Objeto> lista = new List<Objeto>();
             lista.Add(new Objeto());
             lista.Add(new Objeto());
             lista.Add(new Objeto());
             lista.Add(new Objeto());
 
-            List<Objeto> lista2 =  new List<Objeto>();
+            List<Objeto> lista2 = new List<Objeto>();
 
             foreach (Objeto ob in lista)
             {
@@ -51,6 +58,11 @@ namespace xForms
             {
                 Console.WriteLine(ob.nombre + "\t" + ob.edad + "\t" + ob.email);
             }
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
 
         }
     }

@@ -38,8 +38,9 @@ public class dibujador
                         //"rankdir=LR;"+
                         dibujarArbol(raiz)+
                         "}";
+        cadena = cadena.replace("]\"","]");
+        cadena = cadena.replace("]\"","]");
         cadena = cadena.replace("\"\"","\"");
-        cadena = cadena.replace("\\","\\\\");
         /*---------------------------------------------------------------------------------*/
         try (  PrintWriter writer = new PrintWriter(direccionEntrada)) {
             writer.print(cadena);            
@@ -66,6 +67,14 @@ public class dibujador
     }
     public String dibujarArbol2(Nodo raiz)
     {
+        String comillas = "\"";
+        String cadi = raiz.getValue().substring(0, 1);
+        String cadf = raiz.getValue().substring(1, 2);
+        if(cadi.equals(comillas) && cadf.equals(comillas))
+        {
+            raiz.setValue(raiz.getValue().substring(1,raiz.getValue().length()));
+        }
+        
         String cadena = "N"+raiz.hashCode()+"[label=\""+raiz.getValue()+"\"]; \n";
         
         if(!raiz.getHijos().isEmpty())
@@ -89,7 +98,7 @@ public class dibujador
         return cadena;
     }
     public String dibujarArbol(Nodo raiz)
-    {
+    {        
         String cadena = "N"+raiz.hashCode()+"[label=\"["+raiz.getTipo()+"]"+raiz.getValue()+"\"]; \n";
         
         if(!raiz.getHijos().isEmpty())
