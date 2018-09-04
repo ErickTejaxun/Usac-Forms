@@ -48,13 +48,97 @@ public class parseParametro implements parseParametroConstants {
         System.out.println(mensaje);
     }
 
-  final public Nodo Inicio() throws ParseException {Nodo Cad;
-    Nodo nuevo;
+  final public Nodo Inicio() throws ParseException {Nodo aux = new Nodo("parametros","parametros",0,0);
+    Nodo nuevo = null;
     Token t= null;
-    Cad = logica();
-nuevo = new Nodo("parametro","parametro",0,0);
-        nuevo.add(Cad);
-        {if ("" != null) return nuevo;}
+    nuevo = Limites();
+    jj_consume_token(0);
+aux.add(nuevo); {if ("" != null) return aux;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo Limites() throws ParseException {Nodo nuevo = new Nodo("limites","limites",0,0);
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Token t ;
+    label_1:
+    while (true) {
+      izquierdo = Limite();
+nuevo.add(izquierdo);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case cad_max:
+      case cad_fila:
+      case cad_min:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[0] = jj_gen;
+        break label_1;
+      }
+    }
+{if ("" != null) return nuevo;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo Limite() throws ParseException {Nodo nuevo= null;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case cad_min:{
+      nuevo = limiteMinimo();
+{if ("" != null) return nuevo;}
+      break;
+      }
+    case cad_max:{
+      nuevo = limiteMaximo();
+{if ("" != null) return nuevo;}
+      break;
+      }
+    case cad_fila:{
+      nuevo = minimoFilas();
+{if ("" != null) return nuevo;}
+      break;
+      }
+    default:
+      jj_la1[1] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo limiteMinimo() throws ParseException {Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+    t = jj_consume_token(cad_min);
+    jj_consume_token(igual);
+    derecho = logica();
+izquierdo = new Nodo("cad_min","cad_min",0,0);
+        izquierdo.add(derecho);
+        {if ("" != null) return izquierdo;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo limiteMaximo() throws ParseException {Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+    t = jj_consume_token(cad_max);
+    jj_consume_token(igual);
+    derecho = logica();
+izquierdo = new Nodo("cad_max","cad_max",0,0);
+        izquierdo.add(derecho);
+        {if ("" != null) return izquierdo;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo minimoFilas() throws ParseException {Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+    t = jj_consume_token(cad_fila);
+    jj_consume_token(igual);
+    derecho = logica();
+izquierdo = new Nodo("cad_fila","cad_fila",0,0);
+        izquierdo.add(derecho);
+        {if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -62,12 +146,12 @@ nuevo = new Nodo("parametro","parametro",0,0);
     Nodo derecho;
     Token t = null;
     izquierdo = exprAnd();
-    label_1:
+    label_2:
     while (true) {
       if (jj_2_1(2)) {
         ;
       } else {
-        break label_1;
+        break label_2;
       }
       t = jj_consume_token(or);
       derecho = exprAnd();
@@ -85,12 +169,12 @@ Nodo aux = izquierdo;
     Token t = null;
     Nodo nuevo =null;
     izquierdo = Relacional();
-    label_2:
+    label_3:
     while (true) {
       if (jj_2_2(2)) {
         ;
       } else {
-        break label_2;
+        break label_3;
       }
       t = jj_consume_token(and);
       derecho = Relacional();
@@ -107,12 +191,12 @@ Nodo aux = izquierdo;
     Nodo derecho = null;
     Nodo operador = null;
     izquierdo = Comparacion();
-    label_3:
+    label_4:
     while (true) {
       if (jj_2_3(2)) {
         ;
       } else {
-        break label_3;
+        break label_4;
       }
       operador = opRelacional2();
       derecho = Comparacion();
@@ -129,12 +213,12 @@ Nodo aux = izquierdo;
     Nodo derecho = null;
     Nodo operador = null;
     izquierdo = Expr();
-    label_4:
+    label_5:
     while (true) {
       if (jj_2_4(2)) {
         ;
       } else {
-        break label_4;
+        break label_5;
       }
       operador = opRelacional();
       derecho = Expr();
@@ -160,7 +244,7 @@ Nodo aux = izquierdo;
       break;
       }
     default:
-      jj_la1[0] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -190,7 +274,7 @@ Nodo aux = izquierdo;
       break;
       }
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -201,12 +285,12 @@ Nodo aux = izquierdo;
     Nodo derecho = null;
     Token t = null;
     izquierdo = ExprMulti();
-    label_5:
+    label_6:
     while (true) {
       if (jj_2_5(2)) {
         ;
       } else {
-        break label_5;
+        break label_6;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case suma:{
@@ -218,7 +302,7 @@ Nodo aux = izquierdo;
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[4] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -236,12 +320,12 @@ Nodo aux = izquierdo;
     Nodo derecho = null;
     Token t = null;
     izquierdo = ExprPotencia();
-    label_6:
+    label_7:
     while (true) {
       if (jj_2_6(2)) {
         ;
       } else {
-        break label_6;
+        break label_7;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case multi:{
@@ -257,7 +341,7 @@ Nodo aux = izquierdo;
         break;
         }
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[5] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -276,12 +360,12 @@ Nodo aux = izquierdo;
     Nodo derecho = null;
     Token t = null;
     izquierdo = Elemental();
-    label_7:
+    label_8:
     while (true) {
       if (jj_2_7(2)) {
         ;
       } else {
-        break label_7;
+        break label_8;
       }
       t = jj_consume_token(potencia);
       derecho = Elemental();
@@ -391,7 +475,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -454,19 +538,57 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     finally { jj_save(6, xla); }
   }
 
-  private boolean jj_3R_8()
+  private boolean jj_3_3()
  {
-    if (jj_3R_9()) return true;
+    if (jj_3R_11()) return true;
+    if (jj_3R_12()) return true;
     return false;
   }
 
-  private boolean jj_3R_13()
+  private boolean jj_3_2()
  {
-    if (jj_3R_14()) return true;
+    if (jj_scan_token(and)) return true;
+    if (jj_3R_10()) return true;
     return false;
   }
 
-  private boolean jj_3R_38()
+  private boolean jj_3R_10()
+ {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  private boolean jj_3_5()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(32)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(34)) return true;
+    }
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_15()
+ {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_9()
+ {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14()
+ {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_39()
  {
     if (jj_scan_token(not)) return true;
     return false;
@@ -475,164 +597,162 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   private boolean jj_3_1()
  {
     if (jj_scan_token(or)) return true;
-    if (jj_3R_8()) return true;
+    if (jj_3R_9()) return true;
     return false;
   }
 
-  private boolean jj_3R_37()
+  private boolean jj_3R_38()
  {
     if (jj_scan_token(menos)) return true;
     return false;
   }
 
-  private boolean jj_3R_22()
+  private boolean jj_3R_23()
  {
     if (jj_scan_token(menorigualque)) return true;
     return false;
   }
 
-  private boolean jj_3R_21()
+  private boolean jj_3R_22()
  {
     if (jj_scan_token(mayorigualque)) return true;
     return false;
   }
 
-  private boolean jj_3R_20()
+  private boolean jj_3R_21()
  {
     if (jj_scan_token(menorque)) return true;
     return false;
   }
 
-  private boolean jj_3R_12()
+  private boolean jj_3R_13()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_19()) {
-    jj_scanpos = xsp;
     if (jj_3R_20()) {
     jj_scanpos = xsp;
     if (jj_3R_21()) {
     jj_scanpos = xsp;
-    if (jj_3R_22()) return true;
+    if (jj_3R_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_23()) return true;
     }
     }
     }
     return false;
   }
 
-  private boolean jj_3R_19()
+  private boolean jj_3R_20()
  {
     if (jj_scan_token(mayorque)) return true;
     return false;
   }
 
-  private boolean jj_3R_36()
+  private boolean jj_3R_37()
  {
     if (jj_scan_token(parA)) return true;
     return false;
   }
 
-  private boolean jj_3R_35()
+  private boolean jj_3R_36()
  {
     if (jj_scan_token(falso)) return true;
     return false;
   }
 
-  private boolean jj_3R_34()
+  private boolean jj_3R_35()
  {
     if (jj_scan_token(verdadero)) return true;
     return false;
   }
 
-  private boolean jj_3R_33()
+  private boolean jj_3R_34()
  {
     if (jj_scan_token(fecha)) return true;
     return false;
   }
 
-  private boolean jj_3R_32()
+  private boolean jj_3R_33()
  {
     if (jj_scan_token(hora)) return true;
     return false;
   }
 
-  private boolean jj_3R_31()
+  private boolean jj_3R_32()
  {
     if (jj_scan_token(fechahora)) return true;
     return false;
   }
 
-  private boolean jj_3R_30()
+  private boolean jj_3R_31()
  {
     if (jj_scan_token(cadena)) return true;
     return false;
   }
 
-  private boolean jj_3R_18()
+  private boolean jj_3R_19()
  {
     if (jj_scan_token(desigual)) return true;
     return false;
   }
 
-  private boolean jj_3R_29()
+  private boolean jj_3R_30()
  {
     if (jj_scan_token(varP)) return true;
     return false;
   }
 
-  private boolean jj_3R_17()
+  private boolean jj_3R_18()
  {
     if (jj_scan_token(igual)) return true;
     return false;
   }
 
-  private boolean jj_3R_10()
+  private boolean jj_3R_11()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_17()) {
+    if (jj_3R_18()) {
     jj_scanpos = xsp;
-    if (jj_3R_18()) return true;
+    if (jj_3R_19()) return true;
     }
     return false;
   }
 
-  private boolean jj_3R_28()
+  private boolean jj_3R_29()
  {
     if (jj_scan_token(identificador)) return true;
     return false;
   }
 
-  private boolean jj_3R_27()
+  private boolean jj_3R_28()
  {
     if (jj_scan_token(caracter)) return true;
     return false;
   }
 
-  private boolean jj_3R_26()
+  private boolean jj_3R_27()
  {
     if (jj_scan_token(doble)) return true;
     return false;
   }
 
-  private boolean jj_3R_25()
+  private boolean jj_3R_26()
  {
     if (jj_scan_token(entero)) return true;
     return false;
   }
 
-  private boolean jj_3R_24()
+  private boolean jj_3R_25()
  {
     if (jj_scan_token(punto)) return true;
     return false;
   }
 
-  private boolean jj_3R_16()
+  private boolean jj_3R_17()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_23()) {
-    jj_scanpos = xsp;
     if (jj_3R_24()) {
     jj_scanpos = xsp;
     if (jj_3R_25()) {
@@ -661,7 +781,9 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     jj_scanpos = xsp;
     if (jj_3R_37()) {
     jj_scanpos = xsp;
-    if (jj_3R_38()) return true;
+    if (jj_3R_38()) {
+    jj_scanpos = xsp;
+    if (jj_3R_39()) return true;
     }
     }
     }
@@ -680,7 +802,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
-  private boolean jj_3R_23()
+  private boolean jj_3R_24()
  {
     if (jj_scan_token(dospuntos)) return true;
     return false;
@@ -688,21 +810,21 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
 
   private boolean jj_3_4()
  {
-    if (jj_3R_12()) return true;
     if (jj_3R_13()) return true;
+    if (jj_3R_14()) return true;
     return false;
   }
 
-  private boolean jj_3R_11()
+  private boolean jj_3R_12()
  {
-    if (jj_3R_13()) return true;
+    if (jj_3R_14()) return true;
     return false;
   }
 
   private boolean jj_3_7()
  {
     if (jj_scan_token(potencia)) return true;
-    if (jj_3R_16()) return true;
+    if (jj_3R_17()) return true;
     return false;
   }
 
@@ -717,51 +839,13 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     if (jj_scan_token(37)) return true;
     }
     }
-    if (jj_3R_15()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_15()
- {
     if (jj_3R_16()) return true;
     return false;
   }
 
-  private boolean jj_3_3()
+  private boolean jj_3R_16()
  {
-    if (jj_3R_10()) return true;
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  private boolean jj_3_2()
- {
-    if (jj_scan_token(and)) return true;
-    if (jj_3R_9()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_9()
- {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  private boolean jj_3_5()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(32)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(34)) return true;
-    }
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_14()
- {
-    if (jj_3R_15()) return true;
+    if (jj_3R_17()) return true;
     return false;
   }
 
@@ -776,7 +860,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[5];
+  final private int[] jj_la1 = new int[7];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -784,10 +868,10 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x8000000,0x30000000,0x0,0x0,0x6f0119c,};
+      jj_la1_0 = new int[] {0xe000,0xe000,0x8000000,0x30000000,0x0,0x0,0x6f0119c,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x40,0x180,0x5,0x38,0x5804,};
+      jj_la1_1 = new int[] {0x0,0x0,0x40,0x180,0x5,0x38,0x5804,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[7];
   private boolean jj_rescan = false;
@@ -804,7 +888,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -819,7 +903,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -830,7 +914,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -841,7 +925,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -851,7 +935,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -861,7 +945,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -979,7 +1063,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 7; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

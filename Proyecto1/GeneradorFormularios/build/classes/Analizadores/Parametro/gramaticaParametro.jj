@@ -128,19 +128,89 @@ TOKEN:
 
 
 Nodo Inicio() :
-{
-    Nodo Cad;
-    Nodo nuevo;
+{    
+    Nodo aux = new Nodo("parametros","parametros",0,0);
+    Nodo nuevo = null;
     Token t= null;
 }
 {
-    Cad = logica()
+    nuevo = Limites() <EOF> { aux.add(nuevo); return aux;}
+}
+
+
+
+Nodo Limites():
+{
+    Nodo nuevo = new Nodo("limites","limites",0,0);
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Token t ;
+}
+{
+
+    (izquierdo = Limite(){nuevo.add(izquierdo);})+
     {
-        nuevo = new Nodo("parametro","parametro",0,0);
-        nuevo.add(Cad);
         return nuevo;
     }
+}
 
+Nodo Limite():
+{
+    Nodo nuevo= null;
+}
+{
+    nuevo = limiteMinimo(){return nuevo;}
+|   nuevo = limiteMaximo(){return nuevo;}    
+|   nuevo = minimoFilas(){return nuevo;}    
+}
+
+
+Nodo limiteMinimo():
+{
+    Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+}
+{
+    t= <cad_min> <igual> derecho=logica()
+    {
+        izquierdo = new Nodo("cad_min","cad_min",0,0);
+        izquierdo.add(derecho);
+        return izquierdo;
+    }
+
+}
+
+Nodo limiteMaximo():
+{
+    Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+}
+{
+    t= <cad_max> <igual> derecho=logica()
+    {
+        izquierdo = new Nodo("cad_max","cad_max",0,0);
+        izquierdo.add(derecho);
+        return izquierdo;
+    }
+
+}
+
+
+Nodo minimoFilas():
+{
+    Nodo izquierdo = null ;
+    Nodo derecho = null ;
+    Token t = null;
+}
+{
+    t= <cad_fila> <igual> derecho=logica()
+    {
+        izquierdo = new Nodo("cad_fila","cad_fila",0,0);
+        izquierdo.add(derecho);
+        return izquierdo;
+    }
 
 }
 
