@@ -135,8 +135,40 @@ Nodo Inicio() :
 }
 {
     nuevo = Limites() <EOF> { aux.add(nuevo); return aux;}
+|   nuevo = Rango() <EOF> { aux.add(nuevo); return aux;}
 }
 
+
+Nodo Rango():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Nodo nuevo = new Nodo("rango","rango",0,0);
+}
+{
+    izquierdo = Iniciar() derecho = Finalizar(){ nuevo.add(izquierdo); nuevo.add(derecho); return nuevo;}
+|   izquierdo = Finalizar() derecho = Iniciar(){ nuevo.add(izquierdo); nuevo.add(derecho); return nuevo;}    
+}
+
+Nodo Iniciar():
+{
+    Nodo nuevo = new Nodo("iniciar","iniciar",0,0);
+    Nodo aux = null;
+    Token t = null;
+}
+{
+    t= <iniciar> <igual> aux = logica(){ nuevo.setColumna(t.beginColumn); nuevo.setLinea(t.beginLine); nuevo.add(aux); return nuevo;}
+}
+
+Nodo Finalizar():
+{
+    Nodo nuevo = new Nodo("finalizar","finalizar",0,0);
+    Nodo aux = null;
+    Token t = null;
+}
+{
+    t= <finalizar> <igual> aux = logica(){ nuevo.setColumna(t.beginColumn); nuevo.setLinea(t.beginLine); nuevo.add(aux); return nuevo;}
+}
 
 
 Nodo Limites():
