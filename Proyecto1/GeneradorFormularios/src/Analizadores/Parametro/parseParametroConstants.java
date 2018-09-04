@@ -27,75 +27,81 @@ public interface parseParametroConstants {
   /** RegularExpression Id. */
   int dospuntos = 8;
   /** RegularExpression Id. */
-  int varP = 9;
+  int numeral = 9;
   /** RegularExpression Id. */
-  int cad_max = 10;
+  int llaveA = 10;
   /** RegularExpression Id. */
-  int cad_fila = 11;
+  int llaveC = 11;
   /** RegularExpression Id. */
-  int cad_min = 12;
+  int varP = 12;
   /** RegularExpression Id. */
-  int iniciar = 13;
+  int cad_max = 13;
   /** RegularExpression Id. */
-  int finalizar = 14;
+  int cad_fila = 14;
   /** RegularExpression Id. */
-  int verdaderoFalso = 15;
+  int cad_min = 15;
   /** RegularExpression Id. */
-  int siNo = 16;
+  int iniciar = 16;
   /** RegularExpression Id. */
-  int entero = 17;
+  int finalizar = 17;
   /** RegularExpression Id. */
-  int doble = 18;
+  int verdaderoFalso = 18;
   /** RegularExpression Id. */
-  int caracter = 19;
+  int siNo = 19;
   /** RegularExpression Id. */
-  int cadena = 20;
+  int entero = 20;
   /** RegularExpression Id. */
-  int numero = 21;
+  int doble = 21;
   /** RegularExpression Id. */
-  int verdadero = 22;
+  int caracter = 22;
   /** RegularExpression Id. */
-  int falso = 23;
+  int cadena = 23;
   /** RegularExpression Id. */
-  int desigual = 24;
+  int numero = 24;
   /** RegularExpression Id. */
-  int mayorigualque = 25;
+  int verdadero = 25;
   /** RegularExpression Id. */
-  int menorigualque = 26;
+  int falso = 26;
   /** RegularExpression Id. */
-  int si = 27;
+  int desigual = 27;
   /** RegularExpression Id. */
-  int no = 28;
+  int mayorigualque = 28;
   /** RegularExpression Id. */
-  int suma = 29;
+  int menorigualque = 29;
   /** RegularExpression Id. */
-  int potencia = 30;
+  int si = 30;
   /** RegularExpression Id. */
-  int menos = 31;
+  int no = 31;
   /** RegularExpression Id. */
-  int multi = 32;
+  int suma = 32;
   /** RegularExpression Id. */
-  int div = 33;
+  int potencia = 33;
   /** RegularExpression Id. */
-  int mod = 34;
+  int menos = 34;
   /** RegularExpression Id. */
-  int igual = 35;
+  int multi = 35;
   /** RegularExpression Id. */
-  int mayorque = 36;
+  int div = 36;
   /** RegularExpression Id. */
-  int menorque = 37;
+  int mod = 37;
   /** RegularExpression Id. */
-  int and = 38;
+  int igual = 38;
   /** RegularExpression Id. */
-  int or = 39;
+  int mayorque = 39;
   /** RegularExpression Id. */
-  int not = 40;
+  int menorque = 40;
   /** RegularExpression Id. */
-  int parA = 41;
+  int and = 41;
   /** RegularExpression Id. */
-  int parC = 42;
+  int or = 42;
   /** RegularExpression Id. */
-  int identificador = 43;
+  int not = 43;
+  /** RegularExpression Id. */
+  int parA = 44;
+  /** RegularExpression Id. */
+  int parC = 45;
+  /** RegularExpression Id. */
+  int identificador = 46;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -111,6 +117,9 @@ public interface parseParametroConstants {
     "<horaA>",
     "\".\"",
     "\"..\"",
+    "\"#\"",
+    "\"[\"",
+    "\"]\"",
     "<varP>",
     "\"cad_max\"",
     "\"cad_fila\"",

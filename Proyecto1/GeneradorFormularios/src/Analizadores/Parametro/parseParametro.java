@@ -51,15 +51,15 @@ public class parseParametro implements parseParametroConstants {
   final public Nodo Inicio() throws ParseException {Nodo Cad;
     Nodo nuevo;
     Token t= null;
-    Cad = Elemental();
+    Cad = logica();
 nuevo = new Nodo("parametro","parametro",0,0);
         nuevo.add(Cad);
         {if ("" != null) return nuevo;}
     throw new Error("Missing return statement in function");
   }
 
-  final public Nodo logica() throws ParseException {Nodo izquierdo =null;
-    Nodo derecho = null;
+  final public Nodo logica() throws ParseException {Nodo izquierdo;
+    Nodo derecho;
     Token t = null;
     izquierdo = exprAnd();
     label_1:
@@ -71,20 +71,19 @@ nuevo = new Nodo("parametro","parametro",0,0);
       }
       t = jj_consume_token(or);
       derecho = exprAnd();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(t!=null)
-        {
-            Nodo nuevo = new Nodo("or","or",t.beginColumn, t.beginLine);
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
   final public Nodo exprAnd() throws ParseException {Nodo izquierdo = null;
     Nodo derecho = null;
     Token t = null;
+    Nodo nuevo =null;
     izquierdo = Relacional();
     label_2:
     while (true) {
@@ -95,14 +94,12 @@ if(t!=null)
       }
       t = jj_consume_token(and);
       derecho = Relacional();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(t!=null)
-        {
-            Nodo nuevo = new Nodo("and","and",t.beginColumn, t.beginLine);
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -119,14 +116,12 @@ if(t!=null)
       }
       operador = opRelacional2();
       derecho = Comparacion();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(),operador.getLinea());
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(operador!=null)
-        {
-            Nodo nuevo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(), operador.getLinea());
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -143,14 +138,12 @@ if(operador!=null)
       }
       operador = opRelacional();
       derecho = Expr();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(),operador.getLinea());
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(operador!=null)
-        {
-            Nodo nuevo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(), operador.getLinea());
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -230,14 +223,12 @@ if(operador!=null)
         throw new ParseException();
       }
       derecho = ExprMulti();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(t!=null)
-        {
-            Nodo nuevo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -271,18 +262,17 @@ if(t!=null)
         throw new ParseException();
       }
       derecho = ExprPotencia();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(t!=null)
-        {
-            Nodo nuevo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
   final public Nodo ExprPotencia() throws ParseException {Nodo izquierdo = null;
+    Nodo nuevo =  new Nodo("ExpPotencia","ExpPotencia",0,0);
     Nodo derecho = null;
     Token t = null;
     izquierdo = Elemental();
@@ -295,14 +285,12 @@ if(t!=null)
       }
       t = jj_consume_token(potencia);
       derecho = Elemental();
+Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
     }
-if(t!=null)
-        {
-            Nodo nuevo = new Nodo("potencia",t.image,t.beginColumn, t.beginLine);
-            nuevo.add(izquierdo);
-            nuevo.add(derecho);
-        }
-        {if ("" != null) return izquierdo;}
+{if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -342,7 +330,7 @@ if(t!=null)
       }
     case varP:{
       t = jj_consume_token(varP);
-{if ("" != null) return new Nodo("varP",t.image,t.beginColumn, t.beginLine);}
+String sub = t.image.substring(2,t.image.length()-1); {if ("" != null) return new Nodo("varP",sub,t.beginColumn, t.beginLine);}
       break;
       }
     case cadena:{
@@ -390,6 +378,7 @@ nuevo = new Nodo("Expr","()",t.beginColumn, t.beginLine);
 nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
         nuevo.add(new Nodo("menos","menos",t.beginColumn,t.beginLine));
         nuevo.add(auxiliar);
+        {if ("" != null) return nuevo;}
       break;
       }
     case not:{
@@ -398,6 +387,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
 nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
         nuevo.add(new Nodo("not","not",t.beginColumn,t.beginLine));
         nuevo.add(auxiliar);
+        {if ("" != null) return nuevo;}
       break;
       }
     default:
@@ -464,31 +454,6 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     finally { jj_save(6, xla); }
   }
 
-  private boolean jj_3_5()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(29)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(31)) return true;
-    }
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_14()
- {
-    if (jj_3R_15()) return true;
-    return false;
-  }
-
-  private boolean jj_3_1()
- {
-    if (jj_scan_token(or)) return true;
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
   private boolean jj_3R_8()
  {
     if (jj_3R_9()) return true;
@@ -504,6 +469,19 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   private boolean jj_3R_38()
  {
     if (jj_scan_token(not)) return true;
+    return false;
+  }
+
+  private boolean jj_3_1()
+ {
+    if (jj_scan_token(or)) return true;
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_37()
+ {
+    if (jj_scan_token(menos)) return true;
     return false;
   }
 
@@ -548,51 +526,15 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
-  private boolean jj_3R_37()
- {
-    if (jj_scan_token(menos)) return true;
-    return false;
-  }
-
-  private boolean jj_3_4()
- {
-    if (jj_3R_12()) return true;
-    if (jj_3R_13()) return true;
-    return false;
-  }
-
   private boolean jj_3R_36()
  {
     if (jj_scan_token(parA)) return true;
     return false;
   }
 
-  private boolean jj_3R_18()
- {
-    if (jj_scan_token(desigual)) return true;
-    return false;
-  }
-
   private boolean jj_3R_35()
  {
     if (jj_scan_token(falso)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_17()
- {
-    if (jj_scan_token(igual)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_10()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_17()) {
-    jj_scanpos = xsp;
-    if (jj_3R_18()) return true;
-    }
     return false;
   }
 
@@ -626,16 +568,32 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
-  private boolean jj_3_7()
+  private boolean jj_3R_18()
  {
-    if (jj_scan_token(potencia)) return true;
-    if (jj_3R_16()) return true;
+    if (jj_scan_token(desigual)) return true;
     return false;
   }
 
   private boolean jj_3R_29()
  {
     if (jj_scan_token(varP)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_17()
+ {
+    if (jj_scan_token(igual)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_10()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_17()) {
+    jj_scanpos = xsp;
+    if (jj_3R_18()) return true;
+    }
     return false;
   }
 
@@ -648,13 +606,6 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   private boolean jj_3R_27()
  {
     if (jj_scan_token(caracter)) return true;
-    return false;
-  }
-
-  private boolean jj_3_3()
- {
-    if (jj_3R_10()) return true;
-    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -735,9 +686,23 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
+  private boolean jj_3_4()
+ {
+    if (jj_3R_12()) return true;
+    if (jj_3R_13()) return true;
+    return false;
+  }
+
   private boolean jj_3R_11()
  {
     if (jj_3R_13()) return true;
+    return false;
+  }
+
+  private boolean jj_3_7()
+ {
+    if (jj_scan_token(potencia)) return true;
+    if (jj_3R_16()) return true;
     return false;
   }
 
@@ -745,14 +710,27 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(32)) {
+    if (jj_scan_token(35)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(33)) {
+    if (jj_scan_token(36)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(34)) return true;
+    if (jj_scan_token(37)) return true;
     }
     }
     if (jj_3R_15()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_15()
+ {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  private boolean jj_3_3()
+ {
+    if (jj_3R_10()) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -763,15 +741,27 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
-  private boolean jj_3R_15()
- {
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
   private boolean jj_3R_9()
  {
     if (jj_3R_11()) return true;
+    return false;
+  }
+
+  private boolean jj_3_5()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(32)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(34)) return true;
+    }
+    if (jj_3R_14()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14()
+ {
+    if (jj_3R_15()) return true;
     return false;
   }
 
@@ -794,10 +784,10 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1000000,0x6000000,0xa0000000,0x0,0x80de039c,};
+      jj_la1_0 = new int[] {0x8000000,0x30000000,0x0,0x0,0x6f0119c,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x8,0x30,0x0,0x7,0xb00,};
+      jj_la1_1 = new int[] {0x40,0x180,0x5,0x38,0x5804,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[7];
   private boolean jj_rescan = false;
@@ -984,7 +974,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[44];
+    boolean[] la1tokens = new boolean[47];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -1001,7 +991,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
         }
       }
     }
-    for (int i = 0; i < 44; i++) {
+    for (int i = 0; i < 47; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

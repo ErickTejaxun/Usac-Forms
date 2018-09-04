@@ -38,9 +38,10 @@ public class dibujador
                         //"rankdir=LR;"+
                         dibujarArbol(raiz)+
                         "}";
-        cadena = cadena.replace("]\"","]");
+        cadena = cadena.replace("]\"","]");        
         cadena = cadena.replace("]\"","]");
         cadena = cadena.replace("\"\"","\"");
+        cadena = cadena.replace("]]","]\"]");
         /*---------------------------------------------------------------------------------*/
         try (  PrintWriter writer = new PrintWriter(direccionEntrada)) {
             writer.print(cadena);            

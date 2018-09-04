@@ -1167,7 +1167,10 @@ public class Interfaz extends javax.swing.JFrame {
                         case "parametro":
                             if(!pre.esFinal() && !pre.esIniciar())
                             {
-                                temporal = analizarParametro(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                                if(!pre.getParametro().equals(""))
+                                {                                
+                                    temporal = analizarParametro(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                                }
                             }
                             if(temporal !=null)
                             {
