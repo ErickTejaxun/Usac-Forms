@@ -67,11 +67,41 @@ aux.add(nuevo); {if ("" != null) return aux;}
 aux.add(nuevo); {if ("" != null) return aux;}
       break;
       }
+    case opcion:{
+      nuevo = Opcion();
+      jj_consume_token(0);
+aux.add(nuevo); {if ("" != null) return aux;}
+      break;
+      }
     default:
       jj_la1[0] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Nodo Opcion() throws ParseException {Nodo izquierdo = new Nodo("opcion","opcion",0,0);
+    Nodo derecho = null;
+    Token t = null;
+    jj_consume_token(opcion);
+    jj_consume_token(igual);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case sino:{
+      t = jj_consume_token(sino);
+      break;
+      }
+    case verdaderofalso:{
+      t = jj_consume_token(verdaderofalso);
+      break;
+      }
+    default:
+      jj_la1[1] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+izquierdo.add(new Nodo(t.image,t.image,t.beginColumn,t.beginLine));
+        {if ("" != null) return izquierdo;}
     throw new Error("Missing return statement in function");
   }
 
@@ -92,7 +122,7 @@ nuevo.add(izquierdo); nuevo.add(derecho); {if ("" != null) return nuevo;}
       break;
       }
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -135,7 +165,7 @@ nuevo.add(izquierdo);
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         break label_1;
       }
     }
@@ -161,7 +191,7 @@ nuevo.add(izquierdo);
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -306,7 +336,7 @@ Nodo aux = izquierdo;
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -336,7 +366,7 @@ Nodo aux = izquierdo;
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -364,7 +394,7 @@ Nodo aux = izquierdo;
         break;
         }
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[7] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -403,7 +433,7 @@ Nodo aux = izquierdo;
         break;
         }
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -537,7 +567,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       break;
       }
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -598,24 +628,6 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     try { return !jj_3_7(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(6, xla); }
-  }
-
-  private boolean jj_3R_9()
- {
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_14()
- {
-    if (jj_3R_15()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_39()
- {
-    if (jj_scan_token(not)) return true;
-    return false;
   }
 
   private boolean jj_3_1()
@@ -911,6 +923,24 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     return false;
   }
 
+  private boolean jj_3R_9()
+ {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14()
+ {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_39()
+ {
+    if (jj_scan_token(not)) return true;
+    return false;
+  }
+
   /** Generated Token Manager. */
   public parseParametroTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -922,7 +952,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[9];
+  final private int[] jj_la1 = new int[10];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -930,10 +960,10 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x3e000,0x30000,0xe000,0xe000,0x8000000,0x30000000,0x0,0x0,0x6f0119c,};
+      jj_la1_0 = new int[] {0x3e000,0xc0000,0x30000,0xe000,0xe000,0x8000000,0x30000000,0x0,0x0,0x6f0119c,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x40,0x180,0x5,0x38,0x5804,};
+      jj_la1_1 = new int[] {0x4000,0x0,0x0,0x0,0x0,0x40,0x180,0x5,0x38,0x9804,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[7];
   private boolean jj_rescan = false;
@@ -950,7 +980,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -965,7 +995,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -976,7 +1006,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -987,7 +1017,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -997,7 +1027,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1007,7 +1037,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1120,12 +1150,12 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[47];
+    boolean[] la1tokens = new boolean[48];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 10; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1137,7 +1167,7 @@ nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
         }
       }
     }
-    for (int i = 0; i < 47; i++) {
+    for (int i = 0; i < 48; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

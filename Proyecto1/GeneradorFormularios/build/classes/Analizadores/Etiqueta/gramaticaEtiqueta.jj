@@ -78,15 +78,17 @@ SPECIAL_TOKEN:
 
 TOKEN:
 {
-    <dospuntos:"..">
-    |<numeral : "#">
+    
+    <numeral : "#">
     |<corchA : "[" >
     |<corchC : "]" >        
     |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
 }
 TOKEN :
 {
-    <Cadena : (~["#", "[", "]"])+>               
+    <Cadena : (~["#", "[", "]","."])+ > 
+    |<dospuntos:"..">              
+    |<punto:".">
 }
 
 
@@ -251,9 +253,13 @@ Nodo T() :
         nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
         return nuevo;
     }
+    |t=<punto>
+    {
+        return new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+    }
     |t=<dospuntos>
     {        
-        return new Nodo("var","padre",t.beginColumn, t.beginLine);                        
+        return new Nodo("var","padre",t.beginColumn, t.beginLine); 
     }
     | t=<numeral> aux = ET3() 
     {          

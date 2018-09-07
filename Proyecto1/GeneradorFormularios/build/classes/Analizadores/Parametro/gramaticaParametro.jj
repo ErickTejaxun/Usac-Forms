@@ -94,8 +94,8 @@ TOKEN:
     |<cad_min:"cad_min">
     |<iniciar:"iniciar">
     |<finalizar:"finalizar">
-    |<verdaderoFalso:"v_f">
-    |<siNo:"si_no">    
+    |<verdaderofalso:"v_f">
+    |<sino:"si_no">    
     |<entero : <numero>>
     |<doble : <numero>"."(<numero>)*>
     |<caracter : "\'"(~[])"\'">
@@ -122,6 +122,7 @@ TOKEN:
     |<not:"!">
     |<parA:"(">
     |<parC:")">
+    |<opcion:"opcion">
     |<identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
 }
 
@@ -136,6 +137,22 @@ Nodo Inicio() :
 {
     nuevo = Limites() <EOF> { aux.add(nuevo); return aux;}
 |   nuevo = Rango() <EOF> { aux.add(nuevo); return aux;}
+|   nuevo = Opcion() <EOF> { aux.add(nuevo); return aux;}
+}
+
+
+Nodo Opcion():
+{
+    Nodo izquierdo = new Nodo("opcion","opcion",0,0);
+    Nodo derecho = null;
+    Token t = null;
+}
+{
+    <opcion> <igual> (t=<sino>|t=<verdaderofalso>)
+    {
+        izquierdo.add(new Nodo(t.image,t.image,t.beginColumn,t.beginLine));
+        return izquierdo;
+    }
 }
 
 

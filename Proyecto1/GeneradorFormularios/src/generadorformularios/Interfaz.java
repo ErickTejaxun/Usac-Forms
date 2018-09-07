@@ -227,7 +227,8 @@ public class Interfaz extends javax.swing.JFrame {
             try 
             {
                 analizar();
-            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException ex) 
+            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException
+                    | Analizadores.Sugerir.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
@@ -688,75 +689,75 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 case "tipo":
                                     nuevaPregunta.setTipo(valor);
-                                    nuevaPregunta.setColumna("tipo", columna);
+                                    //Pregunta.setColumna("tipo", columna);
                                     break;
                                 case "idpregunta":
                                     nuevaPregunta.setIdPregunta(valor);
-                                    nuevaPregunta.setColumna("idpregunta", columna);
+                                    //Pregunta.setColumna("idpregunta", columna);
                                     break;               
                                 case "etiqueta":                                    
                                     nuevaPregunta.setEtiqueta(valor);
-                                    nuevaPregunta.setColumna("etiqueta", columna);
+                                    //Pregunta.setColumna("etiqueta", columna);
                                     break;
                                 case "parametro":
                                     nuevaPregunta.setParametro(valor);
-                                    nuevaPregunta.setColumna("parametro", columna);
+                                    //nuevaPregunta.setColumna("parametro", columna);
                                     break;
                                 case "calculo":
                                     nuevaPregunta.setCalculo(valor);
-                                    nuevaPregunta.setColumna("calculo", columna);
+                                    //Pregunta.setColumna("calculo", columna);
                                     break;
                                 case "aplicable":
                                     nuevaPregunta.setAplicable(valor);
-                                    nuevaPregunta.setColumna("aplicable", columna);
+                                    //Pregunta.setColumna("aplicable", columna);
                                     break;
                                 case "sugerir":
                                     nuevaPregunta.setSugerir(valor);
-                                    nuevaPregunta.setColumna("sugerir", columna);
+                                    //Pregunta.setColumna("sugerir", columna);
                                     break;
                                 case "restringir":
                                     nuevaPregunta.setRestringir(valor);
-                                    nuevaPregunta.setColumna("restringir", columna);
+                                    //Pregunta.setColumna("restringir", columna);
                                     break;                
                                 case "restringirmsn":
                                     nuevaPregunta.setRestringirmsn(valor);
-                                    nuevaPregunta.setColumna("restringirmsn", columna);
+                                    //Pregunta.setColumna("restringirmsn", columna);
                                     break;
                                 case "requeridomsn":
                                     nuevaPregunta.setRequeridoMsn(valor);
-                                    nuevaPregunta.setColumna("requeridomsn", columna);
+                                    //Pregunta.setColumna("requeridomsn", columna);
                                     break;
                                 case "requerido":
                                     nuevaPregunta.setRequerido(valor);
-                                    nuevaPregunta.setColumna("requerido", columna);
+                                    //Pregunta.setColumna("requerido", columna);
                                     break;
                                 case "predeterminado":
                                     nuevaPregunta.setPredeterminado(valor);
-                                    nuevaPregunta.setColumna("predeterminado", columna);
+                                    //nuevaPregunta.setColumna("predeterminado", columna);
                                     break;
                                 case "lectura":
                                     nuevaPregunta.setLectura(valor);
-                                    nuevaPregunta.setColumna("lectura", columna);
+                                    //nuevaPregunta.setColumna("lectura", columna);
                                     break;
                                 case "repeticion":
                                     nuevaPregunta.setRepeticion(valor);
-                                    nuevaPregunta.setColumna("repeticion", columna);
+                                    //nuevaPregunta.setColumna("repeticion", columna);
                                     break;
                                 case "apariencia":
                                     nuevaPregunta.setApariencia(valor);
-                                    nuevaPregunta.setColumna("apariencia", columna);
+                                    //nuevaPregunta.setColumna("apariencia", columna);
                                     break;
                                 case "codigo_pre":
                                     nuevaPregunta.setCodigo_pre(valor);
-                                    nuevaPregunta.setColumna("codigo_pre", columna);
+                                    //nuevaPregunta.setColumna("codigo_pre", columna);
                                     break;
                                 case "codigo_post":
                                     nuevaPregunta.setCodigo_post(valor);
-                                    nuevaPregunta.setColumna("codigo_post", columna);
+                                    //nuevaPregunta.setColumna("codigo_post", columna);
                                     break;
                                 case "fichero":
                                     nuevaPregunta.setFichero(valor);
-                                    nuevaPregunta.setColumna("fichero", columna);
+                                    //nuevaPregunta.setColumna("fichero", columna);
                                     break;
                             }                            
                             /*Verificamos que estén las obligatorias.*/                             
@@ -1077,7 +1078,8 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     public void registrarEncabezado(String valor, int columna)
-    {                
+    {        
+        valor = valor.trim();
         if(
           valor.toLowerCase().equals("tipo") ||
           valor.toLowerCase().equals("idpregunta") ||                
@@ -1100,6 +1102,7 @@ public class Interfaz extends javax.swing.JFrame {
           )
         {
              listaEncabezadosPreguntas.add(valor); 
+             Pregunta.setColumna(valor.toLowerCase(), columna );
         }
         else
         {
@@ -1109,19 +1112,22 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException, Analizadores.Parametro.ParseException
+    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException, Analizadores.Parametro.ParseException, Analizadores.Sugerir.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
         dibujador printer = new dibujador();
         String[] argumentos = new String[3]; //Argumentos        
         int fila = 1;
-        String[] encabezados = 
+        /*String[] encabezados = 
         {
-            "tipo","idpregunta","etiqueta","parametro",/*"calculo","aplicable","sugerir","restringir",
+            "tipo","idpregunta","etiqueta","parametro","sugerir","calculo","aplicable","sugerir","restringir",
             "restringirmsn","requerido","requeridomsn","predeterminado","lectura","repeticion","apariencia","codigo_pre",
-            "codigo_post","fichero"*/
-        };
+            "codigo_post","fichero"
+        };*/
+        
+        
+        String[] encabezados = listaEncabezadosPreguntas.toArray(new String[0]);        
         
         for(Pregunta pre : listaPreguntas)
         {
@@ -1134,10 +1140,10 @@ public class Interfaz extends javax.swing.JFrame {
                 {
                     argumentos[0] =  pre.getAtributo(parametro);                                                                                  
                     
-                    switch(parametro)
+                    switch(parametro.toLowerCase())
                     {
                         case "tipo":  
-                            temporal = analizarTipo(argumentos,fila,fila,fila,pre.getColumna(parametro));
+                            temporal = analizarTipo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));
                             if(temporal!=null)
                             {
                                 arbolPregunta.add(temporal);                                                        
@@ -1147,7 +1153,7 @@ public class Interfaz extends javax.swing.JFrame {
                             //Mensaje(pre.getTipo(),"----");
                             if(!pre.esFinal() && !pre.esIniciar())
                             {
-                                temporal = analizarId(argumentos,fila,fila,fila,pre.getColumna(parametro));
+                                temporal = analizarId(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));
                             }                                                        
                             if(temporal!=null)
                             {
@@ -1157,7 +1163,7 @@ public class Interfaz extends javax.swing.JFrame {
                         case "etiqueta":
                             if(!pre.esFinal() && !pre.esIniciar())
                             {
-                                temporal = analizarEtiqueta(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                                temporal = analizarEtiqueta(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                
                             }
                             if(temporal !=null)
                             {
@@ -1169,14 +1175,27 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 if(!pre.getParametro().equals(""))
                                 {                                
-                                    temporal = analizarParametro(argumentos,fila,fila,fila,pre.getColumna(parametro));                                
+                                    temporal = analizarParametro(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                
                                 }
                             }
                             if(temporal !=null)
                             {
                                 arbolPregunta.add(temporal);
                             }
-                            break;                            
+                            break;     
+                        case "sugerir":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getSugerir().equals(""))
+                                {                                
+                                    temporal = analizarSugerir(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                
+                                }
+                            }
+                            if(temporal !=null)
+                            {
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                             
                     }                    
                 }
                 temporal = null;
@@ -1284,7 +1303,30 @@ public class Interfaz extends javax.swing.JFrame {
         
         
         return null;
-    }       
+    }  
+    
+    public Nodo analizarSugerir(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Sugerir.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Sugerir.parserSugerir.main(argumentos);                                                        
+             }
+             catch(Analizadores.Sugerir.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Sugerir.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }      
     
     /*Metodo para ver donde se va a nalizar la puta data.*/
     
@@ -1350,6 +1392,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     public String getCelda(int valor)
     {
+        valor ++;
         int primera = valor / 28;
         int segunda = valor % 28;        
         if(primera!=0)

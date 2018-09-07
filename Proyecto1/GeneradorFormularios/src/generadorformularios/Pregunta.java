@@ -14,6 +14,8 @@ import java.util.Hashtable;
  */
 public class Pregunta 
 {
+    
+    public static Hashtable<String, Integer> posicionesColumnas= new Hashtable<String, Integer>();
     String	tipo	=	""	;
    String	IdPregunta	=	""	;
    String	etiqueta	=	""	;
@@ -355,16 +357,30 @@ public class Pregunta
     }     
     
     
-    public void setColumna(String clave, int valor)
+   /* public void setColumna(String clave, int valor)
     {
         this.posiciones.put(clave.toLowerCase(), valor);
-    }
+    }*/
     
-    public int getColumna(String clave)
+    
+    public static void setColumna(String clave, int valor)
     {
-        return this.posiciones.get(clave);
-    }
+        posicionesColumnas.put(clave.toLowerCase(), valor);
+    }    
     
+    /*public int getColumna(String clave)
+    {
+        System.out.println("Buscando clave ----------"+clave);
+        return this.posiciones.get(clave.toLowerCase());        
+    }*/
+    
+    
+    public static int getColumna(String clave)
+    {
+        System.out.println("Buscando clave ----------"+clave.toLowerCase());
+        return posicionesColumnas.get(clave.toLowerCase());
+    }
+        
     
     public boolean pruebaInicio()
     {
@@ -495,7 +511,7 @@ public class Pregunta
     
     public String getAtributo(String atrib)
     {        
-        switch(atrib)
+        switch(atrib.toLowerCase())
         {
             case "tipo":
                 return getTipo();                

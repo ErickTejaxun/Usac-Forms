@@ -18,15 +18,15 @@ options {
   FORCE_LA_CHECK = false;
 }
 
-PARSER_BEGIN(parserEtiqueta)
+PARSER_BEGIN(parserSugerir)
 
-package Analizadores.Etiqueta;
+package Analizadores.Sugerir;
 import AST.Nodo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class parserEtiqueta 
+public class parserSugerir 
 {    
     public static Nodo main(String args[]) throws ParseException
     {
@@ -34,14 +34,14 @@ public class parserEtiqueta
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());
-            parserEtiqueta analizador = new parserEtiqueta(data);
+            parserSugerir analizador = new parserSugerir(data);
             return analizador.Etiqueta();   
         }
         else
         {
             try
             {
-                parserEtiqueta analizador = new parserEtiqueta(System.in);
+                parserSugerir analizador = new parserSugerir(System.in);
                 analizador.Etiqueta();
             }
             catch (ParseException e)
@@ -70,7 +70,7 @@ public class parserEtiqueta
     }   
 
 }
-PARSER_END(parserEtiqueta)
+PARSER_END(parserSugerir)
 SPECIAL_TOKEN:
 {
     <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
@@ -86,8 +86,8 @@ TOKEN:
 }
 TOKEN :
 {
-    <Cadena : (~["#", "[", "]","."])+ > 
-    |<dospuntos:"..">              
+    <Cadena : (~["#", "[", "]","."])+>               
+   |<dospuntos:"..">
     |<punto:".">
 }
 
@@ -147,10 +147,7 @@ Nodo Etiqueta() :
         nuevo.setListaHijos(hijos); 
         return nuevo;
     }
-|   
-    {
-        return new Nodo("etiqueta","etiqueta",0,0);
-    }
+
 }
 
 
@@ -165,7 +162,7 @@ Nodo ETQ() :
 {
     izquierda = T() derecha = ETQ2() 
     {
-        nuevo = new Nodo("etiqueta","etiqueta",0,0);
+        nuevo = new Nodo("sugerir","sugerir",0,0);
         if(izquierda.getHijos().isEmpty())
         {
             nuevo.add(izquierda);
@@ -259,7 +256,7 @@ Nodo T() :
     }
     |t=<dospuntos>
     {        
-        return new Nodo("var","padre",t.beginColumn, t.beginLine); 
+        return new Nodo("var","padre",t.beginColumn, t.beginLine);                        
     }
     | t=<numeral> aux = ET3() 
     {          

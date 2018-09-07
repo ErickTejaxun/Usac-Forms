@@ -45,9 +45,9 @@ public interface parseParametroConstants {
   /** RegularExpression Id. */
   int finalizar = 17;
   /** RegularExpression Id. */
-  int verdaderoFalso = 18;
+  int verdaderofalso = 18;
   /** RegularExpression Id. */
-  int siNo = 19;
+  int sino = 19;
   /** RegularExpression Id. */
   int entero = 20;
   /** RegularExpression Id. */
@@ -101,7 +101,9 @@ public interface parseParametroConstants {
   /** RegularExpression Id. */
   int parC = 45;
   /** RegularExpression Id. */
-  int identificador = 46;
+  int opcion = 46;
+  /** RegularExpression Id. */
+  int identificador = 47;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -154,6 +156,7 @@ public interface parseParametroConstants {
     "\"!\"",
     "\"(\"",
     "\")\"",
+    "\"opcion\"",
     "<identificador>",
   };
 
