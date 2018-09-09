@@ -6,6 +6,7 @@
 package generadorformularios;
 
 
+import AST.A;
 import Analizadores.idPregunta.idParser;
 import Analizadores.idPregunta.ParseException;
 import Analizadores.idPregunta.TokenMgrError;
@@ -104,6 +105,11 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel1.setLayout(null);
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/guardar.png"))); // NOI18N
+        botonGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonGuardarActionPerformed(evt);
+            }
+        });
         jPanel1.add(botonGuardar);
         botonGuardar.setBounds(85, 12, 40, 40);
 
@@ -228,7 +234,7 @@ public class Interfaz extends javax.swing.JFrame {
             {
                 analizar();
             } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException
-                    | Analizadores.Sugerir.ParseException ex) 
+                    | Analizadores.Sugerir.ParseException | Analizadores.Codigo.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
@@ -250,6 +256,21 @@ public class Interfaz extends javax.swing.JFrame {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonAbrirActionPerformed
+
+    private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
+        try 
+        {
+            A a = new A();
+            System.err.println(a.nombre);
+        } catch (StackOverflowError e) 
+        {
+            System.err.println("Desborde");
+            System.err.println(e.getLocalizedMessage());
+        }       
+        
+        
+
+    }//GEN-LAST:event_botonGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -601,33 +622,7 @@ public class Interfaz extends javax.swing.JFrame {
             
             int totalFilas = hojaActual.getLastRowNum();
             int totalCeldas = 0;
-            
-            /*
-            try
-            {
-                while(colContador<totalFilas)
-                {
-                    totalCeldas = hojaActual.getRow(colContador).getLastCellNum();                    
-                    while(filaContador<totalCeldas)
-                    {
-                        if(hojaActual.getRow(colContador).getCell(filaContador)!=null)
-                        {
-                            System.out.print(hojaActual.getRow(colContador).getCell(filaContador).toString()+"  ");
-                        }
-                        
-                        filaContador++;
-                    }  
-                    System.out.println("");
-                    filaContador=0;
-                    colContador++;
-                }
-            }catch(Exception e)
-            {
-                Mensaje(e.getMessage(),"error");
-            }
-            */
-           
-            
+                                
             while(filaIterator.hasNext())
             {                
                 fila = filaIterator.next();
@@ -1112,7 +1107,14 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public void analizar() throws IOException, Analizadores.Tipo.ParseException, Analizadores.Etiqueta.ParseException, ParseException, Analizadores.Parametro.ParseException, Analizadores.Sugerir.ParseException
+    public void analizar() 
+            throws IOException,
+            Analizadores.Tipo.ParseException, 
+            Analizadores.Etiqueta.ParseException, 
+            ParseException, 
+            Analizadores.Parametro.ParseException, 
+            Analizadores.Sugerir.ParseException,
+            Analizadores.Codigo.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1195,7 +1197,37 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 arbolPregunta.add(temporal);
                             }
-                            break;                             
+                            break;  
+                        case "codigo_pre":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getCodigo_pre().equals(""))
+                                {                                
+                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                
+                                    temporal.setTipo("codigo_pre");
+                                    temporal.setValue("codigo_pre");                                    
+                                }
+                            }
+                            if(temporal !=null)
+                            {
+                                arbolPregunta.add(temporal);
+                            }
+                            break;      
+                        case "codigo_post":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getCodigo_post().equals(""))
+                                {                                
+                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));     
+                                    temporal.setTipo("codigo_post");
+                                    temporal.setValue("codigo_post");                                     
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                              
                     }                    
                 }
                 temporal = null;
@@ -1328,6 +1360,30 @@ public class Interfaz extends javax.swing.JFrame {
         return null;
     }      
     
+    
+    
+    public Nodo analizarCodigo(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Codigo.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Codigo.parserCodigo.main(argumentos);                                                        
+             }
+             catch(Analizadores.Codigo.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Codigo.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }    
     /*Metodo para ver donde se va a nalizar la puta data.*/
     
     /*

@@ -62,8 +62,8 @@ public class dibujador
               cmd[4] = direccionSalida;
 
               Runtime rt = Runtime.getRuntime();
-
-              rt.exec( cmd );
+              rt.exec(cmd[0]+" "+cmd[1]+" "+cmd[2]+" "+cmd[3]+" "+cmd[4]);
+              //rt.exec( cmd );
               
     }
     public String dibujarArbol2(Nodo raiz)
@@ -100,6 +100,8 @@ public class dibujador
     }
     public String dibujarArbol(Nodo raiz)
     {        
+        raiz.setValue(raiz.getValue().replace("\"", "\\\""));
+        for(Nodo r: raiz.getHijos()){r.setValue(r.getValue().replace("\"", "\\\""));}
         String cadena = "N"+raiz.hashCode()+"[label=\"["+raiz.getTipo()+"]"+raiz.getValue()+"\"]; \n";
         
         if(!raiz.getHijos().isEmpty())
@@ -119,7 +121,8 @@ public class dibujador
             {
                 cadena = cadena + dibujarArbol(raiz.getHijos().get(cont));                
             }            
-        }               
+        } 
+        raiz.setValue(raiz.getValue().replace("\\\"","\""));
         return cadena;
     }    
     

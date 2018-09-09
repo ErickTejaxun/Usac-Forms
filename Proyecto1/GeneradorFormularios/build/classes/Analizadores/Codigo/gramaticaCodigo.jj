@@ -1,0 +1,283 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(parserCodigo)
+
+package Analizadores.Codigo;
+import AST.Nodo;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+public class parserCodigo 
+{    
+    public static Nodo main(String args[]) throws ParseException
+    {
+        if(args.length>0)
+        {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            parserCodigo analizador = new parserCodigo(data);
+            return analizador.Etiqueta();   
+        }
+        else
+        {
+            try
+            {
+                parserCodigo analizador = new parserCodigo(System.in);
+                analizador.Etiqueta();
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }              
+        }
+        return null;
+    }
+
+    void errorPanico(int tokenSinc) 
+    { 
+        ParseException e = generateParseException();     
+        Token t; 
+        do 
+        {
+            t = getNextToken();
+        } 
+        while (t.kind != tokenSinc);
+    }
+
+    public void imprimir(String mensaje)
+    {
+        System.out.println(mensaje);
+    }   
+
+}
+PARSER_END(parserCodigo)
+SPECIAL_TOKEN:
+{
+    <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
+}
+
+TOKEN:
+{
+    
+    <numeral : "#">
+    |<corchA : "[" >
+    |<corchC : "]" >        
+    |<ID: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+}
+TOKEN :
+{
+    <Cadena : (~["#", "[", "]","@"])+ > 
+    |<arroba: "@">
+}
+
+
+Nodo Etiqueta() :
+{
+    Nodo Cad;
+    Nodo nuevo;
+    Token t= null;
+}
+{
+    (
+        Cad = ETQ()
+        {
+            nuevo = Cad;
+        }
+    )+ <EOF> 
+    {                   
+    
+        ArrayList<Nodo> hijos = new ArrayList();
+        nuevo = Cad;
+        //nuevo.getHijos().clear();
+        Nodo auxiliar = new Nodo("cadena","",0,0);
+        for(Nodo nodo : Cad.getHijos())
+        {
+            if(nodo.getTipo().equals("cadena"))
+            {
+                if(nodo.getValue().equals("."))
+                {
+                    auxiliar.setValue(auxiliar.getValue()+nodo.getValue());
+                }
+                else
+                {
+                    auxiliar.setValue(auxiliar.getValue()+" "+nodo.getValue());
+                }
+                
+            }
+            else
+            {
+                if(!auxiliar.getValue().equals(""))
+                {
+                    hijos.add(auxiliar);
+                    hijos.add(nodo);
+                    auxiliar = new Nodo("cadena","",0,0);
+                }
+                else
+                {
+                    hijos.add(nodo);
+                }
+            }
+        }
+        if(!auxiliar.getValue().equals(""))
+        {
+            hijos.add(auxiliar);
+        }
+        nuevo.getHijos().clear();
+        nuevo.setListaHijos(hijos); 
+        return nuevo;
+    }
+|   
+    {
+        return new Nodo("codigo","codigo",0,0);
+    }
+}
+
+
+Nodo ETQ() :
+{
+    String Cad;
+    String aux;
+    Nodo nuevo = null;
+    Nodo derecha = null;
+    Nodo izquierda = null;
+}
+{
+    izquierda = T() derecha = ETQ2() 
+    {
+        nuevo = new Nodo("codigo","codigo",0,0);
+        if(izquierda.getHijos().isEmpty())
+        {
+            nuevo.add(izquierda);
+        }
+        else
+        {
+            for(Nodo ni: izquierda.getHijos())
+            {
+                if(!ni.getTipo().equals("vacio"))
+                {
+                    nuevo.add(ni);
+                }   
+            }
+        }        
+        if(derecha.getHijos().isEmpty())
+        {
+            nuevo.add(derecha);
+        }
+        else
+        {
+            for(Nodo nd: derecha.getHijos())
+            {
+                if(!nd.getTipo().equals("vacio"))
+                {
+                    nuevo.add(nd);
+                }                   
+            }
+        }         
+        return nuevo;
+    }    
+}
+
+
+Nodo ETQ2() :
+{
+    String Cad;
+    String aux;
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Nodo nuevo  = null;
+}
+{
+        izquierdo = T()  derecho= ETQ2() 
+        {   
+            nuevo = new Nodo("ET2","ET2",0,0); 
+            if(izquierdo.getHijos().isEmpty())
+            {
+                nuevo.add(izquierdo);
+            }
+            else
+            {
+                for(Nodo ni: izquierdo.getHijos())
+                {
+                    if(!ni.getTipo().equals("vacio"))
+                    {
+                        nuevo.add(ni);
+                    }                    
+                }                                
+            }           
+            for(Nodo nd: derecho.getHijos())
+            {
+                nuevo.add(nd);
+            }                                     
+            return nuevo;
+        }
+    |   <EOF> 
+    {
+        nuevo = new Nodo("vacio","vacio",0,0);
+        return nuevo;
+    }
+}
+
+Nodo T() :
+{
+    String auxiliar;    
+    Nodo nuevo = null;
+    Nodo aux = null;
+    Token t = null;
+    Token t2= null;
+    Token t1=null;
+}
+{
+    t=<Cadena> 
+    {                      
+        nuevo = new Nodo("cadena",t.image, t.beginColumn, t.beginLine);
+        return nuevo;
+    }
+    |t=<arroba>
+    {
+        return new Nodo("var","this", t.beginColumn, t.beginLine);
+    }
+    | t=<numeral> aux = ET3() 
+    {          
+        return aux;
+    }
+}
+
+
+Nodo ET3():
+{
+    Nodo nuevo = null;
+    Token t = null;
+}
+{
+    <corchA>t=<ID><corchC>
+    {
+        nuevo = new Nodo("varP",t.image, t.beginColumn, t.beginLine);
+        System.out.println("Invocando variable: "+t.image);
+        return nuevo;
+    }
+    |t=<Cadena> 
+    {                      
+        nuevo = new Nodo("cadena","#"+t.image, t.beginColumn, t.beginLine);
+        return nuevo;
+    }
+}
