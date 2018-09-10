@@ -228,27 +228,35 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void botonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarActionPerformed
         
-        try {
+        try 
+        {
             try 
             {
                 analizar();
-            } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException
-                    | Analizadores.Sugerir.ParseException | Analizadores.Codigo.ParseException
+            } 
+            catch (
+                    Analizadores.Tipo.ParseException 
+                    | Analizadores.Etiqueta.ParseException 
+                    | Analizadores.idPregunta.ParseException  
+                    | Analizadores.Parametro.ParseException
+                    | Analizadores.Sugerir.ParseException 
+                    | Analizadores.Codigo.ParseException
                     | Analizadores.Restringir.ParseException 
                     | Analizadores.Predeterminado.ParseException
                     | Analizadores.Requerido.ParseException
                     | Analizadores.Multimedia.ParseException
                     | Analizadores.Apariencia.ParseException
-                    | Analizadores.Repeticion.ParseException ex) 
+                    | Analizadores.Repeticion.ParseException 
+                ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) 
+        {
             Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
-        mostrarErrores();
-        
-                               
+        mostrarErrores();                                       
     }//GEN-LAST:event_botonGenerarActionPerformed
 
     private void botonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrirActionPerformed
@@ -1609,7 +1617,7 @@ public class Interfaz extends javax.swing.JFrame {
              {                                                  
                  return Analizadores.Apariencia.parserApariencia.main(argumentos);                                                        
              }
-             catch(Analizadores.Multimedia.TokenMgrError te)
+             catch(Analizadores.Apariencia.TokenMgrError te)
              {   
                  //archivoActual, fila, fila
                  registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 

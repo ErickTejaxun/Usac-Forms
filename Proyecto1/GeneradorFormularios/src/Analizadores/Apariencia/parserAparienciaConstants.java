@@ -13,47 +13,49 @@ public interface parserAparienciaConstants {
   /** RegularExpression Id. */
   int texto = 2;
   /** RegularExpression Id. */
-  int entero = 3;
+  int cadena = 3;
   /** RegularExpression Id. */
-  int decimal = 4;
+  int entero = 4;
   /** RegularExpression Id. */
-  int rango = 5;
+  int decimal = 5;
   /** RegularExpression Id. */
-  int condicion = 6;
+  int rango = 6;
   /** RegularExpression Id. */
-  int fecha = 7;
+  int condicion = 7;
   /** RegularExpression Id. */
-  int hora = 8;
+  int fecha = 8;
   /** RegularExpression Id. */
-  int fechahora = 9;
+  int hora = 9;
   /** RegularExpression Id. */
-  int seleccionaUno = 10;
+  int fechahora = 10;
   /** RegularExpression Id. */
-  int seleccionaMultiple = 11;
+  int seleccionaUno = 11;
   /** RegularExpression Id. */
-  int nota = 12;
+  int seleccionaMultiple = 12;
   /** RegularExpression Id. */
-  int multimedia = 13;
+  int nota = 13;
   /** RegularExpression Id. */
-  int calcular = 14;
+  int multimedia = 14;
   /** RegularExpression Id. */
-  int iniciar = 15;
+  int calcular = 15;
   /** RegularExpression Id. */
-  int finalizar = 16;
+  int iniciar = 16;
   /** RegularExpression Id. */
-  int agrupacion = 17;
+  int finalizar = 17;
   /** RegularExpression Id. */
-  int ciclo = 18;
+  int agrupacion = 18;
   /** RegularExpression Id. */
-  int digito = 19;
+  int ciclo = 19;
   /** RegularExpression Id. */
-  int estilo = 20;
+  int digito = 20;
   /** RegularExpression Id. */
-  int letra = 21;
+  int estilo = 21;
   /** RegularExpression Id. */
-  int coma = 22;
+  int letra = 22;
   /** RegularExpression Id. */
-  int punto = 23;
+  int coma = 23;
+  /** RegularExpression Id. */
+  int punto = 24;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -63,6 +65,7 @@ public interface parserAparienciaConstants {
     "<EOF>",
     "<token of kind 1>",
     "\"texto\"",
+    "\"cadena\"",
     "\"entero\"",
     "\"decimal\"",
     "\"rango\"",
@@ -84,7 +87,7 @@ public interface parserAparienciaConstants {
     "<letra>",
     "\",\"",
     "\".\"",
-    "<token of kind 24>",
+    "<token of kind 25>",
   };
 
 }

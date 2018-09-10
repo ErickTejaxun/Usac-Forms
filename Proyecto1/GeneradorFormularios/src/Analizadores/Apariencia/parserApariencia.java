@@ -55,6 +55,7 @@ public class parserApariencia implements parserAparienciaConstants {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case 0:
       case texto:
+      case cadena:
       case entero:
       case decimal:
       case rango:
@@ -85,6 +86,12 @@ public class parserApariencia implements parserAparienciaConstants {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case texto:{
       t = jj_consume_token(texto);
+u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        {if ("" != null) return u;}
+      break;
+      }
+    case cadena:{
+      t = jj_consume_token(cadena);
 u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
         {if ("" != null) return u;}
       break;
@@ -192,7 +199,7 @@ u = new Nodo("",0,0);  {if ("" != null) return u;}
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x107ffd,0x107ffc,};
+      jj_la1_0 = new int[] {0x20fffd,0x20fffc,};
    }
 
   /** Constructor with InputStream. */
@@ -309,7 +316,7 @@ u = new Nodo("",0,0);  {if ("" != null) return u;}
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[25];
+    boolean[] la1tokens = new boolean[26];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -323,7 +330,7 @@ u = new Nodo("",0,0);  {if ("" != null) return u;}
         }
       }
     }
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < 26; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

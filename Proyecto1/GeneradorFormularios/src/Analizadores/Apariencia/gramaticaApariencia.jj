@@ -109,6 +109,7 @@ SKIP:
 TOKEN:
 {
     <texto:"texto">
+    |<cadena:"cadena">
     |<entero:"entero">
     |<decimal:"decimal">
     |<rango:"rango">
@@ -164,6 +165,11 @@ Nodo Tipo():
         u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
         return u;
     }
+|     t=<cadena>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }       
     |t=<estilo>
     {
         u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
