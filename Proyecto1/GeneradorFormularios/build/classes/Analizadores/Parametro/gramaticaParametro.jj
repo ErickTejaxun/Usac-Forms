@@ -98,8 +98,8 @@ TOKEN:
     |<sino:"si_no">    
     |<entero : <numero>>
     |<doble : <numero>"."(<numero>)*>
-    |<caracter : "\'"(~[])"\'">
-    |<cadena : "\""(~[])+"\"">    
+    |<caracter : "\'"(~["'"])"\'">
+    |<cadena : "\""(~["\""])+"\"">   
     |<#numero:(["0"-"9"])+>
     |<verdadero:"verdadero">
     |<falso:"falso">
@@ -123,7 +123,7 @@ TOKEN:
     |<parA:"(">
     |<parC:")">
     |<opcion:"opcion">
-    |<identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+    |<#identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
 }
 
 
@@ -451,7 +451,7 @@ Nodo Elemental():
    |t=<entero>{return new Nodo("entero",t.image,t.beginColumn, t.beginLine);}   
    |t=<doble>{return new Nodo("doble",t.image,t.beginColumn, t.beginLine);}
    |t=<caracter>{return new Nodo("caracter",t.image,t.beginColumn, t.beginLine);}   
-   |t=<identificador>{return new Nodo("var",t.image,t.beginColumn, t.beginLine);}   
+   //|t=<identificador>{return new Nodo("var",t.image,t.beginColumn, t.beginLine);}   
    |t=<varP>{ String sub = t.image.substring(2,t.image.length()-1); return new Nodo("varP",sub,t.beginColumn, t.beginLine);}   
    |t=<cadena>{return new Nodo("cadena",t.image,t.beginColumn, t.beginLine);}   
    |t=<fechahora>{return new Nodo("fechahora",t.image,t.beginColumn, t.beginLine);}   

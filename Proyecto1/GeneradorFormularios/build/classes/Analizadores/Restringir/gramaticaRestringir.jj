@@ -91,9 +91,7 @@ TOKEN:
     |<llaveC:"]">
     |<varP : <numeral>(<ESPACIO>)?<llaveA>(<ESPACIO>)?<identificador>(<ESPACIO>)?<llaveC>>    
     |<entero : <numero>>
-    |<doble : <numero>"."(<numero>)*>
-    |<caracter : "\'"(~[])"\'">
-    |<cadena : "\""(~[])+"\"">    
+    |<doble : <numero>"."(<numero>)*>    
     |<#numero:(["0"-"9"])+>
     |<verdadero:"verdadero">
     |<falso:"falso">
@@ -115,9 +113,11 @@ TOKEN:
     |<or:"||">
     |<not:"!">
     |<parA:"(">
-    |<parC:")">
-    |<opcion:"opcion">
-    |<identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+    |<parC:")">   
+    |<funcion:<identificador>(<ESPACIO>)?<parA>>
+    |<#identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+    |<caracter : "\'"(~["'"])"\'">
+    |<cadena : "\""(~["\""])+"\"">
 }
 
 
@@ -350,20 +350,16 @@ Nodo Elemental():
         nuevo.add(auxiliar);
         return nuevo;
     }    
-    |t=<identificador>(t1=<parA> (auxiliar=listaParametros())? t2=<parC>)?
+    |t=<funcion> (auxiliar=listaParametros())? t2=<parC>
     {
-        if(t1!=null && t2!=null)
-        {
+
             if(auxiliar!=null)
             {
                 nuevo =  new Nodo("funcion",t.image,t.beginColumn, t.beginLine);        
-                for(Nodo nod: auxiliar.getHijos()){nuevo.add(nod);}
-                //nuevo.add(auxiliar);
+                for(Nodo nod: auxiliar.getHijos()){nuevo.add(nod);}                
                 return nuevo;
             }
-            return new Nodo("funcion",t.image,t.beginColumn, t.beginLine);        
-        }
-        return new Nodo("var",t.image,t.beginColumn, t.beginLine);        
+            return new Nodo("funcion",t.image,t.beginColumn, t.beginLine);                
     }
 
 }

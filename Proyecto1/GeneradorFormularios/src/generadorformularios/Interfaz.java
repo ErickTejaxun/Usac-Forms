@@ -35,7 +35,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 
-import Analizadores.Tipo.parserTipo;
 
 /**
  *
@@ -235,7 +234,11 @@ public class Interfaz extends javax.swing.JFrame {
                 analizar();
             } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException
                     | Analizadores.Sugerir.ParseException | Analizadores.Codigo.ParseException
-                    | Analizadores.Restringir.ParseException ex) 
+                    | Analizadores.Restringir.ParseException 
+                    | Analizadores.Predeterminado.ParseException
+                    | Analizadores.Requerido.ParseException
+                    | Analizadores.Multimedia.ParseException
+                    | Analizadores.Repeticion.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
@@ -425,7 +428,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setColumna("codigo_post", columna);
                                     break;
                                 case "fichero":
-                                    nuevaPregunta.setFichero(valor);
+                                    nuevaPregunta.setMultimedia(valor);
                                     nuevaPregunta.setColumna("fichero", columna);
                                     break;
                                     
@@ -752,8 +755,8 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setCodigo_post(valor);
                                     //nuevaPregunta.setColumna("codigo_post", columna);
                                     break;
-                                case "fichero":
-                                    nuevaPregunta.setFichero(valor);
+                                case "multimedia":
+                                    nuevaPregunta.setMultimedia(valor);
                                     //nuevaPregunta.setColumna("fichero", columna);
                                     break;
                             }                            
@@ -1095,7 +1098,7 @@ public class Interfaz extends javax.swing.JFrame {
           valor.toLowerCase().equals("apariencia") ||      
           valor.toLowerCase().equals("codigo_pre") ||      
           valor.toLowerCase().equals("codigo_post") ||                      
-          valor.toLowerCase().equals("fichero")                  
+          valor.toLowerCase().equals("multimedia")                  
           )
         {
              listaEncabezadosPreguntas.add(valor); 
@@ -1117,7 +1120,11 @@ public class Interfaz extends javax.swing.JFrame {
             Analizadores.Parametro.ParseException, 
             Analizadores.Sugerir.ParseException,
             Analizadores.Codigo.ParseException,
-            Analizadores.Restringir.ParseException
+            Analizadores.Restringir.ParseException,
+            Analizadores.Requerido.ParseException,
+            Analizadores.Predeterminado.ParseException,
+            Analizadores.Repeticion.ParseException,
+            Analizadores.Multimedia.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1206,9 +1213,12 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 if(!pre.getCodigo_pre().equals(""))
                                 {                                
-                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                
-                                    temporal.setTipo("codigo_pre");
-                                    temporal.setValue("codigo_pre");                                    
+                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));  
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setTipo("codigo_pre");
+                                        temporal.setValue("codigo_pre");                                       
+                                    }                                                                       
                                 }
                             }
                             if(temporal !=null)
@@ -1221,9 +1231,13 @@ public class Interfaz extends javax.swing.JFrame {
                             {
                                 if(!pre.getCodigo_post().equals(""))
                                 {                                
-                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));     
-                                    temporal.setTipo("codigo_post");
-                                    temporal.setValue("codigo_post");                                     
+                                    temporal = analizarCodigo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));  
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setTipo("codigo_post");
+                                        temporal.setValue("codigo_post");                                       
+                                    }                                     
+                                     
                                 }
                             }
                             if(temporal !=null)
@@ -1243,7 +1257,155 @@ public class Interfaz extends javax.swing.JFrame {
                             {                               
                                 arbolPregunta.add(temporal);
                             }
-                            break;                            
+                            break;       
+                        case "calculo":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getCalculo().equals(""))
+                                {                                
+                                    temporal = analizarRestringir(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("calculo");
+                                        temporal.setTipo("calculo");                                        
+                                    }                                    
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break; 
+                        case "aplicable":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getAplicable().equals(""))
+                                {                                
+                                    temporal = analizarRestringir(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("aplicable");
+                                        temporal.setTipo("aplicable");                                        
+                                    }
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break; 
+                        case "restringirmsn":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getRestringirmsn().equals(""))
+                                {                                
+                                    temporal = analizarEtiqueta(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("restringirmsn");
+                                        temporal.setTipo("restringirmsn");                                        
+                                    }                                                                           
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;     
+                        case "requerirmsn":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getRequeridoMsn().equals(""))
+                                {                                
+                                    temporal = analizarEtiqueta(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("requerirmsn");
+                                        temporal.setTipo("requerirmsn");                                        
+                                    }                                    
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;     
+                        case "requerido":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getRequerido().equals(""))
+                                {                                
+                                    temporal = analizarRequerido(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));  
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("requerido");
+                                        temporal.setTipo("requerido");                                        
+                                    }                                    
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;  
+                        case "lectura":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getLectura().equals(""))
+                                {                                
+                                    temporal = analizarRequerido(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                    if(temporal!=null)
+                                    {
+                                        temporal.setValue("lectura");
+                                        temporal.setTipo("lectura");                                        
+                                    }                                     
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                             
+                        case "predeterminado":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getPredeterminado().equals(""))
+                                {                                
+                                    temporal = analizarPredeterminado(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break; 
+                        case "repeticion":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getRepeticion().equals(""))
+                                {                                
+                                    temporal = analizarRepeticion(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;        
+                        case "multimedia":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getMultimedia().equals(""))
+                                {                                
+                                    temporal = analizarMultimedia(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                             
+                           
                     }                    
                 }
                 temporal = null;
@@ -1330,6 +1492,53 @@ public class Interfaz extends javax.swing.JFrame {
         return null;
     }    
     
+    public Nodo analizarRequerido(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Requerido.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Requerido.parserRequerido.main(argumentos);                                                        
+             }
+             catch(Analizadores.Etiqueta.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Requerido.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }        
+    public Nodo analizarPredeterminado(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Predeterminado.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Predeterminado.parserPredeterminado.main(argumentos);                                                        
+             }
+             catch(Analizadores.Etiqueta.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Predeterminado.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }    
+    
+    
+    
     public Nodo analizarParametro(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Parametro.ParseException
     {        
         try
@@ -1352,6 +1561,53 @@ public class Interfaz extends javax.swing.JFrame {
         
         return null;
     }  
+    
+    public Nodo analizarRepeticion(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Repeticion.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Repeticion.parserRepeticion.main(argumentos);                                                        
+             }
+             catch(Analizadores.Repeticion.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Repeticion.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }  
+
+
+    public Nodo analizarMultimedia(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Multimedia.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Multimedia.parserMultimedia.main(argumentos);                                                        
+             }
+             catch(Analizadores.Multimedia.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Multimedia.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }     
     
     public Nodo analizarSugerir(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Sugerir.ParseException
     {        

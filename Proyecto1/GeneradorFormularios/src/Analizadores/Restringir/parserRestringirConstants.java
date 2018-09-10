@@ -41,57 +41,57 @@ public interface parserRestringirConstants {
   /** RegularExpression Id. */
   int doble = 15;
   /** RegularExpression Id. */
-  int caracter = 16;
+  int numero = 16;
   /** RegularExpression Id. */
-  int cadena = 17;
+  int verdadero = 17;
   /** RegularExpression Id. */
-  int numero = 18;
+  int falso = 18;
   /** RegularExpression Id. */
-  int verdadero = 19;
+  int desigual = 19;
   /** RegularExpression Id. */
-  int falso = 20;
+  int mayorigualque = 20;
   /** RegularExpression Id. */
-  int desigual = 21;
+  int menorigualque = 21;
   /** RegularExpression Id. */
-  int mayorigualque = 22;
+  int si = 22;
   /** RegularExpression Id. */
-  int menorigualque = 23;
+  int no = 23;
   /** RegularExpression Id. */
-  int si = 24;
+  int suma = 24;
   /** RegularExpression Id. */
-  int no = 25;
+  int potencia = 25;
   /** RegularExpression Id. */
-  int suma = 26;
+  int menos = 26;
   /** RegularExpression Id. */
-  int potencia = 27;
+  int multi = 27;
   /** RegularExpression Id. */
-  int menos = 28;
+  int div = 28;
   /** RegularExpression Id. */
-  int multi = 29;
+  int mod = 29;
   /** RegularExpression Id. */
-  int div = 30;
+  int igual = 30;
   /** RegularExpression Id. */
-  int mod = 31;
+  int mayorque = 31;
   /** RegularExpression Id. */
-  int igual = 32;
+  int menorque = 32;
   /** RegularExpression Id. */
-  int mayorque = 33;
+  int and = 33;
   /** RegularExpression Id. */
-  int menorque = 34;
+  int or = 34;
   /** RegularExpression Id. */
-  int and = 35;
+  int not = 35;
   /** RegularExpression Id. */
-  int or = 36;
+  int parA = 36;
   /** RegularExpression Id. */
-  int not = 37;
+  int parC = 37;
   /** RegularExpression Id. */
-  int parA = 38;
+  int funcion = 38;
   /** RegularExpression Id. */
-  int parC = 39;
+  int identificador = 39;
   /** RegularExpression Id. */
-  int opcion = 40;
+  int caracter = 40;
   /** RegularExpression Id. */
-  int identificador = 41;
+  int cadena = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -114,8 +114,6 @@ public interface parserRestringirConstants {
     "<varP>",
     "<entero>",
     "<doble>",
-    "<caracter>",
-    "<cadena>",
     "<numero>",
     "\"verdadero\"",
     "\"falso\"",
@@ -138,8 +136,10 @@ public interface parserRestringirConstants {
     "\"!\"",
     "\"(\"",
     "\")\"",
-    "\"opcion\"",
+    "<funcion>",
     "<identificador>",
+    "<caracter>",
+    "<cadena>",
   };
 
 }

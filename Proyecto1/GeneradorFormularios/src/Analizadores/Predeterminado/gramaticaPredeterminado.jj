@@ -1,0 +1,353 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(parserPredeterminado)
+
+package Analizadores.Predeterminado;
+import AST.Nodo;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+public class parserPredeterminado 
+{    
+    public static Nodo main(String args[]) throws ParseException
+    {
+        if(args.length>0)
+        {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            parserPredeterminado analizador = new parserPredeterminado(data);
+            return analizador.Inicio();   
+        }
+        else
+        {
+            try
+            {
+                parserPredeterminado analizador = new parserPredeterminado(System.in);
+                analizador.Inicio();
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }              
+        }
+        return null;
+    }
+
+    void errorPanico(int tokenSinc) 
+    { 
+        ParseException e = generateParseException();     
+        Token t; 
+        do 
+        {
+            t = getNextToken();
+        } 
+        while (t.kind != tokenSinc);
+    }
+
+    public void imprimir(String mensaje)
+    {
+        System.out.println(mensaje);
+    }   
+
+}
+PARSER_END(parserPredeterminado)
+SPECIAL_TOKEN:
+{
+    <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
+}
+
+TOKEN:
+{
+    <fechahora : ("\'"(<fechaA>)<ESPACIO>(<horaA>)"\'"|"\""(<fechaA>)<ESPACIO>(<horaA>)"\"")>    
+    |<fecha: (("'"<fechaA>"'")|"\""<fechaA>"\"")>
+    |<hora: (("'"<horaA>"'")|"\""<horaA>"\"")>
+    |<fechaA : (("0"["1"-"9"]|["1"-"2"]["0"-"9"]|"3"("0"|"1"))"/"(("0"["1"-"9"])|"1"["0"-"2"])"/"(["1"-"2"]["0"-"9"]["0"-"9"]["0"-"9"]))>
+    |<horaA : (((["0"-"1"]["0"-"9"])|("2"["0"-"3"]))":"(["0"-"5"]["0"-"9"])":"(["0"-"5"]["0"-"9"]))>
+    |<dospuntos:"..">
+    |<numeral:"#">
+    |<llaveA:"[">
+    |<llaveC:"]">
+    |<varP : <numeral>(<ESPACIO>)?<llaveA>(<ESPACIO>)?<identificador>(<ESPACIO>)?<llaveC>>    
+    |<entero : <numero>>
+    |<doble : <numero>"."(<numero>)*>    
+    |<#numero:(["0"-"9"])+>
+    |<verdadero:"verdadero">
+    |<falso:"falso">
+    |<desigual:"!=">
+    |<mayorigualque:">=">
+    |<menorigualque:"<=">
+    |<si:"si">
+    |<no:"no">
+    |<suma:"+">
+    |<potencia:"^">
+    |<menos:"-">
+    |<multi:"*">
+    |<div:"div">
+    |<mod:"mod">   
+    |<igual:"="> 
+    |<mayorque:">">
+    |<menorque:"<">
+    |<and:"&&">
+    |<or:"||">
+    |<not:"!">
+    |<parA:"(">
+    |<parC:")">    
+    |<#identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+    |<caracter : "\'"(~["'"])"\'">
+    |<cadena : "\""(~["\""])+"\"">
+}
+
+
+
+Nodo Inicio() :
+{    
+    Nodo aux = new Nodo("predeterminado","predeterminado",0,0);
+    Nodo nuevo = null;
+    Token t= null;
+}
+{
+    nuevo = logica() <EOF> { aux.add(nuevo); return aux;}
+}
+
+
+
+Nodo logica():
+{
+    Nodo izquierdo;
+    Nodo derecho;
+    Token t = null;    
+}
+{
+    izquierdo = exprAnd()( 
+        LOOKAHEAD(2)t=<or> derecho=exprAnd()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+        )*
+    {
+        return izquierdo;
+    }
+}
+
+Nodo exprAnd():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Token t = null;
+    Nodo nuevo =null;
+}
+{
+    izquierdo = Relacional() ( LOOKAHEAD(2) t=<and> derecho=Relacional()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+
+    )*
+    {
+        return izquierdo;       
+    }
+}
+
+Nodo Relacional():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Nodo operador = null;    
+}
+{
+    izquierdo = Comparacion()
+    (
+         LOOKAHEAD(2) operador= opRelacional2() derecho=Comparacion()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(),operador.getLinea());
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }    
+        )*
+    {
+        return izquierdo;     
+    }
+}
+
+Nodo Comparacion():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Nodo operador = null;
+}
+{
+    izquierdo = Expr()(
+     LOOKAHEAD(2) operador = opRelacional() derecho = Expr()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(operador.getTipo(),operador.getValue(),operador.getColumna(),operador.getLinea());
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+
+    )*
+    {
+        return izquierdo;
+    }
+}
+
+Nodo opRelacional2():
+{
+    Token t = null;
+}
+{
+    t=<igual>{return new Nodo("igual",t.image,t.beginColumn, t.beginLine);}
+   |t=<desigual>{return new Nodo("desigual",t.image,t.beginColumn, t.beginLine);}
+}
+
+
+Nodo opRelacional():
+{
+    Token t = null;
+}
+{
+    t=<mayorque>{return new Nodo("maryoque",t.image,t.beginColumn, t.beginLine);}
+   |t=<menorque>{return new Nodo("menorque",t.image,t.beginColumn, t.beginLine);}
+   |t=<mayorigualque>{return new Nodo("mayorigualque",t.image,t.beginColumn, t.beginLine);}
+   |t=<menorigualque>{return new Nodo("menorigualque",t.image,t.beginColumn, t.beginLine);}   
+}
+
+Nodo Expr():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Token t = null;
+}
+{
+    izquierdo = ExprMulti()(LOOKAHEAD(2)(t=<suma>|t=<menos>) derecho= ExprMulti()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+    )*
+    {
+        return izquierdo;
+    }
+}
+
+
+Nodo ExprMulti():
+{
+    Nodo izquierdo = null;
+    Nodo derecho = null;
+    Token t = null;
+}
+{
+    izquierdo = ExprPotencia()( LOOKAHEAD(2) (t=<multi>|t=<div>|t=<mod>) derecho= ExprPotencia()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+
+    )*
+    {
+        return izquierdo;
+    }
+}
+
+
+Nodo ExprPotencia():
+{
+    Nodo izquierdo = null;
+    Nodo nuevo =  new Nodo("ExpPotencia","ExpPotencia",0,0);
+    Nodo derecho = null;
+    Token t = null;
+}
+{
+
+    izquierdo = Elemental()
+    (
+        LOOKAHEAD(2)t=<potencia>  derecho = Elemental()
+        {
+            Nodo aux = izquierdo;
+            izquierdo = new Nodo(t.image,t.image,t.beginColumn, t.beginLine);
+            izquierdo.add(aux);
+            izquierdo.add(derecho);
+        }
+    )*    
+    {
+        return izquierdo;
+    }
+}
+
+Nodo Elemental():
+{
+    Nodo nuevo = null;
+    Nodo auxiliar = null;
+    Token t = null;
+    Token t1 = null;
+    Token t2 = null;
+}
+{
+    t=<dospuntos>{return new Nodo("var","padre",t.beginColumn, t.beginLine);}   
+   |t=<entero>{return new Nodo("entero",t.image,t.beginColumn, t.beginLine);}   
+   |t=<doble>{return new Nodo("doble",t.image,t.beginColumn, t.beginLine);}
+   |t=<caracter>{return new Nodo("caracter",t.image,t.beginColumn, t.beginLine);}      
+   |t=<varP>{ String sub = t.image.substring(2,t.image.length()-1); return new Nodo("varP",sub,t.beginColumn, t.beginLine);}   
+   |t=<cadena>{return new Nodo("cadena",t.image,t.beginColumn, t.beginLine);}   
+   |t=<fechahora>{return new Nodo("fechahora",t.image,t.beginColumn, t.beginLine);}   
+   |t=<hora>{return new Nodo("hora",t.image,t.beginColumn, t.beginLine);}   
+   |t=<fecha>{return new Nodo("fecha",t.image,t.beginColumn, t.beginLine);}   
+   |t=<verdadero>{return new Nodo("verdadero",t.image,t.beginColumn, t.beginLine);}  
+   |t=<falso>{return new Nodo("falso",t.image,t.beginColumn, t.beginLine);}  
+   |t=<parA>auxiliar=logica()<parC>
+    {
+        nuevo = new Nodo("Expr","()",t.beginColumn, t.beginLine);
+        nuevo.add(auxiliar);
+        return nuevo;
+    }   
+   |t=<menos>auxiliar=logica()
+    {
+        nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
+        nuevo.add(new Nodo("menos","menos",t.beginColumn,t.beginLine));
+        nuevo.add(auxiliar);
+        return nuevo;
+    }   
+   |t=<not>auxiliar=logica()
+    {
+        nuevo = new Nodo("expr","expr",t.beginColumn, t.beginLine);
+        nuevo.add(new Nodo("not","not",t.beginColumn,t.beginLine));
+        nuevo.add(auxiliar);
+        return nuevo;
+    }    
+    //|t=<identificador>{return new Nodo("var",t.image,t.beginColumn, t.beginLine);}
+
+}
+
+

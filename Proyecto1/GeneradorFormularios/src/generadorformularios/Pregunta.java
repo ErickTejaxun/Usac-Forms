@@ -33,7 +33,7 @@ public class Pregunta
    String	apariencia	=	""	;
    String	codigo_pre	=	""	;
    String	codigo_post	=	""	;
-   String	fichero	=	""	;
+   String	multimedia	=	""	;
    boolean vacio = false;
    boolean iniciar = false;
    boolean finalizar = false;
@@ -218,7 +218,7 @@ public class Pregunta
                 getApariencia().equals("")&&
                 getCodigo_post().equals("")&&
                 getCodigo_pre().equals("")&&
-                getFichero().equals("")&&
+                getMultimedia().equals("")&&
                 getEtiqueta().equals("")&&
                 getTipo().equals("");
     }
@@ -314,19 +314,19 @@ public class Pregunta
             case "codigo_post":
                 this.setCodigo_post(valorN);
                 break;
-            case "fichero":
-                this.setFichero(valorN);
+            case "multimedia":
+                this.setMultimedia(valorN);
                 break;
         }
     }
 
-    public String getFichero() {
-        return fichero;
+    public String getMultimedia() {
+        return multimedia;
     }
     
-    public void setFichero(String multimedia)
+    public void setMultimedia(String multimedia)
     {
-        this.fichero = multimedia;
+        this.multimedia = multimedia;
     }
     
     
@@ -351,7 +351,7 @@ public class Pregunta
         data+="\t\t<apariencia>"+this.getApariencia()+"</apariencia>\n"; 
         data+="\t\t<codigo_pre>"+this.getCodigo_pre()+"</codigo_pre>\n"; 
         data+="\t\t<codigo_post>"+this.getCodigo_post()+"</codigo_post>\n"; 
-        data+="\t\t<fichero>"+this.getFichero()+"</fichero>\n";  
+        data+="\t\t<multimedia>"+this.getMultimedia()+"</multimedia>\n";  
         data+="\t</pregunta>\n";  
         return data;
     }     
@@ -401,7 +401,7 @@ public class Pregunta
                 getApariencia().equals("")&&
                 getCodigo_post().equals("")&&
                 getCodigo_pre().equals("")&&
-                getFichero().equals("")&&
+                getMultimedia().equals("")&&
                 !getIdPregunta().equals("")&&
                 (getTipo().trim().toLowerCase().equals("iniciar agrupacion") || getTipo().trim().toLowerCase().equals("iniciar ciclo"))
                 ;
@@ -425,7 +425,7 @@ public class Pregunta
                 getApariencia().equals("")&&
                 getCodigo_post().equals("")&&
                 getCodigo_pre().equals("")&&
-                getFichero().equals("")&&
+                getMultimedia().equals("")&&
                 getEtiqueta().equals("")&&
                 getIdPregunta().equals("")&&
                 (getTipo().trim().toLowerCase().equals("finalizar agrupacion") || getTipo().trim().toLowerCase().equals("finalizar ciclo"))
@@ -454,7 +454,7 @@ public class Pregunta
             if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
             if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
             if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
-            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
+            if(!getMultimedia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("multimedia")), "Sintactico"));}
             if(getIdPregunta().equals("")){errores.add(new Error("Falta idpregunta", 1, 1, fila, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}
        }
        if(getTipo().toLowerCase().equals("iniciar ciclo"))//Verificamos si es inicio
@@ -475,7 +475,7 @@ public class Pregunta
             if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
             if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
             if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
-            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
+            if(!getMultimedia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("multimedia")), "Sintactico"));}
             if(getIdPregunta().equals("")){errores.add(new Error("Falta idpregunta", 1, 1, fila, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}
        }       
        if(getTipo().toLowerCase().equals("finalizar agrupacion") || getTipo().toLowerCase().equals("finalizar ciclo"))//Verificamos si es inicio
@@ -496,7 +496,7 @@ public class Pregunta
             if(!getRepeticion().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("repeticion")), "Sintactico"));}            
             if(!getCodigo_post().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_post")), "Sintactico"));}
             if(!getCodigo_pre().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("codigo_pre")), "Sintactico"));}
-            if(!getFichero().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("fichero")), "Sintactico"));}
+            if(!getMultimedia().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("multimedia")), "Sintactico"));}
             if(getIdPregunta().equals("")){errores.add(new Error("Esta celda debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("idpregunta")), "Sintactico"));}                      
        }      
        if(
@@ -516,7 +516,7 @@ public class Pregunta
                 getApariencia().equals("")&&
                 getCodigo_post().equals("")&&
                 getCodigo_pre().equals("")&&
-                getFichero().equals("")&&
+                getMultimedia().equals("")&&
                 getEtiqueta().equals("")&&
                 getTipo().equals("")
               
@@ -569,8 +569,8 @@ public class Pregunta
                 return getCodigo_pre();
             case "codigo_post":
                 return getCodigo_post();
-            case "fichero":
-                return getFichero();
+            case "multimedia":
+                return getMultimedia();
         }
         return "";
     }
