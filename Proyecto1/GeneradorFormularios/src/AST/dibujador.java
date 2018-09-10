@@ -38,10 +38,10 @@ public class dibujador
                         //"rankdir=LR;"+
                         dibujarArbol(raiz)+
                         "}";
-        cadena = cadena.replace("]\"","]");        
-        cadena = cadena.replace("]\"","]");
-        cadena = cadena.replace("\"\"","\"");
-        cadena = cadena.replace("]]","]\"]");
+        //cadena = cadena.replace("]\"","]");        
+        //cadena = cadena.replace("]\"","]");
+        //cadena = cadena.replace("\"\"","\"");
+        //cadena = cadena.replace("]]","]\"]");
         /*---------------------------------------------------------------------------------*/
         try (  PrintWriter writer = new PrintWriter(direccionEntrada)) {
             writer.print(cadena);            
@@ -100,7 +100,7 @@ public class dibujador
     }
     public String dibujarArbol(Nodo raiz)
     {        
-        raiz.setValue(raiz.getValue().replace("\"", "\\\""));
+        //raiz.setValue(raiz.getValue().replace("\"", "\\\""));
         for(Nodo r: raiz.getHijos()){r.setValue(r.getValue().replace("\"", "\\\""));}
         String cadena = "N"+raiz.hashCode()+"[label=\"["+raiz.getTipo()+"]"+raiz.getValue()+"\"]; \n";
         
@@ -122,7 +122,8 @@ public class dibujador
                 cadena = cadena + dibujarArbol(raiz.getHijos().get(cont));                
             }            
         } 
-        raiz.setValue(raiz.getValue().replace("\\\"","\""));
+        //raiz.setValue(raiz.getValue().replace("\\\"","\""));
+        for(Nodo r: raiz.getHijos()){r.setValue(r.getValue().replace("\\\"","\""));}
         return cadena;
     }    
     

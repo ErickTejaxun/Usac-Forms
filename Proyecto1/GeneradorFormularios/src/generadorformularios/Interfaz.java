@@ -234,7 +234,8 @@ public class Interfaz extends javax.swing.JFrame {
             {
                 analizar();
             } catch (Analizadores.Tipo.ParseException | Analizadores.Etiqueta.ParseException | Analizadores.idPregunta.ParseException  | Analizadores.Parametro.ParseException
-                    | Analizadores.Sugerir.ParseException | Analizadores.Codigo.ParseException ex) 
+                    | Analizadores.Sugerir.ParseException | Analizadores.Codigo.ParseException
+                    | Analizadores.Restringir.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }                                                            
@@ -427,6 +428,7 @@ public class Interfaz extends javax.swing.JFrame {
                                     nuevaPregunta.setFichero(valor);
                                     nuevaPregunta.setColumna("fichero", columna);
                                     break;
+                                    
                             }                            
                             /*Verificamos que estén las obligatorias.*/                             
                             colContador ++ ;
@@ -1114,7 +1116,8 @@ public class Interfaz extends javax.swing.JFrame {
             ParseException, 
             Analizadores.Parametro.ParseException, 
             Analizadores.Sugerir.ParseException,
-            Analizadores.Codigo.ParseException
+            Analizadores.Codigo.ParseException,
+            Analizadores.Restringir.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1227,7 +1230,20 @@ public class Interfaz extends javax.swing.JFrame {
                             {                               
                                 arbolPregunta.add(temporal);
                             }
-                            break;                              
+                            break;          
+                        case "restringir":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getRestringir().equals(""))
+                                {                                
+                                    temporal = analizarRestringir(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));                                         
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                            
                     }                    
                 }
                 temporal = null;
@@ -1384,6 +1400,30 @@ public class Interfaz extends javax.swing.JFrame {
         
         return null;
     }    
+    
+    
+    public Nodo analizarRestringir(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Restringir.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Restringir.parserRestringir.main(argumentos);                                                        
+             }
+             catch(Analizadores.Restringir.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Restringir.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }     
     /*Metodo para ver donde se va a nalizar la puta data.*/
     
     /*
