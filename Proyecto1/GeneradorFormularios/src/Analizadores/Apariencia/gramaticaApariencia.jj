@@ -1,0 +1,236 @@
+
+/*
+ * Copyright © 2002 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+ * California 95054, U.S.A. All rights reserved.  Sun Microsystems, Inc. has
+ * intellectual property rights relating to technology embodied in the product
+ * that is described in this document. In particular, and without limitation,
+ * these intellectual property rights may include one or more of the U.S.
+ * patents listed at http://www.sun.com/patents and one or more additional
+ * patents or pending patent applications in the U.S. and in other countries.
+ * U.S. Government Rights - Commercial software. Government users are subject
+ * to the Sun Microsystems, Inc. standard license agreement and applicable
+ * provisions of the FAR and its supplements.  Use is subject to license terms.
+ * Sun,  Sun Microsystems,  the Sun logo and  Java are trademarks or registered
+ * trademarks of Sun Microsystems, Inc. in the U.S. and other countries.  This
+ * product is covered and controlled by U.S. Export Control laws and may be
+ * subject to the export or import laws in other countries.  Nuclear, missile,
+ * chemical biological weapons or nuclear maritime end uses or end users,
+ * whether direct or indirect, are strictly prohibited.  Export or reexport
+ * to countries subject to U.S. embargo or to entities identified on U.S.
+ * export exclusion lists, including, but not limited to, the denied persons
+ * and specially designated nationals lists is strictly prohibited.
+ */
+
+
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(parserApariencia)
+
+package Analizadores.Apariencia;
+import AST.Nodo;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+public class parserApariencia 
+{    
+
+    public static Nodo main(String args[]) throws ParseException
+    {
+        if(args.length>0)
+        {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            parserApariencia analizador = new parserApariencia(data);
+            return analizador.Inicio();   
+        }
+        else
+        {
+            try
+            {
+                parserApariencia analizador = new parserApariencia(System.in);
+                analizador.Inicio();
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }              
+        }
+        return null;
+    }
+
+    void errorPanico(int tokenSinc) 
+    { 
+        ParseException e = generateParseException();     
+        Token t; 
+        do 
+        {
+            t = getNextToken();
+        } 
+        while (t.kind != tokenSinc);
+    }
+
+}
+PARSER_END(parserApariencia)
+
+
+/*
+<ESTADO> -- ESTADO es el nombre del estado en el que vamos a declarar las reglas léxicas.
+SKIP: ignora el no terminal
+MORE: encicla en una producción 
+TOKEN: tokens
+TOKEN_ESPCIAL: saber
+*/
+
+
+SKIP:
+{
+    <(" " | "\t" | "\n" | "\r" )+>
+}
+
+TOKEN:
+{
+    <texto:"texto">
+    |<entero:"entero">
+    |<decimal:"decimal">
+    |<rango:"rango">
+    |<condicion:"condicion">
+    |<fecha:"fecha">
+    |<hora:"hora">
+    |<fechahora:"fechahora">
+    |<seleccionaUno:"selecciona_uno">
+    |<seleccionaMultiple:"selecciona_multiple">
+    |<nota:"nota">
+    |<multimedia:"multimedia">
+    |<calcular:"calcular">
+    |<iniciar:"iniciar">
+    |<finalizar:"finalizar">
+    |<agrupacion:"agrupacion">
+    |<ciclo:"ciclo">    
+    |<#digito:["0" - "9"] > 
+    |<estilo:("C"|"c")(<digito>)+>
+    |<#letra:["A"-"Z"]> 
+    |<coma:",">
+    |<punto:".">
+}
+
+SKIP:
+{
+    <(" " | "\t" | "\n" | "\r" )+>
+}
+/*Area de analis sintactico. */
+Nodo Inicio():
+{
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+    (
+    nodo=Tipo()<EOF>
+    {
+        return nodo;
+    }
+    )+
+}
+
+Nodo Tipo():
+{
+    Nodo u = null;
+    Nodo nodo;
+    Token t = null;
+}
+{
+     t=<texto>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<estilo>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<entero>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<decimal>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<rango>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<condicion>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<fecha>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<hora>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<fechahora>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<seleccionaUno>
+    {
+        u = new Nodo("seleccionaUno",t.beginColumn,t.beginLine);
+        //u.add(new Nodo("apariencia",t.image,t.beginColumn,t.beginLine));
+        return u;
+    }
+    |t=<seleccionaMultiple>
+    {
+        u = new Nodo("apariencia",t.beginColumn,t.beginLine);
+        //u.add(new Nodo("apariencia",t.image,t.beginColumn,t.beginLine));
+        return u;
+    }
+    |t=<nota>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+    |t=<multimedia>//u=listaFormatos()
+    {
+        nodo = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        //nodo.add(u);
+        return nodo;
+    }
+    |t=<calcular>
+    {
+        u = new Nodo("apariencia",t.image,t.beginColumn,t.beginLine);
+        return u;
+    }
+|   {u = new Nodo("",0,0);  return u;}
+}

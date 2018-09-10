@@ -238,6 +238,7 @@ public class Interfaz extends javax.swing.JFrame {
                     | Analizadores.Predeterminado.ParseException
                     | Analizadores.Requerido.ParseException
                     | Analizadores.Multimedia.ParseException
+                    | Analizadores.Apariencia.ParseException
                     | Analizadores.Repeticion.ParseException ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
@@ -1124,7 +1125,8 @@ public class Interfaz extends javax.swing.JFrame {
             Analizadores.Requerido.ParseException,
             Analizadores.Predeterminado.ParseException,
             Analizadores.Repeticion.ParseException,
-            Analizadores.Multimedia.ParseException
+            Analizadores.Multimedia.ParseException,
+            Analizadores.Apariencia.ParseException
     {        
         //Inicializamos la raíz del arbol general.
         raizArbol = new Nodo("XLS");
@@ -1404,7 +1406,20 @@ public class Interfaz extends javax.swing.JFrame {
                             {                               
                                 arbolPregunta.add(temporal);
                             }
-                            break;                             
+                            break;  
+                        case "apariencia":
+                            if(!pre.esFinal() && !pre.esIniciar())
+                            {
+                                if(!pre.getApariencia().equals(""))
+                                {                                
+                                    temporal = analizarApariencia(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));   
+                                }
+                            }
+                            if(temporal !=null)
+                            {                               
+                                arbolPregunta.add(temporal);
+                            }
+                            break;                              
                            
                     }                    
                 }
@@ -1585,6 +1600,31 @@ public class Interfaz extends javax.swing.JFrame {
         return null;
     }  
 
+    
+    public Nodo analizarApariencia(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Apariencia.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Apariencia.parserApariencia.main(argumentos);                                                        
+             }
+             catch(Analizadores.Multimedia.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Apariencia.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }     
+        
+    
 
     public Nodo analizarMultimedia(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Multimedia.ParseException
     {        
