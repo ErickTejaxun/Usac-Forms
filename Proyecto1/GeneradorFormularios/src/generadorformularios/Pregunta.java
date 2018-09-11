@@ -363,10 +363,7 @@ public class Pregunta
     }*/
     
     
-    public static void setColumna(String clave, int valor)
-    {
-        posicionesColumnas.put(clave.toLowerCase(), valor);
-    }    
+  
     
     /*public int getColumna(String clave)
     {
@@ -374,6 +371,10 @@ public class Pregunta
         return this.posiciones.get(clave.toLowerCase());        
     }*/
     
+    public static void setColumna(String clave, int valor)
+    {
+        posicionesColumnas.put(clave.toLowerCase(), valor);
+    }  
     
     public static int getColumna(String clave)
     {

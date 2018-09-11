@@ -1,0 +1,102 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(parserOpciones)
+
+package Analizadores.Opciones;
+import AST.Nodo;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+public class parserOpciones 
+{    
+    public static Nodo main(String args[]) throws ParseException
+    {
+        if(args.length>0)
+        {
+
+            InputStream data = new ByteArrayInputStream(args[0].getBytes());
+            parserOpciones analizador = new parserOpciones(data);
+            return analizador.Inicio();   
+        }
+        else
+        {
+            try
+            {
+                parserOpciones analizador = new parserOpciones(System.in);
+                analizador.Inicio();
+            }
+            catch (ParseException e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println("Errores------------------");
+            }              
+        }
+        return null;
+    }
+
+    void errorPanico(int tokenSinc) 
+    { 
+        ParseException e = generateParseException();     
+        Token t; 
+        do 
+        {
+            t = getNextToken();
+        } 
+        while (t.kind != tokenSinc);
+    }
+
+    public void imprimir(String mensaje)
+    {
+        System.out.println(mensaje);
+    }   
+
+}
+PARSER_END(parserOpciones)
+SPECIAL_TOKEN:
+{
+    <ESPACIO:(" " | "\t" | "\n" | "\r" )+>
+}
+
+TOKEN:
+{ 
+    <identificador: (["a"-"z","A"-"Z"]("_")?)(["a"-"z","A"-"Z"]|["0"- "9"]|"_")*> 
+}
+
+
+
+Nodo Inicio() :
+{    
+    Nodo nuevo = new Nodo("opcion","opcion",0,0);
+    Nodo aux = null;
+    Token t1= null;
+    Token t2=null;
+}
+{
+    t1=<identificador>
+    {
+        nuevo.setColumna(t1.beginColumn);
+        nuevo.setLinea(t1.beginLine);
+        nuevo.setValue(t1.image);
+        return nuevo;
+    }
+
+}

@@ -5,6 +5,9 @@
  */
 package generadorformularios;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 /**
  *
  * @author erick
@@ -15,7 +18,9 @@ public class Opcion
     public String nombre = "";
     public String etiqueta = "";
     public String multimedia = "";
-    
+    public int columna = 0;
+    public int fila = 0;
+    public static Hashtable<String, Integer> posicionesColumnas= new Hashtable<String, Integer>();
     public Opcion()
     {
         
@@ -52,7 +57,43 @@ public class Opcion
     public void setMultimedia(String multimedia) {
         this.multimedia = multimedia;
     }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public static Hashtable<String, Integer> getPosicionesColumnas() {
+        return posicionesColumnas;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public static void setPosicionesColumnas(Hashtable<String, Integer> posicionesColumnas) {
+        Opcion.posicionesColumnas = posicionesColumnas;
+    }
     
+    
+    
+    public ArrayList<Error> verificarErrores(int fila)
+    {
+       ArrayList<Error> errores  = new ArrayList();        
+        if(getNombre_lista().equals("")){errores.add(new Error("Esta celda no debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("nombre_lista")), "Sintactico"));}
+        if(getEtiqueta().equals("")){errores.add(new Error("Esta celda no debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("etiqueta")), "Sintactico"));}            
+        if(getNombre().equals("")){errores.add(new Error("Esta celda no debe estar vacía.", 1, 1, fila, Integer.valueOf(getColumna("nombre")), "Sintactico"));}         
+       return errores;
+    }    
+    
+                            
     public void insertarAtributo(String tipo, String valor)
     {
         switch(tipo.toLowerCase())
@@ -84,10 +125,42 @@ public class Opcion
         return data;
     }   
     
+    public static void setColumna(String clave, int valor)
+    {
+        posicionesColumnas.put(clave.toLowerCase(), valor);
+    }  
     
+    public static int getColumna(String clave)
+    {
+        System.out.println("Buscando clave ----------"+clave.toLowerCase());
+        return posicionesColumnas.get(clave.toLowerCase());
+    }    
 
+    public String getAtributo(String atrib)
+    {        
+        switch(atrib.toLowerCase())
+        {
+            case "nombre_lista":
+                return getNombre_lista();                
+            case "nombre":
+                return getNombre();
+            case "etiqueta":
+                return getEtiqueta();
+            case "multimedia":
+                return getMultimedia();
+        }
+        return "";
+    }   
     
     
+    
+    public boolean getVacio()
+    {
+        return  getNombre_lista().equals("") &&
+                getNombre().equals("")&&
+                getMultimedia().equals("")&&
+                getEtiqueta().equals("");                
+    }    
 }
 
 
