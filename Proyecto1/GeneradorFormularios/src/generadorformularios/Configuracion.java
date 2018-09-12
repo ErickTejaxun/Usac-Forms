@@ -5,6 +5,8 @@
  */
 package generadorformularios;
 
+import java.util.Hashtable;
+
 /**
  *
  * @author erick
@@ -17,6 +19,9 @@ public class Configuracion
     public String importar = "";
     public String codigo_principal = "";
     public String codigo_global = "";
+    public static Hashtable<String, Integer> posicionesColumnas= new Hashtable<String, Integer>();    
+    public int fila;
+    
     
     public Configuracion()
     {
@@ -69,7 +74,10 @@ public class Configuracion
     public void setCodigo_global(String codigo_global) {
         this.codigo_global = codigo_global;
     }
-    
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }    
     
     
     public void insertarAtributo(String tipo, String data)
@@ -113,7 +121,48 @@ public class Configuracion
     }
     
     
+    public static void setColumna(String clave, int valor)
+    {
+        posicionesColumnas.put(clave.toLowerCase(), valor);
+    }  
+    
+    public static int getColumna(String clave)
+    {
+        System.out.println("Buscando clave ----------"+clave.toLowerCase());
+        return posicionesColumnas.get(clave.toLowerCase());
+    }   
+    
+    
+    public boolean getVacio()
+    {
+        return  getTitulo_formulario().equals("") &&
+                getIdform().equals("")&&
+                getImportar().equals("")&&
+                getCodigo_global().equals("")&&
+                getCodigo_principal().equals("");                
+    }    
+    
 
+    
+    public String getAtributo(String atrib)
+    {        
+        switch(atrib.toLowerCase())
+        {
+            case "titulo_formulario":
+                return getTitulo_formulario();                
+            case "idform":
+                return getIdform();
+            case "importar":
+                return getImportar();
+            case "codigo_global":
+                return getCodigo_global();
+            case "codigo_principal":
+                return getCodigo_principal();                
+        }
+        return "";
+    }   
+        
+    
 }
 
 

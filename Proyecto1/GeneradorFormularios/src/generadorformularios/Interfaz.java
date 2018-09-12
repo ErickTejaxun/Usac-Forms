@@ -53,10 +53,22 @@ public class Interfaz extends javax.swing.JFrame {
     ArrayList<String> listaEncabezadosOpciones = new ArrayList();
     public ArrayList<Opcion> listaOpciones = new ArrayList();
     
+    
+    //Página Configuracion
+    ArrayList<String> listaEncabezadosConfiguracion = new ArrayList();
+    public ArrayList<Configuracion> listaConfiguraciones = new ArrayList();    
+    
     //Arbol auxiliar de opciones.
     
     public ArrayList<Nodo> listaArbolOpciones = new ArrayList();
     Nodo raizArbolOpciones;
+
+
+    //Arbol auxiliar de configuraciones
+    
+    public ArrayList<Nodo> listaArbolConfiguraciones = new ArrayList();
+    Nodo raizArbolConfiguraciones;
+    
     
     DefaultTableModel filasErrores;
     boolean encuestaFlag = true;    
@@ -246,6 +258,7 @@ public class Interfaz extends javax.swing.JFrame {
             {
                 analizarEncuesta();
                 analizarOpciones();
+                analizarConfiguraciones();
             } 
             catch (
                     Analizadores.Tipo.ParseException 
@@ -261,6 +274,7 @@ public class Interfaz extends javax.swing.JFrame {
                     | Analizadores.Apariencia.ParseException
                     | Analizadores.Repeticion.ParseException 
                     | Analizadores.Opciones.ParseException
+                    | Analizadores.Configuracion.ParseException                            
                 ex) 
             {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
@@ -338,299 +352,6 @@ public class Interfaz extends javax.swing.JFrame {
     // Todos mis metodos engazados.
     
     //Metodo para leer el archivo .xls :v
-    
-    public String leerArchivoXEncuesta(String path) throws FileNotFoundException, IOException
-    {        
-        String cadenaArchivo= "";               
-        try(FileInputStream archivo = new FileInputStream(new File(path)))
-        {
-            //Leer el archivo plano de excel.                        
-            XSSFWorkbook libro = new XSSFWorkbook(archivo);              
-            XSSFSheet hojaActual = libro.getSheet("encuesta");  
-            Iterator<Row> filaIterator = hojaActual.iterator();           
-            Row fila; // Auxiliar para cada fila.
-            int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna 
-            int columna = 0;
-            int fil = 0;
-            Pregunta nuevaPregunta = null;            
-            while(filaIterator.hasNext())
-            {
-                fila = filaIterator.next();
-                //Ahora obtenemos las celdas de la fila.
-                Iterator<Cell> celdaIterator = fila.cellIterator();
-                Cell celda;
-                //Obtenemos cada celda
-                if(fila.getPhysicalNumberOfCells()>0)
-                {
-                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
-                    nuevaPregunta = new Pregunta();
-                    while(celdaIterator.hasNext())
-                    {
-                        //Obtenemos el contenido de la celda.
-                        celda = celdaIterator.next();                   
-                        if(filaContador == 0)
-                        {     
-                            registrarEncabezadosEncuesta(celda.toString(), celda.getColumnIndex());                            
-                        }
-                        else                   
-                        {
-                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            String valor = celda.toString(); 
-                            columna = celda.getColumnIndex();
-                            fil = celda.getRowIndex();
-                            String encabezado = listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase();
-                            switch(encabezado)
-                            {
-                                case "tipo":
-                                    nuevaPregunta.setTipo(valor);
-                                    nuevaPregunta.setColumna("tipo", columna);
-                                    break;
-                                case "idpregunta":
-                                    nuevaPregunta.setIdPregunta(valor);
-                                    nuevaPregunta.setColumna("idpregunta", columna);
-                                    break;               
-                                case "etiqueta":                                    
-                                    nuevaPregunta.setEtiqueta(valor);
-                                    nuevaPregunta.setColumna("etiqueta", columna);
-                                    break;
-                                case "parametro":
-                                    nuevaPregunta.setParametro(valor);
-                                    nuevaPregunta.setColumna("parametro", columna);
-                                    break;
-                                case "calculo":
-                                    nuevaPregunta.setCalculo(valor);
-                                    nuevaPregunta.setColumna("calculo", columna);
-                                    break;
-                                case "aplicable":
-                                    nuevaPregunta.setAplicable(valor);
-                                    nuevaPregunta.setColumna("aplicable", columna);
-                                    break;
-                                case "sugerir":
-                                    nuevaPregunta.setSugerir(valor);
-                                    nuevaPregunta.setColumna("sugerir", columna);
-                                    break;
-                                case "restringir":
-                                    nuevaPregunta.setRestringir(valor);
-                                    nuevaPregunta.setColumna("restringir", columna);
-                                    break;                
-                                case "restringirmsn":
-                                    nuevaPregunta.setRestringirmsn(valor);
-                                    nuevaPregunta.setColumna("restringirmsn", columna);
-                                    break;
-                                case "requeridomsn":
-                                    nuevaPregunta.setRequeridoMsn(valor);
-                                    nuevaPregunta.setColumna("requeridomsn", columna);
-                                    break;
-                                case "requerido":
-                                    nuevaPregunta.setRequerido(valor);
-                                    nuevaPregunta.setColumna("requerido", columna);
-                                    break;
-                                case "predeterminado":
-                                    nuevaPregunta.setPredeterminado(valor);
-                                    nuevaPregunta.setColumna("predeterminado", columna);
-                                    break;
-                                case "lectura":
-                                    nuevaPregunta.setLectura(valor);
-                                    nuevaPregunta.setColumna("lectura", columna);
-                                    break;
-                                case "repeticion":
-                                    nuevaPregunta.setRepeticion(valor);
-                                    nuevaPregunta.setColumna("repeticion", columna);
-                                    break;
-                                case "apariencia":
-                                    nuevaPregunta.setApariencia(valor);
-                                    nuevaPregunta.setColumna("apariencia", columna);
-                                    break;
-                                case "codigo_pre":
-                                    nuevaPregunta.setCodigo_pre(valor);
-                                    nuevaPregunta.setColumna("codigo_pre", columna);
-                                    break;
-                                case "codigo_post":
-                                    nuevaPregunta.setCodigo_post(valor);
-                                    nuevaPregunta.setColumna("codigo_post", columna);
-                                    break;
-                                case "fichero":
-                                    nuevaPregunta.setMultimedia(valor);
-                                    nuevaPregunta.setColumna("fichero", columna);
-                                    break;
-                                    
-                            }                            
-                            /*Verificamos que estén las obligatorias.*/                             
-                            colContador ++ ;
-                            if(colContador>= listaEncabezadosPreguntas.size())
-                            { 
-                                colContador =0 ;
-                            }                        
-                        }
-                    }                   
-                    if(filaContador>0)
-                    {
-                        nuevaPregunta.setFila(filaContador);
-                        listaPreguntas.add(nuevaPregunta);
-                    }
-                    ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(fil);
-                    listaTemporal.forEach((err) -> 
-                    {
-                        listaErrores.add(err);
-                    });                     
-                    filaContador = filaContador + 1;                
-                }    
-                
-               
-            }             
-            /*Recorremos el array list*/               
-            cadenaArchivo+= "<encuesta>\n";
-            for(Pregunta preg: listaPreguntas)
-            {
-                cadenaArchivo+=preg.getData();
-            }
-            cadenaArchivo+= "</encuesta>\n";            
-        }
-        catch(Exception error)
-        {
-            if(error instanceof java.lang.NullPointerException)
-            {
-                //Mensaje(error.getMessage(), "Error");
-                //encuestaFlag = false;
-                //registrarError("Hoja Encuesta no encontrada", 0, 0,0, 0, "Sintactico"); 
-            }
-            
-        }                                        
-        return cadenaArchivo;
-    }
-    
-    public String leerArchivoXOpcion(String path) throws FileNotFoundException, IOException
-    {
-        ArrayList<String> encabezados = new ArrayList();
-        String cadenaArchivo= "";               
-        try(FileInputStream archivo = new FileInputStream(new File(path)))
-        {
-            //Leer el archivo plano de excel.                        
-            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
-            XSSFSheet hojaActual = libro.getSheet("opciones");                                    
-            Iterator<Row> filaIterator = hojaActual.iterator();           
-            Row fila; // Auxiliar para cada fila.
-            int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                        
-            ArrayList<Opcion> listaOpciones = new ArrayList();            
-            Opcion nuevaOpcion = null;                                                           
-            while(filaIterator.hasNext())
-            {
-                fila = filaIterator.next();                
-                //Ahora obtenemos las celdas de la fila.
-                Iterator<Cell> celdaIterator = fila.cellIterator();
-                Cell celda;
-                //Obtenemos cada celda
-                if(fila.getPhysicalNumberOfCells()>0)
-                {
-                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
-                    nuevaOpcion = new Opcion();
-                    while(celdaIterator.hasNext())
-                    {
-                        //Obtenemos el contenido de la celda.
-                        celda = celdaIterator.next();                   
-                        if(filaContador == 0)
-                        {
-                            encabezados.add(celda.toString());
-                        }
-                        else                   
-                        {
-                            nuevaOpcion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            colContador ++ ;
-                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
-                        }
-                    }                    
-                    if(filaContador>0){listaOpciones.add(nuevaOpcion);}
-                    filaContador ++;                
-                }                
-            }             
-            /*Recorremos el array list*/               
-            cadenaArchivo+= "<opciones>\n";
-            for(Opcion opc: listaOpciones)
-            {
-                cadenaArchivo+=opc.getData();
-            }
-            cadenaArchivo+= "</opciones>\n";            
-        }
-        catch(Exception error)
-        {
-            Mensaje(error.getMessage(), "Error");
-        }                                        
-        return cadenaArchivo;
-    }    
-    
-    public String leerArchivoXConfiguracion(String path) throws FileNotFoundException, IOException
-    {
-        ArrayList<String> encabezados = new ArrayList();
-        String cadenaArchivo= "";     
-        ArrayList<Configuracion> listaConfiguraciones = new ArrayList();            
-        Configuracion nuevaConfiguracion = null;           
-        try(FileInputStream archivo = new FileInputStream(new File(path)))
-        {
-            //Leer el archivo plano de excel.                        
-            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
-            XSSFSheet hojaActual = libro.getSheet("configuracion");                                    
-            Iterator<Row> filaIterator = hojaActual.iterator();           
-            Row fila; // Auxiliar para cada fila.
-            int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                        
-         
-            
-            while(filaIterator.hasNext())
-            {
-                fila = filaIterator.next();                
-                //Ahora obtenemos las celdas de la fila.
-                Iterator<Cell> celdaIterator = fila.cellIterator();
-                Cell celda;
-                //Obtenemos cada celda
-                if(fila.getPhysicalNumberOfCells()>0)
-                {
-                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
-                    nuevaConfiguracion = new Configuracion();
-                    while(celdaIterator.hasNext())
-                    {
-                        //Obtenemos el contenido de la celda.
-                        celda = celdaIterator.next();                   
-                        if(filaContador == 0)
-                        {
-                            encabezados.add(celda.toString());
-                        }
-                        else                   
-                        {
-                            nuevaConfiguracion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
-                            colContador ++ ;
-                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
-                        }
-                    }                    
-                    if(filaContador>0){listaConfiguraciones.add(nuevaConfiguracion);}
-                    filaContador ++;                
-                }                
-            }             
-            /*Recorremos el array list*/               
-            cadenaArchivo+= "<Configuraciones>\n";
-            for(Configuracion conf: listaConfiguraciones)
-            {
-                cadenaArchivo+=conf.getData();
-            }
-            cadenaArchivo+= "</Configuraciones>\n";            
-        }
-        catch(Exception error)
-        {
-            //Mensaje(error.getMessage(), "Error");
-            /*Recorremos el array list*/               
-            cadenaArchivo+= "<Configuraciones>\n";
-            for(Configuracion conf: listaConfiguraciones)
-            {
-                cadenaArchivo+=conf.getData();
-            }
-            cadenaArchivo+= "</Configuraciones>\n";             
-            
-        }                                        
-        return cadenaArchivo;
-    }       
-    
-    
     
     public String leerArchivoEncuesta(String path) throws FileNotFoundException, IOException
     {        
@@ -944,26 +665,30 @@ public class Interfaz extends javax.swing.JFrame {
         return cadenaArchivo;
     }
 
+    
     public String leerArchivoConfiguracion(String path) throws FileNotFoundException, IOException
-    {
-        ArrayList<String> encabezados = new ArrayList();
-        String cadenaArchivo= "";     
-        ArrayList<Configuracion> listaConfiguraciones = new ArrayList();            
-        Configuracion nuevaConfiguracion = null;           
+    {        
+        String cadenaArchivo= "";               
         try(FileInputStream archivo = new FileInputStream(new File(path)))
         {
             //Leer el archivo plano de excel.                        
             HSSFWorkbook libro = new HSSFWorkbook(archivo);                                                                      
-            HSSFSheet hojaActual = libro.getSheet("configuracion");                                    
+            HSSFSheet hojaActual = libro.getSheet("configuracion");             
             Iterator<Row> filaIterator = hojaActual.iterator();           
             Row fila; // Auxiliar para cada fila.
             int filaContador = 0;    // Contador de la fila                
-            int colContador = 0;     // Contador de columna                        
+            int colContador = 0;     // Contador de columna 
+            int columna = 0;
+            int fil = 0;
+            Configuracion nuevaConfiguracion = null; 
 
+            int totalFilas = hojaActual.getLastRowNum();
+            int totalCeldas = 0;
 
             while(filaIterator.hasNext())
-            {
-                fila = filaIterator.next();                
+            {                
+                fila = filaIterator.next();
+                //Mensaje("Mensaje",fila.getCell(0).toString());
                 //Ahora obtenemos las celdas de la fila.
                 Iterator<Cell> celdaIterator = fila.cellIterator();
                 Cell celda;
@@ -977,42 +702,558 @@ public class Interfaz extends javax.swing.JFrame {
                         //Obtenemos el contenido de la celda.
                         celda = celdaIterator.next();                   
                         if(filaContador == 0)
-                        {
-                            encabezados.add(celda.toString());
+                        {     
+                            registrarEncabezadosConfiguracion(celda.toString(), celda.getColumnIndex());                            
                         }
                         else                   
                         {
-                            nuevaConfiguracion.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString().trim();
+
+                            /*celda.getCellType()
+                            celda.toString().trim();*/
+
+
+                            switch (celda.getCellType()) 
+                            {
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    valor = String.valueOf(celda.getNumericCellValue());
+                                    //System.out.println(celda.getNumericCellValue() + "(Integer)\t");
+                                    break;
+                                case Cell.CELL_TYPE_STRING:
+                                    //System.out.println(celda.getStringCellValue() + "(String)\t");
+                                    valor = String.valueOf(celda.getStringCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    //System.out.println(celda.getBooleanCellValue()+ "(Booleano)\t");
+                                    if(celda.getBooleanCellValue())
+                                    {
+                                        valor = "verdadero";
+                                    }
+                                    else
+                                    {
+                                        valor = "falso";
+                                    }
+                                    break;
+                            }                                                                                                                
+                            columna = celda.getColumnIndex();
+                            fil = celda.getRowIndex();
+                            String encabezado = listaEncabezadosConfiguracion.get(celda.getColumnIndex()).toLowerCase();
+                            switch(encabezado)
+                            {
+                                case "titulo_formulario":
+                                    nuevaConfiguracion.setTitulo_formulario(valor);
+                                    //Pregunta.setColumna("tipo", columna);
+                                    break;
+                                case "idform":
+                                    nuevaConfiguracion.setIdform(valor);
+                                    //Pregunta.setColumna("idpregunta", columna);
+                                    break;               
+                                case "estilo":                                    
+                                    nuevaConfiguracion.setEstilo(valor);
+                                    //Pregunta.setColumna("etiqueta", columna);
+                                    break;
+                                case "importar":
+                                    nuevaConfiguracion.setImportar(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                                case "codigo_principal":
+                                    nuevaConfiguracion.setCodigo_principal(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                                case "codigo_global":
+                                    nuevaConfiguracion.setCodigo_global(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;                                    
+                            }                            
+                            /*Verificamos que estén las obligatorias.*/                             
                             colContador ++ ;
-                            if(colContador>= encabezados.size()){ colContador =0 ;}                        
+                            if(colContador>= listaEncabezadosOpciones.size())
+                            { 
+                                colContador =0 ;
+                            }                        
                         }
-                    }                    
-                    if(filaContador>0){listaConfiguraciones.add(nuevaConfiguracion);}
-                    filaContador ++;                
-                }                
+                    }                   
+                    if(filaContador>0)
+                    {
+                        nuevaConfiguracion.setFila(filaContador);
+                        listaConfiguraciones.add(nuevaConfiguracion);
+                        /*ArrayList<Error> listaTemporal = nuevaConfiguracion.verificarErrores(fil);
+                        listaTemporal.forEach((err) -> 
+                        {
+                            listaErrores.add(err);
+                        });*/                            
+                    }
+                    filaContador = filaContador + 1;                
+                }    
             }             
             /*Recorremos el array list*/               
-            cadenaArchivo+= "<Configuraciones>\n";
+            cadenaArchivo+= "<opciones>\n";
             for(Configuracion conf: listaConfiguraciones)
             {
                 cadenaArchivo+=conf.getData();
             }
-            cadenaArchivo+= "</Configuraciones>\n";            
+            cadenaArchivo+= "</opciones>\n";            
         }
         catch(Exception error)
         {
-            //Mensaje(error.getMessage(), "Error");
+            Mensaje(error.getMessage()+ path + " Opciones", "Error");
+        }                                        
+        return cadenaArchivo;
+    }    
+    
+    
+    public String leerArchivoXEncuesta(String path) throws FileNotFoundException, IOException
+    {        
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("encuesta");             
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna 
+            int columna = 0;
+            int fil = 0;
+            Pregunta nuevaPregunta = null; 
+
+            int totalFilas = hojaActual.getLastRowNum();
+            int totalCeldas = 0;
+
+            while(filaIterator.hasNext())
+            {                
+                fila = filaIterator.next();
+                //Mensaje("Mensaje",fila.getCell(0).toString());
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaPregunta = new Pregunta();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {     
+                            registrarEncabezadosEncuesta(celda.toString(), celda.getColumnIndex());                            
+                        }
+                        else                   
+                        {
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString().trim();
+
+                            /*celda.getCellType()
+                            celda.toString().trim();*/
+
+
+                            switch (celda.getCellType()) 
+                            {
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    valor = String.valueOf(celda.getNumericCellValue());
+                                    //System.out.println(celda.getNumericCellValue() + "(Integer)\t");
+                                    break;
+                                case Cell.CELL_TYPE_STRING:
+                                    //System.out.println(celda.getStringCellValue() + "(String)\t");
+                                    valor = String.valueOf(celda.getStringCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    //System.out.println(celda.getBooleanCellValue()+ "(Booleano)\t");
+                                    if(celda.getBooleanCellValue())
+                                    {
+                                        valor = "verdadero";
+                                    }
+                                    else
+                                    {
+                                        valor = "falso";
+                                    }
+                                    break;
+                            }                                                                                                                
+                            columna = celda.getColumnIndex();
+                            fil = celda.getRowIndex();
+                            String encabezado = listaEncabezadosPreguntas.get(celda.getColumnIndex()).toLowerCase();
+                            switch(encabezado)
+                            {
+                                case "tipo":
+                                    nuevaPregunta.setTipo(valor);
+                                    //Pregunta.setColumna("tipo", columna);
+                                    break;
+                                case "idpregunta":
+                                    nuevaPregunta.setIdPregunta(valor);
+                                    //Pregunta.setColumna("idpregunta", columna);
+                                    break;               
+                                case "etiqueta":                                    
+                                    nuevaPregunta.setEtiqueta(valor);
+                                    //Pregunta.setColumna("etiqueta", columna);
+                                    break;
+                                case "parametro":
+                                    nuevaPregunta.setParametro(valor);
+                                    //nuevaPregunta.setColumna("parametro", columna);
+                                    break;
+                                case "calculo":
+                                    nuevaPregunta.setCalculo(valor);
+                                    //Pregunta.setColumna("calculo", columna);
+                                    break;
+                                case "aplicable":
+                                    nuevaPregunta.setAplicable(valor);
+                                    //Pregunta.setColumna("aplicable", columna);
+                                    break;
+                                case "sugerir":
+                                    nuevaPregunta.setSugerir(valor);
+                                    //Pregunta.setColumna("sugerir", columna);
+                                    break;
+                                case "restringir":
+                                    nuevaPregunta.setRestringir(valor);
+                                    //Pregunta.setColumna("restringir", columna);
+                                    break;                
+                                case "restringirmsn":
+                                    nuevaPregunta.setRestringirmsn(valor);
+                                    //Pregunta.setColumna("restringirmsn", columna);
+                                    break;
+                                case "requeridomsn":
+                                    nuevaPregunta.setRequeridoMsn(valor);
+                                    //Pregunta.setColumna("requeridomsn", columna);
+                                    break;
+                                case "requerido":
+                                    nuevaPregunta.setRequerido(valor);
+                                    //Pregunta.setColumna("requerido", columna);
+                                    break;
+                                case "predeterminado":
+                                    nuevaPregunta.setPredeterminado(valor);
+                                    //nuevaPregunta.setColumna("predeterminado", columna);
+                                    break;
+                                case "lectura":
+                                    nuevaPregunta.setLectura(valor);
+                                    //nuevaPregunta.setColumna("lectura", columna);
+                                    break;
+                                case "repeticion":
+                                    nuevaPregunta.setRepeticion(valor);
+                                    //nuevaPregunta.setColumna("repeticion", columna);
+                                    break;
+                                case "apariencia":
+                                    nuevaPregunta.setApariencia(valor);
+                                    //nuevaPregunta.setColumna("apariencia", columna);
+                                    break;
+                                case "codigo_pre":
+                                    nuevaPregunta.setCodigo_pre(valor);
+                                    //nuevaPregunta.setColumna("codigo_pre", columna);
+                                    break;
+                                case "codigo_post":
+                                    nuevaPregunta.setCodigo_post(valor);
+                                    //nuevaPregunta.setColumna("codigo_post", columna);
+                                    break;
+                                case "multimedia":
+                                    nuevaPregunta.setMultimedia(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                            }                            
+                            /*Verificamos que estén las obligatorias.*/                             
+                            colContador ++ ;
+                            if(colContador>= listaEncabezadosPreguntas.size())
+                            { 
+                                colContador =0 ;
+                            }                        
+                        }
+                    }                   
+                    if(filaContador>0)
+                    {
+                        nuevaPregunta.setFila(filaContador);
+                        listaPreguntas.add(nuevaPregunta);
+                    }
+                    ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(fil);
+                    listaTemporal.forEach((err) -> 
+                    {
+                        listaErrores.add(err);
+                    });                     
+                    filaContador = filaContador + 1;                
+                }    
+            }             
             /*Recorremos el array list*/               
-            cadenaArchivo+= "<Configuraciones>\n";
+            cadenaArchivo+= "<encuesta>\n";
+            for(Pregunta preg: listaPreguntas)
+            {
+                cadenaArchivo+=preg.getData();
+            }
+            cadenaArchivo+= "</encuesta>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage(), "Error");
+        }                                        
+        return cadenaArchivo;
+    }
+
+    public String leerArchivoXOpcion(String path) throws FileNotFoundException, IOException
+    {        
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("opciones");             
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna 
+            int columna = 0;
+            int fil = 0;
+            Opcion nuevaOpcion = null; 
+
+            int totalFilas = hojaActual.getLastRowNum();
+            int totalCeldas = 0;
+
+            while(filaIterator.hasNext())
+            {                
+                fila = filaIterator.next();
+                //Mensaje("Mensaje",fila.getCell(0).toString());
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaOpcion = new Opcion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {     
+                            registrarEncabezadosOpciones(celda.toString(), celda.getColumnIndex());                            
+                        }
+                        else                   
+                        {
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString().trim();
+
+                            /*celda.getCellType()
+                            celda.toString().trim();*/
+
+
+                            switch (celda.getCellType()) 
+                            {
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    valor = String.valueOf(celda.getNumericCellValue());
+                                    //System.out.println(celda.getNumericCellValue() + "(Integer)\t");
+                                    break;
+                                case Cell.CELL_TYPE_STRING:
+                                    //System.out.println(celda.getStringCellValue() + "(String)\t");
+                                    valor = String.valueOf(celda.getStringCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    //System.out.println(celda.getBooleanCellValue()+ "(Booleano)\t");
+                                    if(celda.getBooleanCellValue())
+                                    {
+                                        valor = "verdadero";
+                                    }
+                                    else
+                                    {
+                                        valor = "falso";
+                                    }
+                                    break;
+                            }                                                                                                                
+                            columna = celda.getColumnIndex();
+                            fil = celda.getRowIndex();
+                            String encabezado = listaEncabezadosOpciones.get(celda.getColumnIndex()).toLowerCase();
+                            switch(encabezado)
+                            {
+                                case "nombre_lista":
+                                    nuevaOpcion.setNombre_lista(valor);
+                                    //Pregunta.setColumna("tipo", columna);
+                                    break;
+                                case "nombre":
+                                    nuevaOpcion.setNombre(valor);
+                                    //Pregunta.setColumna("idpregunta", columna);
+                                    break;               
+                                case "etiqueta":                                    
+                                    nuevaOpcion.setEtiqueta(valor);
+                                    //Pregunta.setColumna("etiqueta", columna);
+                                    break;
+                                case "multimedia":
+                                    nuevaOpcion.setMultimedia(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                            }                            
+                            /*Verificamos que estén las obligatorias.*/                             
+                            colContador ++ ;
+                            if(colContador>= listaEncabezadosOpciones.size())
+                            { 
+                                colContador =0 ;
+                            }                        
+                        }
+                    }                   
+                    if(filaContador>0)
+                    {
+                        nuevaOpcion.setFila(filaContador);
+                        listaOpciones.add(nuevaOpcion);
+                        ArrayList<Error> listaTemporal = nuevaOpcion.verificarErrores(fil);
+                        listaTemporal.forEach((err) -> 
+                        {
+                            listaErrores.add(err);
+                        });                            
+                    }
+                    filaContador = filaContador + 1;                
+                }    
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<opciones>\n";
+            for(Opcion opc: listaOpciones)
+            {
+                cadenaArchivo+=opc.getData();
+            }
+            cadenaArchivo+= "</opciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage()+ path + " Opciones", "Error");
+        }                                        
+        return cadenaArchivo;
+    }
+
+    
+    public String leerArchivoXConfiguracion(String path) throws FileNotFoundException, IOException
+    {        
+        String cadenaArchivo= "";               
+        try(FileInputStream archivo = new FileInputStream(new File(path)))
+        {
+            //Leer el archivo plano de excel.                        
+            XSSFWorkbook libro = new XSSFWorkbook(archivo);                                                                      
+            XSSFSheet hojaActual = libro.getSheet("configuracion");             
+            Iterator<Row> filaIterator = hojaActual.iterator();           
+            Row fila; // Auxiliar para cada fila.
+            int filaContador = 0;    // Contador de la fila                
+            int colContador = 0;     // Contador de columna 
+            int columna = 0;
+            int fil = 0;
+            Configuracion nuevaConfiguracion = null; 
+
+            int totalFilas = hojaActual.getLastRowNum();
+            int totalCeldas = 0;
+
+            while(filaIterator.hasNext())
+            {                
+                fila = filaIterator.next();
+                //Mensaje("Mensaje",fila.getCell(0).toString());
+                //Ahora obtenemos las celdas de la fila.
+                Iterator<Cell> celdaIterator = fila.cellIterator();
+                Cell celda;
+                //Obtenemos cada celda
+                if(fila.getPhysicalNumberOfCells()>0)
+                {
+                    //if(filaContador>0){cadenaArchivo +=  "<fila>\n";}   
+                    nuevaConfiguracion = new Configuracion();
+                    while(celdaIterator.hasNext())
+                    {
+                        //Obtenemos el contenido de la celda.
+                        celda = celdaIterator.next();                   
+                        if(filaContador == 0)
+                        {     
+                            registrarEncabezadosConfiguracion(celda.toString(), celda.getColumnIndex());                            
+                        }
+                        else                   
+                        {
+                            //nuevaPregunta.insertarAtributo(encabezados.get(celda.getColumnIndex()), celda.toString());
+                            String valor = celda.toString().trim();
+
+                            /*celda.getCellType()
+                            celda.toString().trim();*/
+
+
+                            switch (celda.getCellType()) 
+                            {
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    valor = String.valueOf(celda.getNumericCellValue());
+                                    //System.out.println(celda.getNumericCellValue() + "(Integer)\t");
+                                    break;
+                                case Cell.CELL_TYPE_STRING:
+                                    //System.out.println(celda.getStringCellValue() + "(String)\t");
+                                    valor = String.valueOf(celda.getStringCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    //System.out.println(celda.getBooleanCellValue()+ "(Booleano)\t");
+                                    if(celda.getBooleanCellValue())
+                                    {
+                                        valor = "verdadero";
+                                    }
+                                    else
+                                    {
+                                        valor = "falso";
+                                    }
+                                    break;
+                            }                                                                                                                
+                            columna = celda.getColumnIndex();
+                            fil = celda.getRowIndex();
+                            String encabezado = listaEncabezadosConfiguracion.get(celda.getColumnIndex()).toLowerCase();
+                            switch(encabezado)
+                            {
+                                case "titulo_formulario":
+                                    nuevaConfiguracion.setTitulo_formulario(valor);
+                                    //Pregunta.setColumna("tipo", columna);
+                                    break;
+                                case "idform":
+                                    nuevaConfiguracion.setIdform(valor);
+                                    //Pregunta.setColumna("idpregunta", columna);
+                                    break;               
+                                case "estilo":                                    
+                                    nuevaConfiguracion.setEstilo(valor);
+                                    //Pregunta.setColumna("etiqueta", columna);
+                                    break;
+                                case "importar":
+                                    nuevaConfiguracion.setImportar(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                                case "codigo_principal":
+                                    nuevaConfiguracion.setCodigo_principal(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;
+                                case "codigo_global":
+                                    nuevaConfiguracion.setCodigo_global(valor);
+                                    //nuevaPregunta.setColumna("fichero", columna);
+                                    break;                                    
+                            }                            
+                            /*Verificamos que estén las obligatorias.*/                             
+                            colContador ++ ;
+                            if(colContador>= listaEncabezadosOpciones.size())
+                            { 
+                                colContador =0 ;
+                            }                        
+                        }
+                    }                   
+                    if(filaContador>0)
+                    {
+                        nuevaConfiguracion.setFila(filaContador);
+                        listaConfiguraciones.add(nuevaConfiguracion);
+                        /*ArrayList<Error> listaTemporal = nuevaConfiguracion.verificarErrores(fil);
+                        listaTemporal.forEach((err) -> 
+                        {
+                            listaErrores.add(err);
+                        });*/                            
+                    }
+                    filaContador = filaContador + 1;                
+                }    
+            }             
+            /*Recorremos el array list*/               
+            cadenaArchivo+= "<opciones>\n";
             for(Configuracion conf: listaConfiguraciones)
             {
                 cadenaArchivo+=conf.getData();
             }
-            cadenaArchivo+= "</Configuraciones>\n";             
-
+            cadenaArchivo+= "</opciones>\n";            
+        }
+        catch(Exception error)
+        {
+            Mensaje(error.getMessage()+ path + " Opciones", "Error");
         }                                        
         return cadenaArchivo;
-    }                   
+    }         
+    
+    
+    
     public void Mensaje(String mensaje, String titulo)
     {
         JOptionPane.showMessageDialog(this, mensaje, titulo, HEIGHT);
@@ -1135,9 +1376,9 @@ public class Interfaz extends javax.swing.JFrame {
                 filasErrores.addRow(new Object[]
                 {
                     this.getArchivoActual(), 
-                    listaErrores.get(x).getFila(),
+                    listaErrores.get(x).getFila() ,
                     listaErrores.get(x).getColumna(),
-                    listaErrores.get(x).getRow(),
+                    listaErrores.get(x).getRow()+ 1,
                     listaErrores.get(x).getColumn(),
                     listaErrores.get(x).getDetalle(),
                     listaErrores.get(x).getTipo()
@@ -1217,6 +1458,29 @@ public class Interfaz extends javax.swing.JFrame {
            listaEncabezadosOpciones.add(valor.toLowerCase());
         }    
     }    
+    
+    public void registrarEncabezadosConfiguracion(String valor, int columna)
+    {        
+        valor = valor.trim();
+        if(
+          valor.toLowerCase().equals("titulo_formulario") ||
+          valor.toLowerCase().equals("idform") ||                
+          valor.toLowerCase().equals("estilo") ||                                   
+          valor.toLowerCase().equals("codigo_principal") ||                                   
+          valor.toLowerCase().equals("codigo_global") ||                                                   
+          valor.toLowerCase().equals("importar")                  
+          )
+        {
+             listaEncabezadosConfiguracion.add(valor.toLowerCase()); 
+             Configuracion.setColumna(valor.toLowerCase(), columna );
+        }
+        else
+        {
+           registrarError("Celda '"+valor+"' no válida.", 0, 0,1, columna, "Sintactico");   
+           listaEncabezadosConfiguracion.add(valor.toLowerCase());
+        }    
+    }       
+    
     
     public void analizarEncuesta() 
             throws IOException,
@@ -1624,6 +1888,104 @@ public class Interfaz extends javax.swing.JFrame {
         printer.grafo(raizArbolOpciones);
     }
         
+    
+    
+    public void analizarConfiguraciones() 
+            throws IOException, 
+            Analizadores.Configuracion.ParseException
+    {        
+        //Inicializamos la raíz del arbol general.
+        //listaArbolOpciones.add(null);
+        raizArbolConfiguraciones = new Nodo("Configuraciones");
+        dibujador printer = new dibujador();
+        String[] argumentos = new String[3]; //Argumentos        
+        int fila = 1;              
+        String[] encabezados = listaEncabezadosConfiguracion.toArray(new String[0]);        
+        
+        for(Configuracion conf : listaConfiguraciones)
+        {
+            Nodo arbolOpciones  = new Nodo("Configuraciones");              
+            Nodo nuevaConfiguracion = new Nodo("opcion");
+            
+            Nodo temporal = null;
+            for(String parametro : encabezados)
+            {
+                if(!conf.getVacio()) // Verificamos que no mandemos una celda vacía.
+                {
+                    argumentos[0] =  parametro+"\n"+conf.getAtributo(parametro);                                                                                  
+                    
+                    switch(parametro.toLowerCase())
+                    {                       
+                        case "titulo_formulario":  
+                            if(!conf.getTitulo_formulario().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            }                            
+                            if(temporal!=null)
+                            {   
+                                nuevaConfiguracion.add(temporal);
+                            }
+                            break;
+                        case "idform":  
+                            if(!conf.getIdform().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            }  
+                            if(temporal!=null)
+                            {
+                                nuevaConfiguracion.add(temporal);
+                            }
+                            break;
+                        case "importar":
+                            if(!conf.getImportar().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            } 
+                            if(temporal!=null)
+                            {
+                                nuevaConfiguracion.add(temporal);                                                        
+                            }                            
+                            break;    
+                        case "codigo_global":
+                            if(!conf.getCodigo_global().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            } 
+                            if(temporal!=null)
+                            {
+                                nuevaConfiguracion.add(temporal);                                                        
+                            }                           
+                            break;  
+                        case "codigo_principal":
+                            if(!conf.getCodigo_principal().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            } 
+                            if(temporal!=null)
+                            {
+                                nuevaConfiguracion.add(temporal);                                                        
+                            }                            
+                            break;  
+                        case "estilo":
+                            if(!conf.getEstilo().equals(""))
+                            {
+                                temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                            } 
+                            if(temporal!=null)
+                            {
+                                nuevaConfiguracion.add(temporal);                                                        
+                            }                            
+                            break;                            
+                    }                    
+                }                
+                temporal = null;
+            }            
+            agregarArbolConfiguraciones(nuevaConfiguracion);           
+            fila++;
+        }        
+        printer.grafo(raizArbolConfiguraciones);
+    }
+            
     public void agregarArbolOpciones(Nodo nuevaLista)
     {
         boolean flagEncontrado = false;
@@ -1642,6 +2004,26 @@ public class Interfaz extends javax.swing.JFrame {
         
     }
     
+    
+    
+    public void agregarArbolConfiguraciones(Nodo nuevaLista)
+    {
+        raizArbolConfiguraciones.add(nuevaLista);
+//        boolean flagEncontrado = false;
+//        for(Nodo lista : raizArbolConfiguraciones.getHijos())
+//        {
+//            if(lista.getValue().equals(nuevaLista.getValue()))
+//            {
+//                lista.add(nuevaLista.getHijos().get(0));                
+//                flagEncontrado = true;
+//            }            
+//        }
+//        if(!flagEncontrado)
+//        {
+//            raizArbolConfiguraciones.add(nuevaLista);
+//        }
+        
+    }    
     
     public Nodo analizarTipo(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Tipo.ParseException
     {        
@@ -1877,6 +2259,29 @@ public class Interfaz extends javax.swing.JFrame {
         
         return null;
     }     
+    
+    public Nodo analizarConfiguracion(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Configuracion.ParseException
+    {        
+        try
+         {
+             try
+             {                                                  
+                 return Analizadores.Configuracion.parserConfiguracion.main(argumentos);                                                        
+             }
+             catch(Analizadores.Configuracion.TokenMgrError te)
+             {   
+                 //archivoActual, fila, fila
+                 registrarError(te.getMessage(), fila, columna, filaE, celda, "Lexico");                                                 
+             }
+         }
+         catch (Analizadores.Configuracion.ParseException e)
+         {
+             registrarError(e.getMessage(), e.currentToken.beginLine, e.currentToken.beginColumn,fila, celda,"Sintactico");
+         }        
+        
+        
+        return null;
+    }        
     
     public Nodo analizarSugerir(String[] argumentos, int fila, int columna, int filaE, int celda) throws Analizadores.Sugerir.ParseException
     {        
