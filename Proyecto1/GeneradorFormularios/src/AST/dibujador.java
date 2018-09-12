@@ -21,17 +21,17 @@ public class dibujador
     {
     }
     
-    public void grafo(Nodo raiz) throws IOException
+    public void grafo(Nodo raiz, String nombre) throws IOException
     {
-        if(raiz!=null){generarGrafica(raiz);}
+        if(raiz!=null){generarGrafica(raiz, nombre);}
     }
-    public void generarGrafica(Nodo raiz) throws IOException 
+    public void generarGrafica(Nodo raiz, String nombre) throws IOException 
     {
         
 
         String dotPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";        
-        String direccionSalida = PathActual()+"\\ast.jpg";
-        String direccionEntrada = PathActual()+"\\ast.txt";
+        String direccionSalida = PathActual()+"\\ast\\"+nombre+".jpg";
+        String direccionEntrada = PathActual()+"\\ast\\"+nombre+".txt";
         
         String cadena = "digraph G\n" +
                         "{\n" +

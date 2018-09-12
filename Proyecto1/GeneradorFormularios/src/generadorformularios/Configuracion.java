@@ -154,6 +154,8 @@ public class Configuracion
                 return getIdform();
             case "importar":
                 return getImportar();
+            case "estilo":
+                return getEstilo();                
             case "codigo_global":
                 return getCodigo_global();
             case "codigo_principal":

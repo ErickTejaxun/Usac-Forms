@@ -6,10 +6,7 @@
 package generadorformularios;
 
 
-import AST.A;
-import Analizadores.idPregunta.idParser;
 import Analizadores.idPregunta.ParseException;
-import Analizadores.idPregunta.TokenMgrError;
 import AST.dibujador;
 import AST.Nodo;
 import java.io.BufferedWriter;
@@ -72,7 +69,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     DefaultTableModel filasErrores;
     boolean encuestaFlag = true;    
-    public Nodo raizArbol;            
+    public Nodo raizArbolEncuesta;            
     /**
      * Creates new form Interfaz
      */
@@ -299,16 +296,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_botonAbrirActionPerformed
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
-        try 
-        {
-            A a = new A();
-            System.err.println(a.nombre);
-        } catch (StackOverflowError e) 
-        {
-            System.err.println("Desborde");
-            System.err.println(e.getLocalizedMessage());
-        }       
-        
+
         
 
     }//GEN-LAST:event_botonGuardarActionPerformed
@@ -1498,7 +1486,7 @@ public class Interfaz extends javax.swing.JFrame {
             Analizadores.Apariencia.ParseException
     {        
         //Inicializamos la raíz del arbol general.
-        raizArbol = new Nodo("XLS");
+        raizArbolEncuesta = new Nodo("XLS");
         dibujador printer = new dibujador();
         String[] argumentos = new String[3]; //Argumentos        
         int fila = 1;
@@ -1796,12 +1784,12 @@ public class Interfaz extends javax.swing.JFrame {
             }              
             if(arbolPregunta.tieneHijos())
             {
-                raizArbol.add(arbolPregunta);
+                raizArbolEncuesta.add(arbolPregunta);
             }
             
             fila++;
         }        
-        printer.grafo(raizArbol);
+        printer.grafo(raizArbolEncuesta, "encuesta");
     }
     
     
@@ -1885,7 +1873,7 @@ public class Interfaz extends javax.swing.JFrame {
             agregarArbolOpciones(nuevaLista);           
             fila++;
         }        
-        printer.grafo(raizArbolOpciones);
+        printer.grafo(raizArbolOpciones, "opciones");
     }
         
     
@@ -1983,7 +1971,7 @@ public class Interfaz extends javax.swing.JFrame {
             agregarArbolConfiguraciones(nuevaConfiguracion);           
             fila++;
         }        
-        printer.grafo(raizArbolConfiguraciones);
+        printer.grafo(raizArbolConfiguraciones, "configuraciones");
     }
             
     public void agregarArbolOpciones(Nodo nuevaLista)
@@ -2429,6 +2417,18 @@ public class Interfaz extends javax.swing.JFrame {
         {
              return  Character.getName(segunda+65); 
         }                
+    }
+    
+    
+    public Nodo ordenarArbol(Nodo raiz)
+    {
+        if(raiz.getTipo().equals("iniciar "))
+        {
+            
+        }    
+        
+        
+        return null;
     }
     
     

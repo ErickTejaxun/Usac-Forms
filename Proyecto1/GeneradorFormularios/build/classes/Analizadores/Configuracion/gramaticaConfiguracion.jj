@@ -165,7 +165,7 @@ Nodo Inicio():
         nuevo = new Nodo(t1.image, t2.image, t2.beginColumn, t2.beginLine -1 );
         return nuevo;
     }
-    |t1=<estilo>(t2=<todo>|t2=<pagina>|t2=<cuadricula>)<EOF>
+    |t1=<estilo>(t2=<todo>|t2=<pagina>|t2=<cuadricula>) <EOF>
     {
         nuevo = new Nodo(t1.image, t2.image, t2.beginColumn, t2.beginLine -1 );
         return nuevo;

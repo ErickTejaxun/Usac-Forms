@@ -1,0 +1,45 @@
+digraph G
+{
+N1529519020[label="[Configuraciones]Configuraciones"]; 
+N585339180[label="[opcion]opcion"]; 
+N1468273324[label="[opcion]opcion"]; 
+N800943482[label="[opcion]opcion"]; 
+N1529519020->N585339180 ; 
+N1529519020->N1468273324 ; 
+N1529519020->N800943482 ; 
+N585339180[label="[opcion]opcion"]; 
+N549807322[label="[idform]impor_arbol"]; 
+N504490783[label="[importar]ArbolBinario.xform"]; 
+N585339180->N549807322 ; 
+N585339180->N504490783 ; 
+N549807322[label="[idform]impor_arbol"]; 
+N504490783[label="[importar]ArbolBinario.xform"]; 
+N1468273324[label="[opcion]opcion"]; 
+N1777830659[label="[idform]codigo1"]; 
+N770047482[label="[codigo_principal]
+abo1 = nuevo Arbol();
+abo2 = nuevo Arbol();"]; 
+N646819624[label="[codigo_global]
+Arbol abo1;
+Arbol abo2;"]; 
+N1468273324->N1777830659 ; 
+N1468273324->N770047482 ; 
+N1468273324->N646819624 ; 
+N1777830659[label="[idform]codigo1"]; 
+N770047482[label="[codigo_principal]
+abo1 = nuevo Arbol();
+abo2 = nuevo Arbol();"]; 
+N646819624[label="[codigo_global]
+Arbol abo1;
+Arbol abo2;"]; 
+N800943482[label="[opcion]opcion"]; 
+N928375285[label="[titulo_formulario]Arbol Binario"]; 
+N1655692175[label="[idform]Abb"]; 
+N1621618701[label="[estilo]todo"]; 
+N800943482->N928375285 ; 
+N800943482->N1655692175 ; 
+N800943482->N1621618701 ; 
+N928375285[label="[titulo_formulario]Arbol Binario"]; 
+N1655692175[label="[idform]Abb"]; 
+N1621618701[label="[estilo]todo"]; 
+}
