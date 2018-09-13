@@ -18,8 +18,22 @@ public class Nodo
     private String tipo;
     private String value;
     private int columna;
-    private int linea;    
+    private int linea;  
+    private int row;
+    private int column;
     private ArrayList<Nodo> hijos = new ArrayList();
+    private boolean flag = false;
+    
+    
+    public void setTrue()
+    {
+        this.flag=true;
+    }
+    
+    public boolean getTrue()
+    {
+        return flag;
+    }
 
     public Nodo() 
     {
@@ -106,6 +120,22 @@ public class Nodo
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
     }
 
     public void setLinea(int linea) {

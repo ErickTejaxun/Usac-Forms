@@ -7,9 +7,11 @@ import java.io.InputStream;
 
 public class idParser implements idParserConstants {
     public String cadenaAuxiliar="";
-    public static Nodo main(String args[]) throws ParseException
+        public int row;
+    public int column;
+    public static Nodo main(String args[], int row, int column) throws ParseException
     {
-        if(args.length>0)
+        if(args.length>0)      
         {
 
             InputStream data = new ByteArrayInputStream(args[0].getBytes());

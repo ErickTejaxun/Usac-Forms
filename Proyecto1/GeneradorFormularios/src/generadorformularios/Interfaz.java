@@ -38,7 +38,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
  * @author erick
  */
 public class Interfaz extends javax.swing.JFrame {
+    // Lista de preguntas registradas     
     
+        
     public ArrayList<Error> listaErrores = new ArrayList();
     private String archivoActual = "";    
     
@@ -254,6 +256,7 @@ public class Interfaz extends javax.swing.JFrame {
             try 
             {
                 analizarEncuesta();
+                verificarNombesPreguntas(raizArbolEncuesta,0,0);
                 analizarOpciones();
                 analizarConfiguraciones();
             } 
@@ -499,7 +502,7 @@ public class Interfaz extends javax.swing.JFrame {
                     }                   
                     if(filaContador>0)
                     {
-                        nuevaPregunta.setFila(filaContador);
+                        nuevaPregunta.setFila(filaContador);                        
                         listaPreguntas.add(nuevaPregunta);
                     }
                     ArrayList<Error> listaTemporal = nuevaPregunta.verificarErrores(fil);
@@ -1345,8 +1348,8 @@ public class Interfaz extends javax.swing.JFrame {
     {                                      
         DefaultTableModel filasErrores = new DefaultTableModel();        
         filasErrores.addColumn("Archivo");        
-        filasErrores.addColumn("Línea");
-        filasErrores.addColumn("Columna");
+        //filasErrores.addColumn("Línea");
+        //filasErrores.addColumn("Columna");
         filasErrores.addColumn("Fila");
         filasErrores.addColumn("Celda");
         filasErrores.addColumn("Detalle"); 
@@ -1364,8 +1367,8 @@ public class Interfaz extends javax.swing.JFrame {
                 filasErrores.addRow(new Object[]
                 {
                     this.getArchivoActual(), 
-                    listaErrores.get(x).getFila() ,
-                    listaErrores.get(x).getColumna(),
+//                    listaErrores.get(x).getFila() ,
+//                    listaErrores.get(x).getColumna(),
                     listaErrores.get(x).getRow()+ 1,
                     listaErrores.get(x).getColumn(),
                     listaErrores.get(x).getDetalle(),
@@ -1514,10 +1517,12 @@ public class Interfaz extends javax.swing.JFrame {
                     switch(parametro.toLowerCase())
                     {
                         case "tipo":  
-                            temporal = analizarTipo(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));
+                            temporal = analizarTipo(argumentos,fila,fila,pre.getFila(),Pregunta.getColumna(parametro));
                             if(temporal!=null)
                             {
-                                arbolPregunta.add(temporal);                                                        
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;
                         case "idpregunta":
@@ -1528,7 +1533,9 @@ public class Interfaz extends javax.swing.JFrame {
                             }                                                        
                             if(temporal!=null)
                             {
-                                arbolPregunta.add(temporal);
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;
                         case "etiqueta":
@@ -1538,7 +1545,9 @@ public class Interfaz extends javax.swing.JFrame {
                             }
                             if(temporal !=null)
                             {
-                                arbolPregunta.add(temporal);
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break;
                         case "parametro":
@@ -1551,7 +1560,9 @@ public class Interfaz extends javax.swing.JFrame {
                             }
                             if(temporal !=null)
                             {
-                                arbolPregunta.add(temporal);
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;     
                         case "sugerir":
@@ -1564,7 +1575,9 @@ public class Interfaz extends javax.swing.JFrame {
                             }
                             if(temporal !=null)
                             {
-                                arbolPregunta.add(temporal);
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;  
                         case "codigo_pre":
@@ -1582,7 +1595,9 @@ public class Interfaz extends javax.swing.JFrame {
                             }
                             if(temporal !=null)
                             {
-                                arbolPregunta.add(temporal);
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;      
                         case "codigo_post":
@@ -1600,8 +1615,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {      
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break;          
                         case "restringir":
@@ -1613,8 +1630,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {         
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break;       
                         case "calculo":
@@ -1631,8 +1650,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {          
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break; 
                         case "aplicable":
@@ -1649,8 +1670,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {       
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break; 
                         case "restringirmsn":
@@ -1667,8 +1690,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {      
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break;     
                         case "requerirmsn":
@@ -1685,8 +1710,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {        
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;     
                         case "requerido":
@@ -1703,8 +1730,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {        
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal);  
                             }
                             break;  
                         case "lectura":
@@ -1721,8 +1750,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {     
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;                             
                         case "predeterminado":
@@ -1734,8 +1765,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {      
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break; 
                         case "repeticion":
@@ -1747,8 +1780,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {     
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;        
                         case "multimedia":
@@ -1760,8 +1795,10 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {    
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
                             break;  
                         case "apariencia":
@@ -1773,12 +1810,14 @@ public class Interfaz extends javax.swing.JFrame {
                                 }
                             }
                             if(temporal !=null)
-                            {                               
-                                arbolPregunta.add(temporal);
+                            {              
+                                temporal.setTrue();
+                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                arbolPregunta.add(temporal); 
                             }
-                            break;                              
-                           
-                    }                    
+                            break;                                                         
+                    } 
+                    
                 }
                 temporal = null;
             }              
@@ -1787,7 +1826,7 @@ public class Interfaz extends javax.swing.JFrame {
                 raizArbolEncuesta.add(arbolPregunta);
             }
             
-            fila++;
+            fila = fila + 1 ;
         }        
         printer.grafo(raizArbolEncuesta, "encuesta");
     }
@@ -2019,7 +2058,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Tipo.parserTipo.main(argumentos);                                                        
+                 return Analizadores.Tipo.parserTipo.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Tipo.TokenMgrError te)
              {   
@@ -2043,7 +2082,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.idPregunta.idParser.main(argumentos);                                                        
+                 return Analizadores.idPregunta.idParser.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.idPregunta.TokenMgrError te)
              {   
@@ -2066,7 +2105,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Opciones.parserOpciones.main(argumentos);                                                        
+                 return Analizadores.Opciones.parserOpciones.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Opciones.TokenMgrError te)
              {   
@@ -2089,7 +2128,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Etiqueta.parserEtiqueta.main(argumentos);                                                        
+                 return Analizadores.Etiqueta.parserEtiqueta.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Etiqueta.TokenMgrError te)
              {   
@@ -2112,7 +2151,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Requerido.parserRequerido.main(argumentos);                                                        
+                 return Analizadores.Requerido.parserRequerido.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Etiqueta.TokenMgrError te)
              {   
@@ -2134,7 +2173,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Predeterminado.parserPredeterminado.main(argumentos);                                                        
+                 return Analizadores.Predeterminado.parserPredeterminado.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Etiqueta.TokenMgrError te)
              {   
@@ -2159,7 +2198,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Parametro.parseParametro.main(argumentos);                                                        
+                 return Analizadores.Parametro.parseParametro.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Parametro.TokenMgrError te)
              {   
@@ -2182,7 +2221,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Repeticion.parserRepeticion.main(argumentos);                                                        
+                 return Analizadores.Repeticion.parserRepeticion.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Repeticion.TokenMgrError te)
              {   
@@ -2206,7 +2245,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Apariencia.parserApariencia.main(argumentos);                                                        
+                 return Analizadores.Apariencia.parserApariencia.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Apariencia.TokenMgrError te)
              {   
@@ -2231,7 +2270,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Multimedia.parserMultimedia.main(argumentos);                                                        
+                 return Analizadores.Multimedia.parserMultimedia.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Multimedia.TokenMgrError te)
              {   
@@ -2254,7 +2293,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Configuracion.parserConfiguracion.main(argumentos);                                                        
+                 return Analizadores.Configuracion.parserConfiguracion.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Configuracion.TokenMgrError te)
              {   
@@ -2277,7 +2316,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Sugerir.parserSugerir.main(argumentos);                                                        
+                 return Analizadores.Sugerir.parserSugerir.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Sugerir.TokenMgrError te)
              {   
@@ -2302,7 +2341,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Codigo.parserCodigo.main(argumentos);                                                        
+                 return Analizadores.Codigo.parserCodigo.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Codigo.TokenMgrError te)
              {   
@@ -2326,7 +2365,7 @@ public class Interfaz extends javax.swing.JFrame {
          {
              try
              {                                                  
-                 return Analizadores.Restringir.parserRestringir.main(argumentos);                                                        
+                 return Analizadores.Restringir.parserRestringir.main(argumentos, filaE, celda);                                                        
              }
              catch(Analizadores.Restringir.TokenMgrError te)
              {   
@@ -2351,7 +2390,7 @@ public class Interfaz extends javax.swing.JFrame {
         {
             try
             {                                                  
-                excelParser.main(argumentos);                                                        
+                excelParser.main(argumentos, filaE, celda);                                                        
             }
             catch(TokenMgrError te)
             {   
@@ -2420,15 +2459,33 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     
-    public Nodo ordenarArbol(Nodo raiz)
-    {
-        if(raiz.getTipo().equals("iniciar "))
+    public void verificarNombesPreguntas(Nodo raiz, int row, int col)
+    {     
+        boolean flag = false; 
+        if(raiz.getTrue())
         {
-            
-        }    
+            row = raiz.getRow();
+            col = raiz.getColumna();           
+        }
         
+        if(raiz.getTipo().toLowerCase().equals("varp"))
+        {
+           for(Pregunta pre: listaPreguntas)
+           {
+               if(raiz.getValue().equals(pre.getIdPregunta())){flag = true;}
+           }
+            if(!flag)//No se encontró la cosa
+            {
+                registrarError("No se ha encontrado la variable " + raiz.getValue(),
+                        raiz.getLinea(), raiz.getColumna(),row,col,"Semantico");
+            }           
+        } 
         
-        return null;
+        for(Nodo nod: raiz.getHijos())
+        {
+            verificarNombesPreguntas(nod, row, col);
+        }        
+
     }
     
     
