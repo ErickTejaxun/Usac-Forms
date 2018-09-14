@@ -1521,7 +1521,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal!=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;
@@ -1534,7 +1535,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal!=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;
@@ -1546,7 +1548,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break;
@@ -1561,7 +1564,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;     
@@ -1576,7 +1580,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;  
@@ -1596,7 +1601,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;      
@@ -1617,7 +1623,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {      
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break;          
@@ -1632,7 +1639,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {         
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break;       
@@ -1652,7 +1660,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {          
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break; 
@@ -1672,7 +1681,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {       
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break; 
@@ -1692,7 +1702,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {      
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break;     
@@ -1712,7 +1723,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {        
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;     
@@ -1732,7 +1744,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {        
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal);  
                             }
                             break;  
@@ -1752,7 +1765,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {     
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;                             
@@ -1767,7 +1781,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {      
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break; 
@@ -1782,7 +1797,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {     
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;        
@@ -1797,7 +1813,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {    
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;  
@@ -1812,7 +1829,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(temporal !=null)
                             {              
                                 temporal.setTrue();
-                                temporal.setColumna(Pregunta.getColumna(parametro));
+                                temporal.setColumna(fila);
+                                temporal.setRow(Pregunta.getColumna(parametro));
                                 arbolPregunta.add(temporal); 
                             }
                             break;                                                         
@@ -1947,6 +1965,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(!conf.getTitulo_formulario().equals(""))
                             {
                                 temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                                temporal.setRow(fila);
+                                temporal.setColumn(Configuracion.getColumna(parametro));
                             }                            
                             if(temporal!=null)
                             {   
@@ -1957,6 +1977,8 @@ public class Interfaz extends javax.swing.JFrame {
                             if(!conf.getIdform().equals(""))
                             {
                                 temporal = analizarConfiguracion(argumentos,fila,fila,fila,Configuracion.getColumna(parametro));
+                                temporal.setRow(fila);
+                                temporal.setColumn(Configuracion.getColumna(parametro));                                
                             }  
                             if(temporal!=null)
                             {
@@ -2477,7 +2499,7 @@ public class Interfaz extends javax.swing.JFrame {
             if(!flag)//No se encontró la cosa
             {
                 registrarError("No se ha encontrado la variable " + raiz.getValue(),
-                        raiz.getLinea(), raiz.getColumna(),row,col,"Semantico");
+                        raiz.getLinea(), raiz.getColumna(),col,row,"Semantico");
             }           
         } 
         

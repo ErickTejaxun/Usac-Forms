@@ -379,7 +379,7 @@ public class Pregunta
     public static int getColumna(String clave)
     {
         System.out.println("Buscando clave ----------"+clave.toLowerCase());
-        return posicionesColumnas.get(clave.toLowerCase()) + 1;
+        return posicionesColumnas.get(clave.toLowerCase()) ;
     }
         
     
