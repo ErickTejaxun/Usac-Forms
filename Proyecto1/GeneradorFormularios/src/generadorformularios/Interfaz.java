@@ -69,9 +69,20 @@ public class Interfaz extends javax.swing.JFrame {
     Nodo raizArbolConfiguraciones;
     
     
-    DefaultTableModel filasErrores;
-    boolean encuestaFlag = true;    
-    public Nodo raizArbolEncuesta;            
+    public DefaultTableModel filasErrores;
+    public boolean encuestaFlag = true;    
+    public Nodo raizArbolEncuesta; 
+    
+    
+    
+    /*Para el nuevo ast*/
+    public Nodo raizNueva = new Nodo("raiz");
+    public Nodo raizAuxiliar =  new Nodo("grupo");
+    public int indice = 0;
+    public int iterador = 0;
+    
+    
+    
     /**
      * Creates new form Interfaz
      */
@@ -256,9 +267,17 @@ public class Interfaz extends javax.swing.JFrame {
             try 
             {
                 analizarEncuesta();
-                verificarNombesPreguntas(raizArbolEncuesta,0,0);
+                //verificarNombesPreguntas(raizArbolEncuesta,0,0);                
+                dibujar(equilibrarArbol(), "equilibrado");
                 analizarOpciones();
                 analizarConfiguraciones();
+                
+                
+                //organizarEncuenta(raizArbolEncuesta, raizNueva, raizAuxiliar); // Este metodo.
+                
+                
+                
+                
             } 
             catch (
                     Analizadores.Tipo.ParseException 
@@ -1528,10 +1547,15 @@ public class Interfaz extends javax.swing.JFrame {
                             break;
                         case "idpregunta":
                             //Mensaje(pre.getTipo(),"----");
-                            if(!pre.esFinal() && !pre.esIniciar())
+//                            if(!pre.esFinal() && !pre.esIniciar())
+//                            {
+//                                temporal = analizarId(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));
+//                            }   
+                            if(!pre.getIdPregunta().equals(""))
                             {
                                 temporal = analizarId(argumentos,fila,fila,fila,Pregunta.getColumna(parametro));
-                            }                                                        
+                            }
+                            
                             if(temporal!=null)
                             {
                                 temporal.setTrue();
@@ -2510,6 +2534,226 @@ public class Interfaz extends javax.swing.JFrame {
 
     }
     
+   
+    public Nodo equilibrarArbol()
+    {
+        indice = 0;
+        Nodo arbolito = new Nodo("xls");
+        Nodo nodo;
+        while(indice<raizArbolEncuesta.getHijos().size())
+        {
+            System.out.println("------------------Posicion \t"+indice);
+            
+            nodo = raizArbolEncuesta.getHijos().get(indice);
+            Nodo atributo;
+            String tipoNodo =  ""; //nodo.getHijos().get(0).getValue().toLowerCase();
+            for(Nodo auxiliar: nodo.getHijos())
+            {
+                if(auxiliar.getTipo().toLowerCase().equals("tipo"))
+                {
+                    tipoNodo = auxiliar.getValue().toLowerCase();
+                    break;
+                }
+            } 
+                        
+            switch (tipoNodo) 
+            {
+                case "iniciar agrupacion":
+                    indice++;
+                    //arbolito.setValue(tipoNodo);
+                    arbolito.add(agrupacion());
+                    iterador = indice;
+                    break;
+                case "iniciar ciclo":
+                    indice++;
+                    //arbolito.setValue(tipoNodo);
+                    arbolito.add(ciclo());
+                    iterador = indice;
+                    break;
+//                case "finalizar agrupacion":
+//                    indice++;
+//                    break;
+//                case "finalizar ciclo":
+//                    indice++;
+//                    return arbolito;
+                default:
+                    indice++;
+                    arbolito.add(nodo);                    
+                    break;
+            }
+        }
+        return arbolito;
+    }
+    
+    
+    
+    public Nodo agrupacion()
+    {
+        Nodo arbolito = new Nodo("agrupacion");
+        Nodo nodo;
+        for(Nodo temp : raizArbolEncuesta.getHijos().get(indice-1).getHijos())
+        {
+            if(temp.getTipo().toLowerCase().equals("id"))
+            {
+                arbolito.add(temp);
+            }
+        }        
+        while(indice<raizArbolEncuesta.getHijos().size())
+        {
+            System.out.println("------------------Posicion \t"+indice);
+            nodo = raizArbolEncuesta.getHijos().get(indice);
+            Nodo atributo;
+            String tipoNodo =  ""; //nodo.getHijos().get(0).getValue().toLowerCase();
+            for(Nodo auxiliar: nodo.getHijos())
+            {
+                if(auxiliar.getTipo().toLowerCase().equals("tipo"))
+                {
+                    tipoNodo = auxiliar.getValue().toLowerCase();
+                    break;
+                }
+            } 
+                        
+            switch (tipoNodo) 
+            {
+                case "iniciar agrupacion":
+                    indice ++;
+//                    arbolito.setValue(tipoNodo);
+                    arbolito.add(agrupacion());
+                    iterador = indice;
+                case "iniciar ciclo":
+                    indice++;
+//                    arbolito.setValue(tipoNodo);
+                    arbolito.add(ciclo());
+                    iterador = indice;
+                    break;
+                case "finalizar agrupacion":
+                    indice++;
+                    return arbolito; 
+                case "finalizar ciclo":
+                    registrarError("Falta la etiqueta de inicio de ciclo.",
+                            nodo.getLinea(),
+                            nodo.getColumna(),
+                            nodo.getLinea(),
+                            Pregunta.getColumna("tipo"),
+                            "Semantico");
+                    indice++;
+                    break;
+                default:
+                    indice++;
+                    arbolito.add(nodo);
+                    break;
+            }
+        }
+        return arbolito;        
+    }
+    
+    public Nodo ciclo()
+    {
+        Nodo arbolito = new Nodo("ciclo");
+        Nodo nodo;
+        for(Nodo temp : raizArbolEncuesta.getHijos().get(indice-1).getHijos())
+        {
+            if(temp.getTipo().toLowerCase().equals("id"))
+            {
+                arbolito.add(temp);
+            }
+        }        
+//        arbolito.add(raizArbolEncuesta.getHijos().get(indice-1).getHijos().get(0));
+        while(indice<raizArbolEncuesta.getHijos().size())
+        {
+            System.out.println("------------------Posicion \t"+indice);
+            nodo = raizArbolEncuesta.getHijos().get(indice);
+            Nodo atributo;
+            String tipoNodo =  ""; //nodo.getHijos().get(0).getValue().toLowerCase();
+            for(Nodo auxiliar: nodo.getHijos())
+            {
+                if(auxiliar.getTipo().toLowerCase().equals("tipo"))
+                {
+                    tipoNodo = auxiliar.getValue().toLowerCase();
+                    break;
+                }
+            }                         
+            switch (tipoNodo) 
+            {
+                case "iniciar agrupacion":
+                    indice ++;
+//                    arbolito.setValue(tipoNodo);
+                    arbolito.add(agrupacion());
+                    iterador = indice;
+                case "iniciar ciclo":
+                    indice++;
+//                    arbolito.setValue(tipoNodo);
+                    arbolito.add(equilibrarArbol());
+                    iterador = indice;
+                    break;
+                case "finalizar agrupacion":                    
+                case "finalizar ciclo":
+                    indice++;
+                    return arbolito;
+                default:
+                    indice++;
+                    arbolito.add(nodo);
+                    break;
+            }
+        }
+        return arbolito;        
+    }    
+    
+    public void organizarEncuenta(Nodo raiz, Nodo raizNueva, Nodo raizAuxiliar) throws IOException
+    { 
+        boolean flag= false;
+        boolean flagCab = false;
+        for(Nodo nodo: raiz.getHijos())
+        {
+            //Inicio de agrupacion
+            if(nodo.getHijos().get(0).getValue().toLowerCase().equals("iniciar agrupacion")
+              ||nodo.getHijos().get(0).getValue().toLowerCase().equals("iniciar ciclo"))
+            {
+                flag = true;  
+                flagCab = true;
+                raizAuxiliar= new Nodo(nodo.getHijos().get(0).getValue());
+            }
+            else
+            {
+                flagCab = true;
+            }
+            
+            //Fin de agrupacion
+            if(nodo.getHijos().get(0).getValue().toLowerCase().equals("finalizar agrupacion")
+              ||nodo.getHijos().get(0).getValue().toLowerCase().equals("finalizar ciclo"))
+            {
+                flag = false;
+                raizNueva.add(raizAuxiliar);
+            }
+            else
+            {
+                flagCab = true;
+            }
+            
+            if(flag && flagCab)
+            {                
+                raizAuxiliar.add(nodo);
+            }
+            else
+            {
+                if(flagCab)
+                {
+                    raizNueva.add(nodo);
+                }                                
+            }
+        }
+        
+        dibujador dib = new dibujador();
+        dib.grafo(raizNueva, "reASt");
+        
+    }
+    
+    
+    public void dibujar(Nodo arbol, String nombre) throws IOException
+    {
+        dibujador dib = new dibujador();
+        dib.grafo(arbol, nombre);        
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
