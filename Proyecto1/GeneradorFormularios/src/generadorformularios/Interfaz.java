@@ -267,10 +267,10 @@ public class Interfaz extends javax.swing.JFrame {
             try 
             {
                 analizarEncuesta();
-                //verificarNombesPreguntas(raizArbolEncuesta,0,0);                
-                dibujar(equilibrarArbol(), "equilibrado");
+                verificarNombesPreguntas(raizArbolEncuesta,0,0);                                
                 analizarOpciones();
-                analizarConfiguraciones();
+                analizarConfiguraciones();                                
+                generarCodigo();
                 
                 
                 //organizarEncuenta(raizArbolEncuesta, raizNueva, raizAuxiliar); // Este metodo.
@@ -2754,6 +2754,150 @@ public class Interfaz extends javax.swing.JFrame {
         dibujador dib = new dibujador();
         dib.grafo(arbol, nombre);        
     }
+    
+    
+    public void generarCodigo() throws IOException
+    {
+        Nodo preguntas = equilibrarArbol();
+        dibujar(preguntas, "equilibrado");
+                
+        System.out.println(code(preguntas));
+    }
+    
+    
+    
+    public String code(Nodo raiz)
+    {
+        String nuevoCode = "";
+        for(Nodo nodo : raiz.getHijos())
+        {
+            switch(nodo.getTipo().toLowerCase())
+            {
+                case "pregunta":
+                    nuevoCode += codePregunta(nodo);
+                    break;
+                case "agrupacion":
+                    nuevoCode += codeAgrupacion(nodo);
+                    break;
+                case "ciclo":
+                    nuevoCode += codeCiclo(nodo);
+                    break;
+            }
+        }
+        return nuevoCode;
+    }
+    
+    public String codePregunta(Nodo raiz)
+    {
+        String data[] = new String[17];
+        for(Nodo nodo : raiz.getHijos())
+        {
+            switch(nodo.getTipo().toLowerCase())
+            {
+                case "tipo":                    
+                    data[1]=nodo.getValue().replace("texto", "cadena");                    
+                    break;
+                case "id":
+                    data[0]=nodo.getValue();
+                    break;
+                case "etiqueta":
+                    data[2] = codeEtiqueta(nodo,raiz.getValue());
+                    break;
+                case "parametro":
+                    break;
+                case "calculo":
+                    break;
+                case "aplicable":
+                    break;
+                case "sugerir":
+                    break;
+                case "restringir":
+                    break;
+                case "restringmsn":
+                    break;
+                case "requerido":
+                    break;
+                case "requeridomsn":
+                    break;
+                case "predeterminado":
+                    break;
+                case "repeticion":
+                    break;
+                case "apariencia":
+                    break; 
+                case "codigo_pre":
+                    break;
+                case "codigo_pro":
+                    break;
+                case "multimedia":
+                    break;                   
+            }
+        }
+        String temp ="";
+        temp += "Pregunta "+data[0] +"(){\n";
+        temp += data[1] +" respuesta";
+        return temp;
+    }
+    public String codeAgrupacion(Nodo raiz)
+    {
+        
+        return "";
+    }   
+    public String codeCiclo(Nodo raiz)
+    {
+        return "";
+    }     
+    
+    public String codeEtiqueta(Nodo raiz, String padre)
+    {
+        String etiqueta ="";
+        for(Nodo nodo: raiz.getHijos())
+        {
+            switch(nodo.getTipo().toLowerCase())
+            {
+                case "vacio":
+                    break;
+                case "cadena":
+                    if(etiqueta.equals(""))
+                    {
+                        etiqueta += "\"";
+                        etiqueta += nodo.getValue();                        
+                        etiqueta += "\"";
+                    }
+                    else
+                    {
+                        etiqueta += "+ \"";
+                        etiqueta += nodo.getValue();  
+                        etiqueta += "\"";
+                    }
+                    break;
+                case "varP":
+                    if(etiqueta.equals(""))
+                    {                        
+                        etiqueta += nodo.getValue();                                                
+                    }
+                    else
+                    {
+                        etiqueta += "+";
+                        etiqueta += nodo.getValue();                          
+                    }                                                                               
+                    break;
+                case "var"://Padre
+                    if(etiqueta.equals(""))
+                    {                        
+                        etiqueta += padre;                                                
+                    }
+                    else
+                    {
+                        etiqueta += "+";
+                        etiqueta += padre;                          
+                    }                     
+                    break;                
+            }
+        }
+        return "cadena etiqueta ="+etiqueta+";";
+    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaEdicion;
